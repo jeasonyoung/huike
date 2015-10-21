@@ -6,7 +6,7 @@ return array(
 	
 	/* 数据库设置 */
 	'DB_TYPE'               =>  'mysql',     // 数据库类型
-	'DB_HOST'               =>  '127.0.0.1', // 服务器地址
+	'DB_HOST'               =>  '124.232.146.111', // 服务器地址
 	'DB_NAME'               =>  'huike',          // 数据库名
 	'DB_USER'               =>  'D9xf1S600K3Op2w',      // 用户名
 	'DB_PWD'                =>  'G8i2e0J5q3v1X7zLn9MM',          // 密码
