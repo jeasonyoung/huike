@@ -9,11 +9,10 @@ use Think\Model;
 class DigestAuthModel extends Model{
     //定义表名
     protected $tableName = 'jigou';
-
     /**
      * 根据简称获取机构接口密钥
-     * @param  String $abbr 机构简称
-     * @return String       接口密钥
+     * @param  string $abbr 机构简称
+     * @return string       接口密钥
      */
     public function loadAppKey($abbr=null){
         if(APP_DEBUG) trace('根据机构简称['.$abbr.']查询接口密钥..');
