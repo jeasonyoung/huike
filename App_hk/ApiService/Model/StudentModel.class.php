@@ -12,7 +12,7 @@ class StudentModel extends Model{
      * 验证学生用户
      * @param  string $agencyId 所属机构ID
      * @param  string $username 用户名
-     * @param  string $pwd      密码
+     * @param  string $pwd      密码md5(md5(agencyId+username)+md5(password))
      * @return array            返回数据类型
      */
     public function verifyStudentUser($agencyId=null,$username=null,$pwd=null){
