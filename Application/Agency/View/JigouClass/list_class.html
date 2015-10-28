@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>机构班级列表</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+<script type="text/javascript">
+        function del_class(){
+            var jgcid = ''; 
+                $('input[name="jgcid"]:checked').each(function(){
+                    if(this.checked){
+                        jgcid+= $(this).val();
+                        jgcid+=',';
+                    }
+                });
+                jgcid = jgcid.substr(0,jgcid.length-1);
+                if(!jgcid.length>0){
+                    alert('请勾选要删除的班级');
+                }else{
+                    var status = confirm("确定要删除已勾选的班级吗？");
+                    if(!status){
+                     return false;
+                    }
+                   window.location.href = "{:U('jigouClass/del_class')}?jgcid="+jgcid;
+                }
+               
+            }   
+
+</script>
+</head>
+
+
+<body>
+
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">课程管理</a></li>
+    <li><a href="#">班级设置</a></li>
+    <li><a href="#">班级信息</a></li>
+    </ul>
+    </div>
+    
+    <div class="rightinfo">
+    
+    <div class="tools">
+    
+    	<ul class="toolbar">
+        <li class="click"><a href="{:U('jigouClass/add_class')}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>   
+        <li onclick="del_class()"><a href="javascript:void()"><span><img src="__PUBLIC__/images/t03.png" /></span>删除</a></li>
+        </ul>
+    </div>
+    <table class="tablelist">
+    	<thead>
+    	<tr>
+        <th><input name="" type="checkbox" value="" checked="checked"/></th>
+        <th>班级名称</th>
+        <th>描述</th>
+        <th>宣传图片URL</th>
+        <th>使用年份</th>
+        <th>销售价格</th>
+        <th>优惠价格</th>
+        <th>锁定</th>
+        <th>课时数</th>
+        <th>试听课程ID</th>
+        <th>创建时间</th>
+        <th>最后修改时间</th>
+        <th>排序ID</th>
+        <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist id="vo" name="classlist">
+        <tr>
+        <td><input name="jgcid" type="checkbox" value="{$vo.jgcid}" /></td>
+        <td>{$vo.cnname}</td>
+        <td>{$vo.desc}</td>
+        <td>{$vo.picpath}</td>
+        <td>{$vo.usryear}</td>
+        <td>{$vo.sale_price}</td>
+        <td>{$vo.price}</td>
+        <td>
+        <if condition="$vo.statetf eq 1">
+        <font color="#FF0000">是</font>
+        <else />
+        <font color="#008000">否</font>
+        </if>
+        </td>
+        <td>{$vo.classnum}</td>
+        <td>{$vo.listenID}</td>
+        <td>{$vo.create_time}</td>
+        <td>{$vo.last_time}</td>
+        <td>{$vo.sortid}</td>
+        <td><a href="{:U('jigouClass/edit_class',array('jgcid' => $vo['jgcid']))}" class="tablelink">修改</a>     <a href="{:U('jigouClass/del_class',array('jgcid' => $vo['jgcid']))}" onclick="javascript:return confirm('确定删除此班级吗?')" class="tablelink"> 删除</a></td>
+        </tr>   
+        </volist>   
+        </tbody>
+    </table>
+    <!--<div class="pagin">
+    </div>-->
+    </div>
+    
+    <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script>
+
+</body>
+
+</html>

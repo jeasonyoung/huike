@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>系统用户列表</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+</head>
+
+
+<body>
+
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">用户和权限管理</a></li>
+    <li><a href="#">用户列表</a></li>
+    </ul>
+    </div>
+    
+    <div class="rightinfo">
+    
+    <div class="tools">
+    
+    	<ul class="toolbar">
+        <li class="click"><a href="{:U('ExamClass/add_user')}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
+        </ul>
+        
+        
+        <ul class="toolbar1">
+        <li><span><img src="__PUBLIC__/images/t05.png" /></span>设置</li>
+        </ul>
+    
+    </div>
+    <table class="tablelist">
+    	<thead>
+    	<tr>
+        <th><input name="" type="checkbox" value="" checked="checked"/></th>
+        <th>编号<i class="sort"><img src="__PUBLIC__/images/px.gif" /></i></th>
+        <th>英文名</th>
+        <th>中文名</th>
+        <th width="12%">考试时间</th>
+        <th width="12%">招生截至时间</th>
+        <th width="12%">创建时间</th>
+        <th width="12%">更新时间</th>
+        <th>排序</th>
+        <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist id="vo" name="users">
+        <tr>
+        <td><input name="" type="checkbox" value="" /></td>
+        <td>{$vo.examid}</td>
+        <td>{$vo.enname}</td>
+        <td>{$vo.cnname}</td>
+        <td>{$vo.examtime}</td>
+        <td>{$vo.enddate}</td>
+        <td>{$vo.create_time}</td>
+        <td>{$vo.last_time}</td>
+        <td>{$vo.sortid}</td>
+        <td><a href="{:U('ExamClass/edit_user',array('examid' => $vo['examid']))}" class="tablelink">修改</a>     <a href="{:U('ExamClass/del_user',array('examid' => $vo['examid']))}" onclick="javascript:return confirm('确定删除此用户吗?')" class="tablelink"> 删除</a></td>
+        </tr>   
+        </volist>   
+        </tbody>
+    </table>
+    <!--<div class="pagin">
+    </div>-->
+    </div>
+    
+    <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script>
+
+</body>
+
+</html>

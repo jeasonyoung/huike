@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>合作机构列表</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+</head>
+<body>
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">机构信息管理</a></li>
+    <li><a href="#">合作机构列表</a></li>
+    </ul>
+    </div>
+    <div class="rightinfo">
+    <div class="tools">
+    	<ul class="toolbar">
+        <li class="click"><a href="{:U('agency/add_agency')}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
+        </ul>
+        <ul class="toolbar1">
+        <li><span><img src="__PUBLIC__/images/t05.png" /></span>设置</li>
+        </ul>
+    </div>
+    <table class="tablelist">
+    	<thead>
+    	<tr>
+        <th>编号<i class="sort"><img src="__PUBLIC__/images/px.gif" /></i></th>
+        <th>机构名称</th>
+        <th>机构域名</th>
+        <th>机构状态</th>
+        <th>联系人</th>
+        <th>合作电话</th>
+        <th>联系电话</th>
+        <th>创建时间</th>
+        <th>负责人</th>
+        <th>负责客服</th>
+        <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist id="vo" name="info">
+        <tr>
+        <td>{$vo.jgid}</td>
+        <td>{$vo.company}</td>
+        <td>{$vo.domain}</td>
+        <td>
+        <if condition="$vo.statetf eq 1">
+        <font color="#008000">启用</font>
+        <else />
+        <font color="#FF0000">停用</font>
+        </if>
+        </td>
+        <td>{$vo.contact}</td>
+        <td>{$vo.hztel}</td>
+        <td>{$vo.stutel}</td>
+        <td>{$vo.create_time}</td>
+        <td>{$vo.marketname}</td>
+        <td>{$vo.kfname}</td>
+        <td><a href="{:U('agency/edit_agency',array('jgid' => $vo['jgid']))}" class="tablelink">修改</a>     <a href="{:U('agency/del_agency',array('jgid' => $vo['jgid']))}" onclick="javascript:return confirm('确定删除此机构?')" class="tablelink"> 删除</a></td>
+        </tr>   
+        </volist>   
+        </tbody>
+    </table>
+    <!--<div class="pagin">
+    </div>-->
+    </div>
+    
+    <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script>
+
+</body>
+
+</html>

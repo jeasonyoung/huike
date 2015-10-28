@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>机构信息</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+</head>
+
+
+<body>
+
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">系统管理</a></li>
+    <li><a href="#">机构设置</a></li>
+    <li><a href="#">机构信息</a></li>
+    </ul>
+    </div>
+    
+    <div class="rightinfo">
+    
+    <div class="tools">
+<div class="formbody">
+  <div class="formtitle"><span>机构信息</span><span style='right: 0px;'>（双击可修改信息，底部点确认保存）</span></div>
+  <ul class="forminfo">
+  <form name="jigou" action="{:U('jigou/edit_jigou')}" method="post">
+    <li>
+      <label>机构名称</label>
+      <input name="Company" type="text" class="dfinput" value="{$info.company}" readonly="readonly" />
+    </li>
+      <li>
+      <label>对外名称</label>
+      <input name="abbr_cn" type="text" class="dfinput" value="{$info.abbr_cn}" readonly="readonly" />
+    </li>
+      <li>
+      <label>英文名称</label>
+      <input name="abbr_en" type="text" class="dfinput" value="{$info.abbr_en}" readonly="readonly" />
+    </li>
+      <li>
+      <label>登陆logo</label>
+      <input name="login_icon" type="text" class="dfinput" value="{$info.login_icon}" readonly="readonly" />
+    </li>
+      <li>
+      <label>登陆后logo</label>
+      <input name="logo_icon" type="text" class="dfinput" value="{$info.logo_icon}" readonly="readonly" />
+    </li>
+      <li>
+      <label>视频logo</label>
+      <input name="video_icon" type="text" class="dfinput" value="{$info.video_icon}" readonly="readonly" />
+    </li>
+      <li>
+      <label>视频片头</label>
+      <input name="head_video" type="text" class="dfinput" value="{$info.head_video}" readonly="readonly" />
+    </li>
+      <li>
+      <label>机构域名</label>
+      <input name="domain" type="text" class="dfinput" value="{$info.domain}" readonly="readonly" />
+    </li>
+      <li>
+      <label>机构首页</label>
+      <input name="Home_url" type="text" class="dfinput" value="{$info.ome_url}" readonly="readonly" />
+    </li>
+      <li>
+      <label>登陆网址</label>
+      <input name="Login_Url" type="text" class="dfinput" value="{$info.login_url}" readonly="readonly" />
+    </li>
+      <li>
+      <label>机构状态</label>
+      <input name="StateTF" type="text" class="dfinput" value="{$info.statetf}" readonly="readonly" />
+    </li>
+      <li>
+      <label>包含考试</label>
+      <input name="AllExams" type="text" class="dfinput" value="{$info.allexams}" readonly="readonly" />
+    </li>
+      <li>
+          省&nbsp;<select ><option>请选择</option></select>&nbsp;&nbsp;&nbsp;&nbsp;
+                            
+<!--      <input name="Province" type="text" class="dfinput" value="{$info.Province}" readonly="readonly" />-->
+      市&nbsp;<select ><option>请选择</option></select>&nbsp;&nbsp;&nbsp;&nbsp;
+<!--      <input name="City" type="text" class="dfinput" value="{$info.city}" readonly="readonly" />    -->
+      区县&nbsp;<select ><option>请选择</option></select>&nbsp;&nbsp;&nbsp;&nbsp;
+<!--      <input name="County" type="text" class="dfinput" value="{$info.county}" readonly="readonly" />-->
+    </li>
+      <li>
+      <label>详细地址</label>
+      <input name="Address" type="text" class="dfinput" value="{$info.address}" readonly="readonly" />
+    </li>
+      <li>
+      <label>联系人</label>
+      <input name="Contact" type="text" class="dfinput" value="{$info.contact}" readonly="readonly" />
+    </li>
+      <li>
+      <label>合作联系电话</label>
+      <input name="HZTel" type="text" class="dfinput" value="{$info.hztel}" readonly="readonly" />
+    </li>
+      <li>
+      <label>学员联系电话</label>
+      <input name="StuTel" type="text" class="dfinput" value="{$info.stutel}" readonly="readonly" />
+    </li>
+      <li>
+      <label>机构简介</label>
+      <input name="Introduce" type="textarea" class="dfinput" value="{$info.introduce}" readonly="readonly" />
+    </li>
+      <li>
+      <label>机构余额</label>
+      <input name="" type="text" class="dfinput" value="{$info.money}" readonly="readonly" />
+    </li>
+      <li>
+      <label>机构折扣</label>
+      <input name="dicount" type="text" class="dfinput" value="{$info.dicount}" readonly="readonly" />
+    </li>
+      <li>
+      <label>试听数量</label>
+      <input name="ListenNum" type="text" class="dfinput" value="{$info.listennum}" readonly="readonly" />
+    </li>
+    <li>
+      <label>机构秘钥</label>
+      <input name="Md5Key" type="text" class="dfinput" value="{$info.md5key}" readonly="readonly" />
+    </li>
+      <li>
+      <label>手机端秘钥</label>
+      <input name="APPKey" type="text" class="dfinput" value="{$info.appkey}" readonly="readonly" />
+    </li>
+      <li>
+      <label>头部html</label>
+      <input name="html_header" type="text" class="dfinput" value="{$info.html_header}" readonly="readonly" />
+    </li>
+      <li>
+      <label>尾部html</label>
+      <input name="html_footer" type="text" class="dfinput" value="{$info.html_footer}" readonly="readonly" />
+    </li>
+      <li>
+<!--      <label>创建时间</label>
+      <input name="create_time" type="text" class="dfinput" value="{$info.create_time}" readonly="readonly" />
+    </li>
+      <li>
+      <label>更新时间</label>
+      <input name="last_time" type="text" class="dfinput" value="{$info.last_time}" readonly="readonly" />
+    </li>-->
+      <li>
+      <label>市场负责人</label>
+      <input name="MarketID" type="text" class="dfinput" value="{$info.marketid}" readonly="readonly" />
+    </li>
+      <li>
+      <label>负责客服</label>
+      <input name="KefuID" type="text" class="dfinput" value="{$info.kefuid}" readonly="readonly" />
+    </li>
+       <li>
+      <label>安卓下载地址</label>
+      <input name="apk_url" type="text" class="dfinput" value="{$info.apk_url}" readonly="readonly" />
+    </li>
+       <li>
+      <label>苹果下载地址</label>
+      <input name="app_url" type="text" class="dfinput" value="{$info.app_url}" readonly="readonly" />
+    </li>
+    <li>
+      <label>&nbsp;</label>
+      <input type="hidden" name="JGID" value="{$info.jgid}" />
+      <input name="" type="submit" class="btn" value="确认保存"/>
+    </li>
+    </form>
+  </ul>
+</div>
+    <!--<div class="pagin">
+    </div>-->
+    </div>
+        <script type="text/javascript">
+        $(function(){
+            $('.dfinput').dblclick(function(){
+                this.readOnly=false;
+            }).blur(function(){
+                this.readOnly=true;
+            });
+        })
+    </script>
+
+</body>
+
+</html>

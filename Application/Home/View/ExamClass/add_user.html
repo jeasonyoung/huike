@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>系统考试添加</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript"  src="__PUBLIC__/laydate/laydate.js" charset="utf-8" ></script>
+</head>
+<body>
+<div class="place"> <span>位置：</span>
+  <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">考试管理</a></li>
+    <li><a href="#">添加考试</a></li>
+  </ul>
+</div>
+<div class="formbody">
+  <div class="formtitle"><span>添加考试</span></div>
+  <ul class="forminfo">
+  <form name="user" action="{:U('ExamClass/add_user')}" method="post">
+    <li>
+      <label>英文名称</label>
+      <input name="EnName" type="text" class="dfinput" value="{$info['EnName']}" />
+      <i>设置考试英文名称</i></li>
+    <li>
+      <label>中文名称</label>
+      <input name="CnName" type="text" class="dfinput" value="{$info['CnName']}" />
+      <i>设置考试中文名称</i></li>
+    </li>
+    <li>
+      <label>考试日期</label>
+      <input id="ExamTime" name="ExamTime" type="text" class="laydate-icon" onclick="laydate()" value="{$info['ExamTime']}" />
+    </li>
+    <li>
+      <label>招生截止日期</label>
+      <input id="EndDate" name="EndDate" type="text" class="laydate-icon" onclick="laydate()" value="" />
+    </li>
+    <li>
+      <label>排序</label>
+      <input name="SortID" type="text" class="dfinput" value="" />
+    </li>
+    <li>
+      <label>&nbsp;</label>
+      <input type="hidden" name="ExamID" value="{$info['examid']}" />
+      <input name="" type="submit" class="btn" value="确认保存"/>
+    </li>
+    </form>
+  </ul>
+</div>
+</body>
+</html>

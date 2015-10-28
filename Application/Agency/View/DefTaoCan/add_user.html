@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>添加考试班级</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+<script type="text/javascript"  src="__PUBLIC__/laydate/laydate.js" charset="utf-8" ></script>
+</head>
+<body>
+<div class="place"> <span>位置：</span>
+  <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="{:U('DefTaoCan/select_exam')}&examid=">选择考试</a></li>
+    <li><a href="{:U('DefTaoCan/list_user')}&examid={$Think.get.examid}">默认套餐列表</a></li>
+  </ul>
+</div>
+<div class="formbody">
+  <div class="formtitle"><span>添加默认套餐</span></div>
+  <ul class="forminfo">
+  <form name="user" action="{:U('DefTaoCan/add_user')}" method="post">
+    <li>
+      <label>默认套餐名称</label>
+      <input name="DefCnName" type="text" class="dfinput" value="" />
+      <i>设置默认套餐名称</i></li>
+    <li>
+      <label>套餐类型</label>
+      <label>
+		<select name="TCTypeID" class="dfinput">
+			<option value="0">选择套餐类型</option>
+			<volist id="coo" name="TaoCanType">
+			<option value="{$coo['tctypeid']}">{$coo['tctypename']}_{$coo['discount']}折</option>
+			</volist>
+		</select>
+	  </label>
+	  <label style="text-align:center;">套餐总价</label>
+      <label><input name="Total_Price" type="text" class="dfinput" style="width:100px;" value="" />元</label>
+      <label style="text-align:center;">套餐优惠价</label>
+      <label><input name="Sale_Price" type="text" class="dfinput" style="width:100px;" value="" />元</label>
+    </li>
+	<li></li>
+    <li>
+      <label>套餐省份</label>
+      <select name="Province" class="dfinput">
+      <option value="">选择省份</option>
+		<volist id="pro" name="ProList">
+		<option value="{$pro['cityid']}">{$pro['cityname']}</option>
+		</volist>
+      </select>
+	  <i style="color:red;">全国通用套餐，不得选择</i>
+    </li>
+	<li>
+		<label>套餐描述</label>
+		<textarea name="Desc" class="textinput"></textarea>
+	</li>
+	<li>
+      <label>套餐有效期</label>
+	  <label>
+		<select id="UseDate1" name="UseDate1" class="dfinput" style="width:120px">
+		<option style="color:#000000" value="-1">自定义时间</option>
+		<option style="color:#FF6600" value="3">3个月</option>
+		<option style="color:#0000FF" value="6">半年</option>
+		<option value="8">8个月</option>
+		<option style="color:#FF0000" value="12" selected="selected">1年</option>
+		<option style="color:#00FF00" value="24">2年</option>
+		<option style="color:#FF0000" value="36">3年</option>
+		</select>
+	  </label>
+	  <label id="UseDate" style="display:none;">&nbsp;
+      <input name="validity" type="text" class="laydate-icon" style="width:160px" onclick="laydate()" value="" />
+	  <i>课程到期为固定时间，请在考试日期后+3天</i>
+	  </label>
+    </li>
+	<li>
+      <label>截至时间</label>
+      <input name="EndDate" type="text" class="laydate-icon" onclick="laydate()" value="{$ExamName['enddate']}" />
+	  <i>本次招生截至时间,《默认时间》在考试设置上修改</i>
+    </li>
+	<li>
+      <label>套餐主图</label>
+      <input name="PicPath" type="text" class="dfinput" value="" />
+	  <i>尺寸大小 待定</i>
+    </li>
+    <li>
+	  <label>课时数量</label>
+      <label><input name="ClassNum" type="text" class="dfinput" style="width:100px;" value="" />节</label>
+	  <label style="text-align:center;">课程年份</label>
+      <label><input name="Year" type="text" class="dfinput" style="width:100px;" value="" />年</label>
+	  <label style="text-align:center;">排序</label>
+      <label><input name="SortID" type="text" class="dfinput" style="width:100px;" value="" /></label>
+    </li>
+	<li>&nbsp;</li>
+    <li>
+      <label><input name="StateTF" type="checkbox" checked="checked" value="1" />有效套餐</label>
+      <input type="hidden" name="examid" value="{$Think.get.examid}" />
+      <input name="" type="submit" class="btn" value="确认保存"/>
+    </li>
+    </form>
+  </ul>
+</div>
+<script type="text/javascript">
+$("#UseDate1").change(function(){
+	if($("#UseDate1").val()=='-1'){
+		$("#UseDate").css("display","");
+	}
+	else{
+		$("#UseDate").css("display","none");
+	}
+})
+</script>
+</body>
+</html>

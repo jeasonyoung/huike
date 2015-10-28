@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>欢迎来到{$title}</title>
+<link href="__APP_IMG__/log.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="__APP_JS__/jquery.js"></script>
+</head>
+
+<body>
+<div class="logo">
+    <if condition="strpos($logo,'/')">
+        <img src="{$logo}">
+    <else />
+        <img src="__APP_IMG__/{$logo}">
+    </if>
+</div>
+<div class="main">
+<form name="form1" method="post" action="{:U('Login/LoginCheck')}">
+<input name="username" type="text" placeholder="用户名" class="box">
+<input name="password" type="password" placeholder="密 码" class="box">
+<button id="submit" type="submit">立即登录</button>
+<p>{$copyright}</p>
+<p>技术支持：长沙畅亨信息技术有限公司</p>
+</form>
+</div>
+<div class="bottombg"></div>
+<div class="footerbg"></div>
+</body>
+</html>

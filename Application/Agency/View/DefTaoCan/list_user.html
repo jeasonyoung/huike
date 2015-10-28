@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>默认套餐列表</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+</head>
+
+
+<body>
+
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="{:U('DefTaoCan/select_exam')}&examid=">选择考试</a></li>
+    <li>默认套餐列表</li>
+    </ul>
+    </div>
+    
+    <div class="rightinfo">
+	<div class="tools">
+    	<ul class="toolbar">
+        <li class="click"><a href="{:U('DefTaoCan/add_user')}&examid={$Think.get.examid}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
+        </ul>
+        <ul class="toolbar1">
+        <li><span><img src="__PUBLIC__/images/t05.png" /></span>设置</li>
+        </ul>
+    </div>
+    <table class="tablelist">
+    	<thead>
+    	<tr>
+        <th><input name="" type="checkbox" value="" checked="checked"/></th>
+        <th>套餐名称</th>
+		<th>套餐类型</th>
+		<th>套餐总价</th>
+		<th>套餐优惠价</th>
+		<th>套餐状态</th>
+		<th>有效期</th>
+		<th>招生截止日期</th>
+        <th width="12%">创建时间</th>
+        <th width="12%">更新时间</th>
+        <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist id="vo" name="taocanlist">
+        <tr>
+        <td><input name="tcid" type="checkbox" value="{$vo.tcid}" /></td>
+        <td>{$vo.defcnname}</td>
+        <td>{$vo.tctypename}</td>
+		<td>{$vo.total_price}</td>
+		<td>{$vo.sale_price}</td>
+		<td>
+			<if condition="$vo.statetf == 1 ">有效
+			<else />无效
+			</if>
+		</td>
+        <td>{$vo.validity}</td>
+        <td>{$vo.enddate}</td>
+        <td>{$vo.create_time}</td>
+        <td>{$vo.last_time}</td>
+        <td>{$vo.sortid}</td>
+        <td><a href="{:U('DefTaoCan/edit_user',array('examid' => $vo['examid'],'tcid' => $vo['tcid']))}" class="tablelink">修改</a>     
+		<a href="{:U('DefTaoCan/del_user',array('examid' => $vo['examid'],'tcid' => $vo['tcid']))}" onclick="javascript:return confirm('确定删除此套餐吗?')" class="tablelink"> 删除</a></td>
+        </tr>
+        </volist>
+        </tbody>
+    </table>
+    <!--<div class="pagin">
+    </div>-->
+    </div>
+
+</body>
+
+</html>

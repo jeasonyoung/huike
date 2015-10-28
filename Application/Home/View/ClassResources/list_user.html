@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>课时资源列表</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+</head>
+<script type="text/javascript">
+<!--
+function MM_jumpMenu(targ,selObj,restore){ //v3.0
+  eval(targ+".location='{:U('ClassResources/list_user')}&scid={$Think.get.scid}&yearid="+selObj.options[selObj.selectedIndex].value+"'");
+  if (restore) selObj.selectedIndex=0;
+}
+//-->
+</script>
+<body>
+
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">考试管理</a></li>
+	<li><a href="#">科目管理</a></li>
+	<li><a href="#">班级管理</a></li>
+    <li><a href="#">课时资源列表</a></li>
+    </ul>
+    </div>
+    <div class="rightinfo">
+	<div class="tools">
+    	<ul class="toolbar">
+        <li class="click"><a href="{:U('ClassResources/add_user')}&scid={$Think.get.scid}&yearid={$Think.get.yearid}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
+		<li class="click">&nbsp;课时年份
+		<select name="Province" class="dfinput" style="width:120px;" id="Province" onchange="MM_jumpMenu('window',this,0)">
+		<volist id="pro" name="examyears">
+		<if condition="$pro['year'] == $Think.get.yearid ">
+		<option value="{$pro['year']}" selected>{$pro['year']}年</option>
+		<else />
+		<option value="{$pro['year']}">{$pro['year']}年</option>
+		</if>
+		</volist>
+      </select>&nbsp;{$Think.get.yearid}年{$sysclass['scname']}</li>
+		
+        </ul>
+        <ul class="toolbar1">
+        <li><span><img src="__PUBLIC__/images/t05.png" /></span>设置</li>
+        </ul>
+    </div>
+    <table class="tablelist">
+    	<thead>
+    	<tr>
+        <th><input name="" type="checkbox" value="" checked="checked"/>课时编号</th>
+        <th>课时名称</th>
+        <th>班级名称</th>
+		<th>课程年份</th>
+		<th>开放时间</th>
+		<th>课程时长</th>
+		<th>包含视频类型</th>
+        <th width="12%">创建时间</th>
+        <th width="12%">更新时间</th>
+        <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist id="vo" name="resources">
+        <tr>
+        <td><label style="font-size:14px; font-weight:bold"><input name="scid" type="checkbox" value="{$vo.lessonid}" /> 第<font style="font-size:14px; font-weight:bold" color=red>{$vo.sortid}</font>节</label></td>
+        <td>{$vo.cnname}</td>
+        <td>{$scname['scname']}</td>
+		<td>{$vo.year}</td>
+        <td>{$vo.startdate}</td>
+        <td>{$vo.timelen}秒</td>
+        <td>
+			<empty name="vo.mp3url"><else />MP3 | </empty>
+			<empty name="vo.videourl"><else />标清 | </empty>
+			<empty name="vo.highturl"><else />高清 | </empty>
+			<empty name="vo.superurl"><else />超清 | </empty>
+			<empty name="vo.ppturl"><else />PPT讲义</empty>
+		</td>
+        <td>{$vo.create_time}</td>
+        <td>{$vo.last_time}</td>
+        <td><a href="{:U('ClassResources/edit_user',array('lessonid' => $vo['lessonid'],'scid' => $vo['scid']))}" class="tablelink">修改</a>     
+		<a href="{:U('ClassResources/del_user',array('lessonid' => $vo['lessonid'],'scid' => $vo['scid']))}" onclick="javascript:return confirm('确定删除此班级吗?')" class="tablelink"> 删除</a></td>
+        </tr>
+        </volist>
+        </tbody>
+    </table>
+    <!--<div class="pagin">
+    </div>-->
+    </div>
+    <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script>
+
+</body>
+
+</html>

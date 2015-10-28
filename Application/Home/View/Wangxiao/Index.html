@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>我的课程</title>
+<link href="{$Think.const.APP_IMG}pub.css" rel="stylesheet" type="text/css">
+<link href="{$Think.const.APP_IMG}vip.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.const.APP_JS}jquery.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
+<body>
+<include file="wangxiao/top" />
+<div class="h40"></div>
+<div class="main">
+  <div class="cont-bg yinying fl">
+  <include file="wangxiao/left" />
+    <div class="cont-r fr">
+      <h2>我的视频</h2>
+      <div class="tabbox fl">
+        <div class="on" id="video_1" onClick="playtab('video_','video_list','on','off',1,2);">有效视频</div>
+        <div class="off" id="video_2" onClick="playtab('video_','video_list','on','off',2,2);">过期视频</div>
+      </div>
+      <div class="Showbox" id="video_list1">
+        <div class="videobox fl">
+          <ul class="listbox">
+          <volist name="myclass" id="vo" empty="$empty">
+            <li>
+              <div class="video"><a href="{:U('wangxiao/catalog',array('classid' => $vo['id']))}" title="{$vo.name}"><img src="{:C('img_host')}{$vo.imgurl}" alt="{$vo.name}" /></a></div>
+              <h3><a href="{:U('wangxiao/catalog',array('classid' => $vo['id']))}" title="{$vo.name}">{$vo.name}</a></h3>
+              <div class="btn">
+                <div class="cheng-btn"><a href="{:U('wangxiao/catalog',array('classid' => $vo['id']))}">开始学习</a></div>
+              </div>
+            </li>
+            </volist>
+          </ul>
+        </div>
+      </div>
+      <div class="Hidebox" id="video_list2">
+        <div class="videobox fl">
+          <ul class="listbox">
+          <volist name="myclass2" id="vo2" empty="$empty">
+            <li>
+              <div class="video"><a href="{:U('wangxiao/catalog',array('classid' => $vo2['id']))}" title="{$vo2.name}"><img src="{$vo2.imgurl}" alt="{$vo2.name}" /></a></div>
+              <h3><a href="{:U('wangxiao/catalog',array('classid' => $vo2['id']))}" title="{$vo2.name}">{$vo2.name}</a></h3>
+              <div class="btn">
+                <div class="hui-btn"><a href="{:U('wangxiao/catalog',array('classid' => $vo2['id']))}">已过期</a></div>
+              </div>
+            </li>
+          </volist>  
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<include file="wangxiao/foot" />
+<div class="author">技术支持：长沙畅亨信息技术有限公司</div>
+<script language="javascript" src="{$Think.const.APP_JS}common.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>添加系统套餐类型</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="place"> <span>位置：</span>
+  <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">课程管理</a></li>
+    <li><a href="#">套餐类型管理</a></li>
+    <li><a href="#">添加套餐类型</a></li>
+  </ul>
+</div>
+<div class="formbody">
+  <div class="formtitle"><span>添加系统套餐类型</span></div>
+  <ul class="forminfo">
+  <form name="user" action="{:U('TaoCanType/add_class_taocantype')}" method="post">
+    <li>
+      <label>套餐类型名称</label>
+      <input name="TCTypeName" type="text" class="dfinput" value="{$info['TCTypeName']}" />
+      <i>设置套餐类型名称</i></li>
+    <li>
+      <label>套餐折扣</label>
+      <input name="discount" type="text" class="dfinput" value="{$info['discount']}" />
+	  <i>默认为1.0，即改套餐下所有班级价格之和*折扣=套餐价格</i>
+    </li>
+    <li>
+      <label>排序号</label>
+      <input name="SortID" type="text" class="dfinput" value="{$info['sortid']}" />
+    </li>
+    <li>
+      <label>&nbsp;</label>
+      <input type="hidden" name="CTID" value="{$info['ctid']}" />
+      <input name="" type="submit" class="btn" value="确认保存"/>
+    </li>
+    </form>
+  </ul>
+</div>
+</body>
+</html>

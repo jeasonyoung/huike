@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>网络课程-视屏播放页left</title>
+<link href="{$Think.const.APP_IMG}pub.css" rel="stylesheet" type="text/css">
+<link href="{$Think.const.APP_IMG}video.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.const.APP_JS}jquery.js"></script>
+<script type="text/javascript">
+function getLight(pars){if(pars=="open"){close_light(this)}else{close_light(this)}};function thisMovie(movieName){if(navigator.appName.indexOf("Microsoft")!=-1){return window[movieName]}else{return document[movieName]}}
+</script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
+<body>
+
+<div class="vr">
+  <div class="v-top">
+    <div class="name fl">{$lesson['name']}</div>
+    <div class="btn fr"><a href="#">下一个&nbsp;&gt;</a><a href="#">&lt;&nbsp;上一个</a></div>
+  </div>
+  <script type="text/javascript" src="{$Think.const.APP_JS}swfobject.js"></script>
+  <div class="v-paly" id="CuPlayer" style="height:530px"><b><img src="{$Think.const.APP_IMG}loading.gif"  /> 网页视频播放器加载中，请稍后...</b></div>
+  <SCRIPT language=javascript src="{$Think.const.APP_JS}action.js" type=text/javascript></SCRIPT>
+  <script type="text/javascript">
+    var so = new SWFObject("{$Think.const.APP_BFQ}player.swf","ply","100%",$('#CuPlayer').height(),"9","#000000");
+    so.addParam("allowfullscreen","true");
+    so.addParam("allowscriptaccess","always");
+    so.addParam("wmode","opaque");
+    so.addParam("quality","high");
+    so.addParam("salign","lt");
+    //播放器设置文件-----------------------------
+    so.addVariable("JcScpFile","{$Think.const.APP_BFQ}CuSunV2set.php");
+    //视频文件及略缩图--------------------------
+    //so.addVariable("JcScpServer","rtmp://www.yoursite.com/vod");
+    so.addVariable("JcScpVideoPath","{$lesson['videourl']}"); 
+    so.addVariable("JcScpImg","images/startpic.jpg");
+    //-----------------------------------------
+    so.addVariable("JcScpSharetitle","极酷阳光播放器(CuSunPlayerV2.5)版使用官方演示实例"); 
+    so.write("CuPlayer");
+  </script>
+  
+  <div class="shouzhan"><a href="#">&gt;</a></div>
+  <!--展开<div class="shouzhan"><a href="#">&lt;</a></div>--> 
+</div>
+</body>
+</html>

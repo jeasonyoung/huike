@@ -10,7 +10,7 @@ define('BIND_MODULE', 'ApiService'); //绑定默认模块Home
 define('APP_DEBUG',True);
 
 // 定义应用目录
-define('APP_PATH','./App_hk/');
+define('APP_PATH','./Application/');
 
 // 引入ThinkPHP入口文件
 require './ThinkPHP/ThinkPHP.php';

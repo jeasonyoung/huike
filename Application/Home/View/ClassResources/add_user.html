@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>添加班级课时</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript"  src="__PUBLIC__/laydate/laydate.js" charset="utf-8" ></script>
+</head>
+<body>
+<div class="place"> <span>位置：</span>
+  <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">考试管理</a></li>
+    <li><a href="#">添加班级课时</a></li>
+  </ul>
+</div>
+<div class="formbody">
+  <div class="formtitle"><span>添加{$Think.get.yearid}版{$ExamName['cnname']}=>{$ExamName['scname']}课时</span></div>
+  <ul class="forminfo">
+  <form name="user" action="{:U('ClassResources/add_user')}" method="post">
+    <li>
+      <label>课时编号</label>
+      <i style="font-size:16px;">第<input name="SortID" type="text" class="dfinput" value="{$DefClassNum['sortid']}" style="width:80px; text-align:center; font-size:16px; font-weight:bold;" />节</i>
+      <i>设置课时编号</i></li>
+    <li>
+      <label>课时名称</label>
+      <input name="CnName" type="text" class="dfinput" value="" />
+      <i>设置课时名称</i></li>
+	<li>
+      <label>开放时间</label>
+      <input name="StartDate" type="text" class="laydate-icon" onclick="laydate()" value="" />
+	  <i>课件开放给学员的学习时间</i>
+    </li>
+	<li>
+      <label>MP3试听地址</label>
+      <input name="MP3Url" type="text" class="dfinput" value="" />
+    </li>
+	<li>
+      <label>标清视频地址</label>
+      <input name="VideoUrl" type="text" class="dfinput" value="" />
+	  <i style="color:red;">*</i>
+    </li>
+	<li>
+      <label>高清视频地址</label>
+      <input name="HightUrl" type="text" class="dfinput" value="" />
+    </li>
+	<li>
+      <label>超清视频地址</label>
+      <input name="SuperUrl" type="text" class="dfinput" value="" />
+    </li>
+	<li>
+      <label>PPT讲义地址</label>
+      <input name="PPTUrl" type="text" class="dfinput" value="" />
+    </li>
+	<li>
+      <label>视频时长</label>
+      <i style="font-size:16px;"><input name="TimeLen" type="text" class="dfinput" value="" style="width:120px; text-align:center; font-weight:bold;" />秒</i>
+      <i>这个时间为视频长度，只能按秒计算</i></li>
+    <li>
+      <label>&nbsp;</label>
+      <input type="hidden" name="yearid" value="{$Think.get.yearid}" />
+      <input type="hidden" name="scid" value="{$Think.get.scid}" />
+      <input type="hidden" name="examid" value="{$ExamName['examid']}" />
+      <input type="hidden" name="subid" value="{$ExamName['subid']}" />
+      <input name="" type="submit" class="btn" value="确认保存"/>
+    </li>
+    </form>
+  </ul>
+</div>
+</body>
+</html>

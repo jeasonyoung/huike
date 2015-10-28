@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>添加合作机构</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<link type="text/css" rel="stylesheet" href="__PUBLIC__/calendar/calendar.css" >
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+<script type="text/javascript" src="__PUBLIC__/calendar/calendar.js" ></script>  
+<script type="text/javascript" src="__PUBLIC__/calendar/calendar-zh.js" ></script>
+<script type="text/javascript" src="__PUBLIC__/calendar/calendar-setup.js"></script>
+<script  type="text/javascript">
+function loadoptions(obj,level,pid,default_opt){
+	var uri="{:U('citys/loadoptions')}";
+	$.ajax({
+		url:uri,
+		type:'post',
+		data:{level:level,pid:pid},
+		dataType:'JSON',
+		success:function(json){
+			$("#County").empty();
+			$('#County').append("<option value=''>-选择区(县)-</option>");
+			if(typeof(default_opt)!=="undefined"){
+				$("#"+obj).empty();
+				$("#"+obj).append("<option value=''>"+default_opt+"</option>");
+			}
+			json_obj = eval( "(" + json + ")" );
+			for(i=0;i<=json_obj.length;i++){
+				$("#"+obj).append("<option value='"+json_obj[i].cityid+"'>"+json_obj[i].shortname+"</option>")
+			}
+		}
+	})
+}
+</script>
+</head>
+<body>
+<div class="place"> <span>位置：</span>
+  <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">机构信息管理</a></li>
+    <li><a href="#">添加合作机构</a></li>
+  </ul>
+</div>
+<div class="formbody">
+  <div class="formtitle"><span>添加合作机构</span></div>
+  <ul class="forminfo">
+  <form name="user" action="{:U('agency/add_agency')}" method="post">
+    <li>
+      <label>公司名称</label>
+      <input name="Company" type="text" class="dfinput" />
+      <i>如: 合作单位真实名称；如《柳州英腾软件》</i></li>
+    <li>
+      <label>对外名称</label>
+      <input name="abbr_cn" type="text" class="dfinput" style="width:150px" />
+      <i>"如：考试宝典"</i></li>
+    <li>
+      <label>英文简称</label>
+      <input name="abbr_en" type="text" class="dfinput" style="width:150px" />
+      <i>"如：ksbao"</i></li>
+    <li>
+      <label>登陆LOGO</label>
+      <input name="login_icon" type="text" class="dfinput" /></li>
+    <li>
+      <label>登陆后LOGO</label>
+      <input name="logo_icon" type="text" class="dfinput" /></li>
+    <li>
+      <label>视频LOGO</label>
+	  <input name="video_icon" type="text" class="dfinput" />
+    </li>
+    <li>
+      <label>视频片头</label>
+      <input name="head_video" type="text" class="dfinput" />
+      <i>填入数字 按顺序排列</i></li>
+    <li>
+      <label>机构域名</label>
+      <input name="domain" type="text" class="dfinput" /><i>机构合作域名</i></li>
+    <li>
+      <label>流媒体域名</label>
+      <input name="FlvDomain" type="text" class="dfinput" /><i>播放流媒体视频所需</i></li>
+      
+    <li>
+      <label>机构首页</label>
+      <input name="Home_url" type="text" class="dfinput" /></li>
+    <li>
+      <label>登陆网址</label>
+      <input name="Login_Url" type="text" class="dfinput" /></li>
+    <li>
+      <label>机构状态</label>
+      <cite>
+      <input name="StateTF" type="radio" value="1" checked="checked" />
+      启用&nbsp;&nbsp;&nbsp;&nbsp;
+      <input name="StateTF" type="radio" value="0" />
+      停用</cite></li>
+    <li class="iexams">
+      <label>包含考试</label>
+      <cite>
+      <volist name="exams" id="vo">
+      <input name="AllExams[]" value="{$vo.examid}" type="checkbox" /><span>{$vo.cnname}</span> 
+      </volist>
+      </cite>
+    </li>
+    <li>
+      <label>所在地区</label>
+      <select name="Province" class="styled-select" style="width:150px" onchange="loadoptions('City',2,this.value,'-选择市-')">
+      <option value="">-选择省-</option>
+      <volist name="province" id="pro">
+      <option value="{$pro.cityid}">{$pro.shortname}</option>
+      </volist>
+      </select>
+      <select name="City" id="City" class="styled-select" style="width:150px" onchange="loadoptions('County',3,this.value,'-选择区(县)-')">
+      <option value="">-选择市-</option>
+      </select>
+      <select name="County" id="County" class="styled-select" style="width:150px">
+      <option value="">-选择区(县)-</option>
+      </select>
+    </li>
+    <li>
+      <label>详细地址</label>
+      <input name="Address" type="text" class="dfinput" style="width:546px" /></li>
+    <li>
+      <label>联系人</label>
+      <input name="Contact" type="text" class="dfinput" style="width:100px" /> 合作电话: <input name="HZTel" type="text" class="dfinput" style="width:150px" /> 学员联系电话: <input name="StuTel" type="text" class="dfinput" style="width:150px" /></li>
+    <li>
+    <label>机构简介</label>
+    <textarea name="Introduce" class="dfinput" style="width: 546px; height: 102px;"></textarea>
+    </li>
+    <li>
+    <label>机构余额</label>
+    <input name="Money" type="text" class="dfinput" style="width:100px" />
+    <i>"单位：元"</i>
+    </li>
+    <li>
+    <label>机构折扣</label>
+    <input name="Dicount" type="text" class="dfinput" style="width:100px" />
+    <i>"合同折扣 默认1.0"</i>
+    </li>
+    <li>
+    <label>试听数量</label>
+    <input name="ListenNum" type="text" class="dfinput" style="width:100px" />
+    <i>"默认为2"</i>
+    </li>
+    <li>
+    <label>机构秘钥</label>
+    <input name="Md5Key" type="text" class="dfinput" style="width:150px" />
+    手机端秘钥
+    <input name="APPKey" type="text" class="dfinput" style="width:150px" />
+    </li>
+    <li>
+    <label>头部html</label>
+    <textarea name="html_header" class="dfinput" style="width: 546px; height: 102px;"></textarea>
+    </li>
+    <li>
+    <label>尾部html</label>
+    <textarea name="html_footer" class="dfinput" style="width: 546px; height: 102px;"></textarea>
+    </li>
+    <li>
+    <label>创建时间</label>
+    <input name="create_time" type="text" id="create_time" class="dfinput" style="width:200px" onclick="return showCalendar('create_time', 'y-mm-dd');" />
+    <i>"合作开始时间"</i>
+    </li>
+    <li>
+    <label>市场负责人</label>
+    <select class="styled-select" name="MarketID">
+    <option value="">-请选择-</option>
+    <volist name="admin" id="market">
+    <option value="{$market.adminid}">{$market.realname}</option>
+    </volist>
+    </select>
+    </li>
+    <li>
+    <label>负责客服</label>
+    <select class="styled-select" name="KefuID">
+    <option value="">-请选择-</option>
+    <volist name="admin" id="kefu">
+    <option value="{$kefu.adminid}">{$kefu.realname}</option>
+    </volist>
+    </select>
+    </li>
+    <li>
+    <label>安卓下载地址</label>
+    <input name="apk_url" type="text" class="dfinput" /><i>"andriod端APK下载地址"</i>
+    </li>
+    <li>
+    <label>苹果下载地址</label>
+    <input name="app_url" type="text" class="dfinput" /><i>"IOS端APP获取地址"</i>
+    </li>   
+    <li>
+      <label>&nbsp;</label>
+      <input name="" type="submit" class="btn" value="确认保存"/>
+    </li>
+    
+    </form>
+  </ul>
+</div>
+</body>
+</html>

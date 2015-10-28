@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>选择考试</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+</head>
+
+
+<body>
+
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="{:U('DefTaoCan/select_exam')}&examid=">选择考试</a></li>
+    </ul>
+    </div>
+    
+    <div class="rightinfo">
+    <table class="tablelist" style="text-align:center">
+    	<thead>
+    	<tr>
+        <th align="center" colspan="10">选择考试</th>
+		</tr>
+        </thead>
+        <tbody>
+		<tr>
+		<volist id="voa" name="exams" mod="10">
+			<td><a href="{:U('DefTaoCan/list_user')}&examid={$voa.examid}">{$voa.cnname}</a></td>
+			<eq name="mod" value="9"></tr><tr></eq>
+		</volist>
+		</tr>
+		</tbody>
+	</table>
+    </div>
+    
+    <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script>
+</body>
+
+</html>

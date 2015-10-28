@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{$info['classname']}学习目录</title>
+<link href="{$Think.const.APP_IMG}pub.css" rel="stylesheet" type="text/css">
+<link href="{$Think.const.APP_IMG}vip.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.const.APP_JS}jquery.js"></script>
+</head>
+
+<body>
+<include file="wangxiao/top" />
+<div class="h40"></div>
+<div class="main">
+  <div class="cont-bg yinying fl">
+  <include file="wangxiao/left" />
+    <div class="cont-r fr">
+      <h2><a href="{:U('wangxiao/catlog')}">视频</a><i>&gt;</i><span>视频目录</span></h2>
+      <div class="mlbox fl">
+        <div class="mulu fl">
+          <div class="fl-pic fl"> <img src="{$info['classimg']}" alt="{$info['classname']}" />
+            <div class="ml-cont">
+              <h3>{$info['classname']}</h3>
+              <h4>有效期：{$info['starttime']|fdate="Y-m-d",###|} 至 {$info['endtime']|fdate="Y-m-d",###}</h4>
+              <div class="btn fl">
+                <div class="cheng-btn"><a target="_blank" href="{:U('wangxiao/play',array('vid' => $lastid))}">开始学习</a></div>
+              </div>
+            </div>
+          </div>
+          <div class="fr-cont fl">
+          	<div class="head fl"><img src="{:C('img_host')}{$info.imgurl}"><h3>讲师：{$info.name}</h3><i>{$info.title}</i></div>
+            <div class="ls-js fl">{$info.description}</div>
+          </div>
+        </div>
+        <div class="ml-l fl">
+          <volist name="chapters" id="cp">
+          <if condition="($cp.child neq 0)">
+          <h1>{$cp.name}</h1>
+          </if>
+          <ul class="list">
+          <if condition="($cp.child eq 0)">
+            <li><a name="#video1" id="video1"></a>
+              <div class="listjie">第{$cp.order}节
+              <if condition="($cp.status eq 0 AND $cp.status neq '')">
+                <div class="xueguo"></div>
+              <elseif condition="($cp.status eq 1 AND $cp.status neq '')"/> 
+                 <div class="xuewan"></div>
+              <else />
+                  <div class="meixue"></div>
+              </if>    
+              </div>
+              <div class="cont">
+                <div class="mltit">
+                  <h3>{$cp.name}</h3>
+                  <div class="keshi">视频时长{$cp.time|playtime=###,"60"}分钟</div>
+                </div>
+                <div class="btn">
+                  <div class="lan-btn"><a target="_blank" href="{:U('wangxiao/play',array('vid' => $cp['lesson_id']))}">开始学习</a></div>
+                </div>
+              </div>
+            </li>
+          </if>  
+          </ul>
+          </volist>
+        </div>
+        <div class="ml-r fr">
+          <ul class="list-top">
+            <li><i></i>已学完</li>
+            <li><em></em>未学完</li>
+          </ul>
+          <volist name="chapters" id="cp">
+          <if condition="($cp.child neq 0)">
+          <div class="tit">第{$cp.order}章</div>
+          </if>
+          <ul class="listxx">
+            <if condition="($cp.child eq 0)">
+            <li class="wxk"><a href="{:U('wangxiao/play',array('vid' => $cp['lesson_id']))}">第{$cp.order}节</a></li>
+            </if>
+          </ul>
+          </volist>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<include file="wangxiao/foot" />
+<div class="author">技术支持：长沙畅亨信息技术有限公司</div>
+<script language="javascript" src="{$Think.const.APP_JS}common.js"></script>
+</body>
+</html>

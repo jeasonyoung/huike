@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+<if condition="$_GET['aid'] neq ''">
+机构默认管理员添加
+<else />
+机构管理员添加
+</if>
+</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="place"> <span>位置：</span>
+  <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">机构信息管理</a></li>
+    <li><a href="#">
+  	<if condition="$_GET['aid'] neq ''">
+  	机构默认管理员添加
+  	<else />
+  	机构管理员添加
+  	</if>
+    </a></li>
+  </ul>
+</div>
+<div class="formbody">
+  <div class="formtitle"><span>
+  <if condition="$_GET['aid'] neq ''">
+  机构默认管理员添加
+  <else />
+  机构管理员添加
+  </if>
+  </span></div>
+  <ul class="forminfo">
+  <form name="user" action="{:U('agency/add_user')}" method="post">
+    <li>
+      <label>用户名</label>
+      <input name="UserName" type="text" class="dfinput" value="{$info['username']}" />
+      <i>设置管理员用户名</i></li>
+    <li>
+      <label>用户密码</label>
+      <input name="PassWords" type="password" class="dfinput" />
+      <i>此用户登陆管理后台所使用的密码</i></li>
+    <li>
+      <label>确认密码</label>
+      <input name="RePassWords" type="password" class="dfinput" />
+      <i>确认密码</i></li>
+    <if condition="$_GET['aid'] neq ''">
+    <li>
+      <label>机构ID</label>
+      <input name="JGID" type="text" class="dfinput" value="{$_GET['aid']}"{:empty($_GET['aid'])?'':' readonly'} />
+      <i>合作机构ID</i></li>
+    <else />
+    <li>
+    <label>选择机构</label>
+    <select name="JGID" class="styled-select">
+    <option value="">-选择机构-</option>
+    <volist name="agency" id="ag">
+    <option value="{$ag.jgid}">{$ag.company}</option>
+    </volist>
+    </select>
+    </li>  
+    </if>  
+    <li>
+      <label>是否锁定</label>
+      <cite>
+      <input name="Lock" type="radio" value="1" checked="checked" />
+      是&nbsp;&nbsp;&nbsp;&nbsp;
+      <input name="Lock" type="radio" value="0" />
+      否</cite></li>
+    <li>
+      <label>真实姓名</label>
+      <input name="RealName" type="text" class="dfinput" value="{$info['realname']}" />
+    </li>
+    <li>
+      <label>管理组</label>
+      <select name="GroupID" class="styled-select">
+      <option value="0">选择管理组</option>
+      </select>
+    </li>
+    <li>
+      <label>&nbsp;</label>
+      <input name="" type="submit" class="btn" value="确认保存"/>
+    </li>
+    </form>
+  </ul>
+</div>
+</body>
+</html>

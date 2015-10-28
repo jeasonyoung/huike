@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>管理用户修改</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+<script type="text/javascript">
+$(function(){
+  $("input[name='Lock']").each(function(){
+	 if($(this).val()==$("#Lock").val()){
+		 $(this).attr("checked",true);
+	 }
+  })
+})
+</script>
+</head>
+<body>
+<div class="place"> <span>位置：</span>
+  <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">系统管理</a></li>
+    <li><a href="#">用户设置</a></li>
+    <li><a href="#">修改管理员</a></li>
+  </ul>
+</div>
+<div class="formbody">
+  <div class="formtitle"><span>修改管理员</span></div>
+  <ul class="forminfo">
+  <form name="info" action="{:U('jigou/edit_jigou_user')}" method="post">
+    <li>
+      <label>用户名</label>
+      <input name="UserName" type="text" class="dfinput" value="{$info['username']}" readonly="readonly" />
+      <i>设置管理员用户名</i></li>
+    <li>
+      <label>用户密码</label>
+      <input name="PassWords" type="password" class="dfinput" />
+      <i>不修改密码，则不用填写</i></li>
+    <li>
+      <label>确认密码</label>
+      <input name="RePassWords" type="password" class="dfinput" />
+      <i>确认密码</i></li>
+    <li>
+      <label>是否锁定</label>
+      <cite>
+      <input name="Lock" type="radio" value="1" />
+      是&nbsp;&nbsp;&nbsp;&nbsp;
+      <input name="Lock" type="radio" value="0" />
+      否</cite></li>
+    <li>
+      <label>真实姓名</label>
+      <input name="RealName" type="text" class="dfinput" value="{$info['realname']}" />
+    </li>
+    <li>
+      <label>管理组</label>
+      <select name="GroupID" class="dfinput">
+      <option value="0">选择管理组</option>
+      </select>
+    </li>
+    <li>
+      <label>&nbsp;</label>
+      <input type="hidden" name="uid" value="{$info['uid']}" />
+      <input type="hidden" name="username" value="{$info['username']}" />
+      <input type="hidden" id="Lock" value="{$info['lock']}" />
+      <input name="" type="submit" class="btn" value="确认保存"/>
+    </li>
+    </form>
+  </ul>
+</div>
+</body>
+</html>

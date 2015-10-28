@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>考试班级列表</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+</head>
+
+
+<body>
+
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="{:U('Subjects/list_user')}&examid=">考试管理</a></li>
+	<li><a href="{:U('Subjects/list_user')}&examid={$Think.get.examid}">科目管理</a></li>
+    <li>班级列表</li>
+    </ul>
+    </div>
+    
+    <div class="rightinfo">
+	<div class="tools">
+    	<ul class="toolbar">
+        <li class="click"><a href="{:U('SysClass/add_user')}&examid={$Think.get.examid}&subid={$Think.get.subid}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
+        </ul>
+        <ul class="toolbar1">
+        <li><span><img src="__PUBLIC__/images/t05.png" /></span>设置</li>
+        </ul>
+    </div>
+    <table class="tablelist">
+    	<thead>
+    	<tr>
+        <th><input name="" type="checkbox" value="" checked="checked"/></th>
+        <th>班级名称</th>
+        <th>科目名称</th>
+		<th>班级类型</th>
+		<th>班级状态</th>
+		<th>课程价格</th>
+		<th>课时数量</th>
+        <th width="12%">创建时间</th>
+        <th width="12%">更新时间</th>
+        <th>排序</th>
+        <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist id="vo" name="sublist">
+        <tr>
+        <td><input name="scid" type="checkbox" value="{$vo.scid}" /></td>
+        <td><a href="{:U('ClassResources/list_user',array('yearid' => $vo['year'],'scid' => $vo['scid']))}" class="tablelink">{$vo.scname}</a></td>
+        <td>{$vo.subname}</td>
+		<td>{$vo.classtypename}</td>
+		<td>
+			<if condition="$vo.statetf == 1 ">有效
+			<else />无效
+			</if>
+		</td>
+        <td>{$vo.price}元</td>
+        <td>{$vo.classnum}节</td>
+        <td>{$vo.create_time}</td>
+        <td>{$vo.last_time}</td>
+        <td>{$vo.sortid}</td>
+        <td><a href="{:U('SysClass/edit_user',array('examid' => $vo['examid'],'subid' => $vo['subid'],'scid' => $vo['scid']))}" class="tablelink">修改</a>     
+		<a href="{:U('SysClass/del_user',array('examid' => $vo['examid'],'scid' => $vo['scid']))}" onclick="javascript:return confirm('确定删除此班级吗?')" class="tablelink"> 删除</a></td>
+        </tr>
+        </volist>
+        </tbody>
+    </table>
+    <!--<div class="pagin">
+    </div>-->
+    </div>
+    
+    <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script>
+
+</body>
+
+</html>

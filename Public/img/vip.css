@@ -1,0 +1,131 @@
+@charset "utf-8";
+/* CSS Document */
+.cont-bg{ width:100%; background:#f0f0f0; _background:#e8e8e8; *background:#e8e8e8; background:#e8e8e8\0; border-radius:8px}
+/*left start*/
+.navbox{ width:165px; border-bottom:#e8e8e8 solid 1px;}
+.navbox .head img{ width:100px; height:100px; border:#f4f4f4 solid 2px; margin:10px 30px; border-radius:50%}
+.navbox .head i{ width:100%; color:#787878; text-align:center; float:left; font-size:17px; padding-bottom:20px}
+.navbox .list li{ width:165px; height:40px; float:left; border-top:#e8e8e8 solid 1px; _border-top:#dfdfdf solid 1px; *border-top:#dfdfdf solid 1px; border-top:#dfdfdf solid 1px\0; font-size:14px; line-height:40px; color:#f1f1f1; position:relative; z-index:1}
+.navbox .list li a:link,.navbox .list li a:visited,.navbox .list li a:active{ width:153px; padding-left:12px; height:40px; float:left; color:#585858}
+.navbox .list li a:hover,.navbox .list li.chack a{ width:153px; padding-left:12px; height:40px; float:left; font-weight:bold; color:#0a8cbe; background-position:0 0}
+.shp-ico,.dd-ico,.wd-ico,.xx-ico,.shzh-ico,.bj-ico{ width:40px; height:40px; float:left; position:relative; top:0; z-index:99999}
+.shp-ico{ background-position:0px -100px}
+.dd-ico{ background-position:0px -140px}
+.wd-ico{ background-position:0px -180px}
+.xx-ico{ background-position:0px -220px}
+.shzh-ico{ background-position:0px -260px}
+.bj-ico{ background-position:0px -300px}
+.navbox .list li .tishi{ border-radius:50%; z-index:9999; padding:0 6px; float:left; text-align:center; position:absolute; z-index:99999; top:10px; left:90px; background:#f40; line-height:18px; color:#fff; font-size:13px}
+/*right start*/
+.cont-r{ width:935px; _width:925px; background:#fff; border-top-right-radius:6px; border-bottom-right-radius:6px; padding:20px 0; height:auto !important; min-height:450px; height:450px;-moz-box-shadow:-1px 0px 4px #ccc; -webkit-box-shadow:-1px 0px 4px #ccc; box-shadow:-1px 0px 4px #ccc;}
+.cont-r h2{ width:905px; float:left; padding-left:30px; height:40px; overflow:hidden; font-size:18px; border-bottom:#dfdfdf solid 1px; line-height:40px}
+.cont-r h2 span{ color:#999}
+.cont-r h2 i{ font-family:"宋体"; padding:0 8px}
+.cont-r .r-cont{ width:875px; _width:865px; padding:0 30px}
+.tabbox{height:40px; width:905px; padding-left:30px; background:#f5f4f9}
+.tabbox .on,.tabbox .off{ width:auto; height:40px; cursor:pointer; float:left; font-size:15px; line-height:40px; padding:0 20px}
+.tabbox .on{ font-weight:bold; color:#0a8cbe; background:#fff}
+.tabbox .off{ color:#666}
+/*no message*/
+.nonebox{ width:100%; float:left; text-align:center; padding-top:30px}
+.nonebox span{ width:100%; float:left; color:#bbb; font-size:16px}
+/*个人资料*/
+.reg-box{ width:740px; height:auto; overflow:hidden; float:left; padding:50px 50px 30px}
+.reg-box .filelist li{ width:100%; height:40px; padding-bottom:16px}
+.reg-box .filelist li em{ width:200px; line-height:40px; height:40px; color:#777; float:left;text-align:right}
+.reg-box .filelist li .text{ width:240px; padding-left:10px; float:left; font-size:16px; line-height:40px; height:38px; border:1px #dfdfdf solid; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px}
+.reg-box .filelist li input{ font-family:"微软雅黑"}
+.reg-box .filelist li .sn{ font-size:30px; font-weight:bold}
+.reg-box .filelist li i{ width:auto; font-size:12px; float:left; line-height:40px; padding-left:10px; color:#f00}
+.reg-box .filelist li span{ width:auto; float:left; font-size:20px; line-height:40px; padding-left:10px; color:#000}
+.reg-box .reg-btn{ padding-left:200px; width:250px; float:left; overflow:hidden; font-size:20px; line-height:40px; text-align:center}
+/*系统消息*/
+.message{ width:100%; text-indent:12px; font-size:13px; margin-top:30px; line-height:30px; background:#efefef; float:left}
+.message span{ float:right; padding-right:20px}
+.message-table{ width:100%; text-align:center; line-height:35px; float:left; background:#dfdfdf}
+.message-table tr{ background:#fff}
+.message-table tr:hover{ background:#fefef0}
+.message-table .align-l{ height:30px; overflow:hidden; float:left;text-align:left; padding-left:15px}
+.message-table .time{ color:#999; font-size:13px}
+.news-cont{ padding-top:20px; width:100%}
+.news-cont h3{ width:100%; text-align:center; padding-bottom:20px; line-height:38px; font-size:20px; font-weight:bold}
+.news-cont .cont{ width:100%; text-indent:24px; line-height:25px; color:#525252}
+/*问答*/
+.question,.biji{ width:100%}
+.tiwen{ width:100%; border-bottom:#0a8cbe solid 2px}
+.xzbox{ width:100%; padding:20px 0}
+.xzbox select{ height:30px; line-height:30px; background:#fafafa; border:#dfdfdf solid 1px; border-radius:3px; color:#525252; margin-right:15px; float:left}
+.xzbox input{ height:30px; _height:24px; _line-height:20px; font-size:13px; padding:0 10px}
+.xzbox h3{ float:left; line-height:24px; padding:0; margin:0}
+.xzbox i{ float:right; color:#999; width:100%; text-align:right; font-size:13px; padding-top:10px}
+.contbox{ width:100%; padding-bottom:30px}
+.contbox textarea{ resize:none; width:98%; line-height:24px; border:#dfdfdf solid 1px; border-radius:5px; padding:1%; height:120px}
+.btnbox{ margin:0 auto; width:300px; text-align:center}
+.btndan{margin:0 auto; width:150px; text-align:center}
+.btnbox .btn,.btndan .btn{ width:130px; padding:0 10px; line-height:40px; font-size:18px}
+.all li{ width:100%; border-bottom:#e8e8e8 dashed 1px; padding:15px 0}
+.all li:hover{ background:#fafafa}
+.all li .pic img{width:60px; height:60px; border:#dfdfdf solid 1px; float:left; margin:0 5px; border-radius:50%}
+.biji .all li .cont{ width:847px}
+.question .all li .cont{ width:785px; _width:778px}
+.all li .cont{ font-size:15px; padding-left:15px}
+.all li .cont b{ width:100%; line-height:24px; font-weight:300; float:left}
+.all li .cont b a{ color:#0aa0f7}
+.all li .cont b a:hover{ text-decoration:underline}
+.all li .cont em{ width:100%; float:left; line-height:24px; padding-bottom:10px; color:#686868}
+.all li .cont em textarea{ width:98%; padding:10px 1%; line-height:20px; border:#dfdfdf solid 1px; border-radius:5px; float:left; height:40px; resize:none}
+.all li .cont i{ float:left; font-size:13px; color:#999}
+.all li .cont span{ width:12%; float:right; font-size:13px; color:#999}
+.all li .cont span a{ color:#999; padding-left:20px}
+.all li .cont span a:hover{ color:#c00}
+/*视频*/
+.videobox{ width:98%; padding:0 1%}
+.listbox li{ width:280px; height:265px; border:#efefef solid 1px; text-align:center; overflow:hidden; float:left; padding:4px; margin:20px 7px 0;_margin:20px 5px 0}
+.listbox li:hover{ -moz-box-shadow:-1px 0px 3px #aaa, 1px 0px 3px #aaa;-webkit-box-shadow:-1px 0px 3px #aaa, 1px 0px 3px #aaa;box-shadow:-1px 0px 3px #aaa, 1px 0px 3px #aaa}
+.listbox li a.video img{ width:280px; height:180px; float:left}
+.listbox li h3{ width:100%; height:40px; padding-top:10px; overflow:hidden; line-height:18px; text-align:center; font-size:15px}
+.listbox li .btn{ width:140px; margin:0 auto; padding-top:8px; text-align:center; font-size:18px; line-height:40px}
+/*课程目录*/
+.mlbox{ width:935px}
+/*目录视频介绍*/
+.mlbox .mulu{ width:895px; border-bottom:#dfdfdf dotted 1px; padding:20px}
+.mulu .fl-pic{ width:591px}
+.mulu .fl-pic img{ padding:3px; float:left; border:#eee solid 1px; border-radius:3px; width:280px; height:180px}
+.mulu .fl-pic .ml-cont{ width:275px; float:left; padding-left:20px}
+.fl-pic .ml-cont h3{ width:100%; float:left; padding-bottom:10px}
+.fl-pic .ml-cont h4{ width:100%; float:left; padding-bottom:10px; color:#c00}
+.fl-pic .ml-cont .btn{ width:120px; text-align:center; padding-top:10px; line-height:40px; font-size:18px}
+.mulu .fr-cont{ width:264px; padding-left:40px}
+.fr-cont .head{ width:100%; line-height:30px}
+.fr-cont .head img{width:60px; height:60px; border:#dfdfdf solid 1px; float:left; margin-right:10px; border-radius:50%}
+.fr-cont .head h3{ font-weight:600; width:192px; color:#777; float:left}
+.fr-cont .head i{ width:192px; color:#666; float:left; font-size:15px}
+.fr-cont .ls-js{ width:95%; padding-left:5%; line-height:22px; padding-top:10px; height:110px; overflow:hidden; font-size:13px; color:#777}
+/*目录左边*/
+.mlbox .ml-l{ width:591px; padding:0 20px 20px; _padding:0 15px 20px; background:#fff; color:#555}
+.mlbox .ml-l h1{ width:100%; border-bottom:#ccc solid 1px; font:700 16px/60px "宋体"; float:left}
+.mlbox .ml-l .list li{ width:100%; height:70px; border-bottom:#c9f0ff dotted 1px}
+.mlbox .ml-l .listjie{ width:72px; font-size:14px; font-family:Arial; position:relative; border-right:#0db3f1 solid 1px; float:left; line-height:70px}
+.meixue,.xueguo,.xuewan{ width:24px; height:24px; position:absolute; top:23px; left:61px; z-index:1}
+.xuewan{ background-position:-375px -260px}
+.meixue{ background-position:-375px -290px}
+.xueguo{ background-position:-375px -320px}
+.mlbox .ml-l .cont{ float:right; width:500px; height:70px}
+.mlbox .ml-l .cont:hover{ background:#edfaff}
+.mlbox .ml-l .cont .mltit{ width:380px; height:60px; padding:5px 10px 5px 0; float:left}
+.mlbox .ml-l .cont .mltit h3{ width:400px; font:15px/35px "宋体"; float:left;display:block; overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mlbox .ml-l .cont .download{ width:180px; text-align:center; float:left; line-height:70px; color:#999}
+.mlbox .ml-l .cont .download a:last-child,.mlbox .ml-l .cont .download a:hover:last-child{ border-right:none}
+.mlbox .ml-l .cont .download a{ padding:0 6px; color:#5db1cf; border-right:#e8e8e8 solid 1px}
+.mlbox .ml-l .cont .download a:hover{ padding:0 6px; color:#f00; border-right:#e8e8e8 solid 1px}
+.mlbox .ml-l .cont .keshi{ height:24px;padding-left:18px; font:13px/24px "宋体"; float:left; color:#999; background-position:-380px -97px}
+.mlbox .ml-l .cont .btn{ width:85px; float:left; padding-right:5px; font-size:14px; line-height:28px; padding-top:20px; text-align:center}
+/*目录右边*/
+.mlbox .ml-r{ width:264px; padding:20px}
+.mlbox .ml-r .list-top li{ width:35%; padding-left:15%; overflow:hidden; font-size:12px; padding-top:10px; color:#999}
+.mlbox .ml-r .list-top li i{ width:12px; height:12px; overflow:hidden; float:left; margin:1px 5px 0 0; background:#0db3f1}
+.mlbox .ml-r .list-top li em{ width:12px; height:12px; overflow:hidden; float:left; margin:1px 5px 0 0; background:#dfdfdf}
+.mlbox .ml-r .tit{ width:100%; float:left; border-top:#d4d4d4 solid 1px; font:700 16px/30px "微软雅黑"; margin-top:15px; _margin-top:-9px; padding-top:5px}
+.mlbox .ml-r .listxx li{ width:78px; height:28px; text-align:center; font-size:14px; line-height:28px; margin:5px}
+.mlbox .ml-r .listxx li.yxk a{ background:#0db3f1; color:#fff; width:100%; height:100%; float:left}
+.mlbox .ml-r .listxx li.wxk a{ background:#dfdfdf; color:#777; width:100%; height:100%; float:left}

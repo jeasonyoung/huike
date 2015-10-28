@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>会计从业资格证 问答-详细</title>
+<link href="{$Think.const.APP_IMG}pub.css" rel="stylesheet" type="text/css">
+<link href="{$Think.const.APP_IMG}vip.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.const.APP_JS}jquery.js"></script>
+<script type="text/javascript">
+function jxtw(){
+	var qid=$('#qid').val();
+	$('#jixu').addClass('Hidebox');
+	$('#tiwen').removeClass('Hidebox');
+}
+function cancel(){
+	$('#tiwen').addClass('Hidebox');
+	$('#jixu').removeClass('Hidebox');
+}
+</script>
+</head>
+
+<body>
+<include file="wangxiao/top" />
+<div class="h40"></div>
+<div class="main">
+  <div class="cont-bg yinying fl">
+    <include file="wangxiao/left" />
+    <div class="cont-r fr">
+      <h2><a href="{:U('wangxiao/ask')}">问答</a><i>&gt;</i><span>{$answer['question']['title']}</span></h2>
+      <div class="r-cont fl">
+        <div class="question fl">
+          <div class="tiwen fl">
+            <div class="xzbox fl">
+              <h3>{$answer['question']['context']}</h3>
+              <i>{$answer['question']['createtime']}</i>
+            </div>
+          </div>
+          <ul class="all">
+          <volist name="answer['data']" id="vo">
+            <li>
+              <div class="pic"><a href="#" target="_blank"><img src="{$vo.imgurl}"></a></div>
+              <div class="cont fl"><b><a href="#" target="_blank">{$vo.name}</a></b><em class="cc">{$vo.content}</em><i class="fr">{$vo.createtime}</i></div>
+            </li>
+          </volist>  
+            <li id="tiwen" class="Hidebox">
+            <form name="tw" id="tw" method="post" action="{:U('wangxiao/answer')}">
+              <div class="contbox fl">
+                <textarea name="context" cols="" rows=""></textarea>
+                <input name="qid" type="hidden" id="qid" value="{$_GET['qid']}">  
+              </div>
+              <div class="btnbox">
+                <div class="btn fl">
+                  <div class="cheng-btn"><a href="javascript:void(0)" onClick="$('#tw').submit();">继续提问</a></div>
+                </div>
+                <div class="btn fl">
+                  <div class="hui-btn"><a href="javascript:void(0)" onClick="cancel()">取消提问</a></div>
+                </div>
+              </div>
+              </form>
+            </li>
+            <li>
+              <div class="h20"></div>
+              <div class="btndan" id="jixu">
+                <div class="btn fl">
+                  <div class="cheng-btn"><a href="javascript:void(0)" onClick="jxtw()">继续提问</a></div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<include file="wangxiao/foot" />
+<div class="author">技术支持：长沙畅亨信息技术有限公司</div>
+<script language="javascript" src="{$Think.const.APP_JS}common.js"></script>
+<input type="hidden" id="n" value="1">
+</body>
+</html>
