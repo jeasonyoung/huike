@@ -1,0 +1,96 @@
+<include file="Public/view_header" title="机构套餐分类添加" />
+<body>
+    <!-- 导航栏 -->
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">课程管理</a></li>
+            <li><a href="#">套餐设置</a></li>
+            <li><a href="#">自定义套餐</a></li>
+        </ul>
+    </div>
+    <!-- 选择班级 -->
+    <div class="rightinfo">
+        <!-- 数据列表 -->
+        <table class="tablelist">
+            <thead>
+                <tr>
+                    <th align="center" colspan="10">
+                        <a href="{:U('JigouTaocan/select_subject',array('typeId'=>$type_id,'groupId'=>$group_id))}">选择班级</a>
+                    </th>
+                </tr>
+            </thead>
+            <thead>
+                <tr>
+                    <th><input id="select_all" type="checkbox"/></th>
+                    <th>班级名称</th>
+                    <th>班级类型</th>
+                    <th>所属考试</th>
+                    <th>所属科目</th>
+                    <th>使用年份</th>
+                    <th>原始价格</th>
+                    <th>套餐总格</th>
+                    <th>销售价格</th>
+                    <th>优惠价格</th>
+                </tr>
+            </thead>
+            <tbody>
+            <volist name="data_list" id="vo">
+                <tr>
+                    <td><input name="id" type="checkbox" value="{$vo.id}" /></td>
+                    <td>{$vo.name}</td>
+                    <td>{$vo.type_name}</td>
+                    <td>{$vo.exam_name}</td>
+                    <td>{$vo.subject_name}</td>
+                    <td>{$vo.use_year}</td>
+                    <td>{$vo.old_price}</td>
+                    <td>{$vo.cost_price}</td>
+                    <td>{$vo.sale_price}</td>
+                    <td>{$vo.price}</td>
+                </tr>
+            </volist>
+            </tbody>
+        </table>
+
+         
+        <div style="margin-top:10px;">
+            <center>
+                <input type="submit" class="btn" value="确定"/>
+            </center>
+        </div> 
+    </div>
+
+    <script type="text/javascript">
+    <!--
+    $(function(){
+        $('.tablelist tbody tr:odd').addClass('odd');
+        //全选
+        $("#select_all").click(function(){
+            var chk = $(this).attr('checked');
+            $("input[name='id']").each(function(){
+                $(this).attr('checked',chk);
+            });
+        });
+        //选中确认
+        $("input[type='submit']").click(function(){
+            var opts = [], typeId = "{$type_id}",groupId = "{$group_id}";
+            $("input[name='id']:checked").each(function(){
+                opts.push($(this).attr('value'));
+            });
+            //提交数据
+            $.ajax({
+                url:"{:U('JigouTaocan/select_class')}",
+                type:'POST',
+                data:{'typeId':typeId,'groupId': groupId,'classIds[]':opts},
+                dataType:'json',
+                success:function(data){
+                    location.href = data['url'];
+                }
+            });
+        });
+    });
+    //-->
+    </script>
+</body>
+<include file="Public/view_footer"/>

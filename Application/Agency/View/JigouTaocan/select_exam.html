@@ -1,0 +1,44 @@
+<include file="Public/view_header" title="机构套餐分类添加" />
+<body>
+    <!-- 导航栏 -->
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">课程管理</a></li>
+            <li><a href="#">套餐设置</a></li>
+            <li><a href="#">自定义套餐</a></li>
+        </ul>
+    </div>
+    <!-- 选择考试 -->
+    <div class="rightinfo">
+        <table class="tablelist" style="text-align:center">
+            <thead>
+                <tr>
+                    <th align="center" colspan="10">选择考试</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <volist name="exams" id="vo" mod="5">
+                        <td>
+                            <a href="{:U('JigouTaocan/select_type',array('examId'=>$vo['id']))}">{$vo.name}</a>
+                        </td>
+                        <eq name="mod" value="4">
+                            </tr><tr>
+                        </eq>
+                    </volist>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+    <!--
+    $(function(){
+        $('.tablelist tbody tr:odd').addClass('odd');
+    });
+    //-->
+    </script>
+</body>
+<include file="Public/view_footer"/>

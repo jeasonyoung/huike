@@ -1,0 +1,174 @@
+<include file="Public/view_header" title="机构套餐分类添加" />
+<body>
+    <!-- 导航栏 -->
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">课程管理</a></li>
+            <li><a href="#">套餐设置</a></li>
+            <li><a href="#">自定义套餐</a></li>
+        </ul>
+    </div>
+    <!-- 表单 -->
+    <div class="formbody">
+        <div class="formtitle">
+            <span>修改自定义套餐</span>
+        </div>
+        <ul class="forminfo">
+            <form action="{:U('JigouTaocan/edit')}" method="post">
+                <li>
+                    <label>套餐名称</label>
+                    <input name="TaoCanName" value="{$data['taocanname']}" type="text" class="dfinput"/>
+                    <i>机构自定义套餐名称（中文名称）</i>
+                </li>
+                <li>
+                    <label>套餐分类</label>
+                    <select name="TCCID" class="styled-select">
+                        <option value="" val="">-选择机构套餐分类-</option>
+                        <volist name="taocanClasses" id="vo">
+                            <if condition="$vo.id eq $data['tccid']">
+                                <option value="{$vo['id']}" val="所属考试:{$vo['exam_name']}  套餐折扣:{$vo['discount']} 使用年份:{$vo['use_year']}" exam_id="{$vo['exam_id']}" use_year="{$vo['use_year']}" url_class="{:U('JigouTaocan/select_subject',array('typeId'=>$vo['id'],'groupId'=>$data['taocanid']))}" url_taocan="{:U('JigouTaocan/add_taocan',array('typeId'=>$vo['id'],'groupId' => $data['taocanid']))}" selected="selected">{$vo['name']}</option>
+                            <else/>
+                                <option value="{$vo['id']}" val="所属考试:{$vo['exam_name']}  套餐折扣:{$vo['discount']} 使用年份:{$vo['use_year']}" exam_id="{$vo['exam_id']}" use_year="{$vo['use_year']}" url_class="{:U('JigouTaocan/select_subject',array('typeId'=>$vo['id'],'groupId' => $data['taocanid']))}" url_taocan="{:U('JigouTaocan/add_taocan',array('typeId'=>$vo['id'],'groupId' => $data['taocanid']))}">{$vo['name']}</option>
+                            </if>
+                        </volist>
+                    </select>
+                    <i>所属机构套餐分类</i>
+                </li>
+                <li>
+                    <i id="taocan_class_info"></i>
+                </li>
+                <li>
+                    <label>套餐描述</label>
+                    <textarea name="Desc" value="{$data['desc']}" class="dfinput" style="width:546px;height:102px;"></textarea>
+                    <i></i>
+                </li>
+                <li>
+                    <label>宣传图片</label>
+                    <input name="PicPath" value="{$data['picpath']}" type="text" class="dfinput" />
+                    <i>宣传图片URL地址</i>
+                </li>
+                <li>
+                    <label>使用年份</label>
+                    <input name="UseYear" value="{$data['useyear']}" type="text" class="dfinput" />
+                    <i></i>
+                </li>
+                <li>
+                    <!-- 列表 -->
+                    <div class="rightinfo">
+                        <div class="tools">
+                            <ul class="toolbar">
+                                <li name="add_jigou_class" class="click">
+                                    <a href="#add_jigou_class"><span><img src="__PUBLIC__/images/t01.png" /></span>添加自定义班级</a>
+                                </li>   
+                                <li name="add_sys_taocan" class="click">
+                                    <a href="#add_sys_taocan"><span><img src="__PUBLIC__/images/t01.png" /></span>添加系统套餐</a>
+                                </li> 
+                            </ul>
+                        </div>
+                        <table class="tablelist">
+                            <thead>
+                                <tr>
+                                    <th>班级名称</th>
+                                    <th>班级类型</th>
+                                    <th>所属科目</th>
+                                    <th>使用年份</th>
+                                    <th>原始价格</th>
+                                    <th>成本价格</th>
+                                    <th>销售价格</th>
+                                    <th>优惠价格</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <volist name="data_list" id="vo">
+                                <tr>
+                                    <td>{$vo['name']}</td>
+                                    <td>{$vo['type_name']}</td>
+                                    <td>{$vo['subject_name']}</td>
+                                    <td>{$vo['use_year']}</td>
+                                    <td>{$vo['old_price']}</td>
+                                    <td>{$vo['cost_price']}</td>
+                                    <td>{$vo['sale_price']}</td>
+                                    <td>{$vo['price']}</td>
+                                    <td>
+                                        <a href="{:U('JigouTaocan/del_edit',array('classId' => $vo['id'],'id' => $data['taocanid']))}" onclick="javascript:return confirm('确定删除此班级吗?')" class="tablelink"> 删除</a>
+                                    </td>
+                                </tr>
+                                </volist>
+                            </tbody>
+                        </table>
+                    </div>
+                </li>
+                <li>
+                    <label>试听课程</label>
+                    <input name="ListenID" value="{$data['listenid']}" type="text" class="dfinput" />
+                    <i></i>
+                </li>
+                <li>
+                    <label>销售价格</label>
+                    <input name="Sale_Price" value="{$data['sale_price']}" type="text" class="dfinput" />
+                    <i></i>
+                </li>
+                <li>
+                    <label>优惠价格</label>
+                    <input name="Real_Price" value="{$data['real_price']}" type="text" class="dfinput" />
+                    <i></i>
+                </li>
+                <li>
+                    <label>排序</label>
+                    <input name="SortID" value="{$data['sortid']}" type="text" class="dfinput" />
+                    <i>用于显示排序</i>
+                </li>
+                <li>
+                  <label>&nbsp;</label>
+                  <input type="hidden" name="TaoCanID" value="{$data['taocanid']}"/>
+                  <input type="hidden" name="ExamID" value="{$data['examid']}"/>
+                  <input type="submit" class="btn" value="确认保存"/>
+                </li>
+            </form>
+        </ul>
+    </div>
+    <script type="text/javascript">
+    <!--
+    $(function(){
+        //
+        $('.tablelist tbody tr:odd').addClass('odd');
+        //display option val data.
+        function show_option_val(opt){
+            if(opt){
+                $("#taocan_class_info").text(opt.attr('val'));
+                $("input[name='ExamID']").val(opt.attr('exam_id'));
+
+                var uy = opt.attr('use_year');
+                $("input[name='UseYear']").val(uy ? uy : "{$use_year}");
+            }
+        };
+        //select change.
+        $("select[name='TCCID']").change(function(){
+            show_option_val($(this).find("option:selected"));
+        });
+        //loading
+        show_option_val($("select[name='TCCID']").find("option:selected"));
+        //click add_jigou_class
+        $("li[name='add_jigou_class']").click(function(){
+            load_option_page($("select[name='TCCID']").find("option:selected").attr('url_class'));
+        });
+        //click add_sys_taocan
+        $("li[name='add_sys_taocan']").click(function(){
+            load_option_page($("select[name='TCCID']").find("option:selected").attr('url_taocan'));
+        });
+        //location.href
+        function load_option_page(url){
+            if(!url || url == ""){
+                alert('请先选择套餐分类!');
+                return;
+            }
+            location.href = url;
+        }
+    });
+    //-->
+    </script>
+</body>
+<include file="Public/view_footer"/>

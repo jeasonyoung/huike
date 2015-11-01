@@ -1,0 +1,102 @@
+<include file="Public/view_header" title="机构套餐分类修改" />
+<body>
+    <!-- 导航栏 -->
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">课程管理</a></li>
+            <li><a href="#">套餐设置</a></li>
+            <li><a href="#">套餐分类</a></li>
+        </ul>
+    </div>
+    <!-- 表单 -->
+    <div class="formbody">
+        <div class="formtitle">
+            <span>修改机构套餐分类</span>
+        </div>
+        <ul class="forminfo">
+            <form name="user" action="{:U('JigouTaocanClass/edit')}" method="post">
+                <li>
+                    <label>分类名称</label>
+                    <input name="TCCName" value="{$data['tccname']}" type="text" class="dfinput" />
+                    <i>套餐分类名称（中文名称）</i>
+                </li>
+                <li>
+                    <label>套餐类型</label>
+                    <select name="TCTypeID" class="styled-select">
+                        <option value="">-选择系统套餐类型-</option>
+                        <volist name="sysTaocanTypes" id="vo">
+                            <if condition="$vo.id eq $data['tctypeid']">
+                                <option value="{$vo.id}" selected="selected">{$vo.name}(折扣:{$vo.discount})</option>
+                            <else/>
+                                <option value="{$vo.id}" >{$vo.name}(折扣:{$vo.discount})</option>
+                            </if>
+                        </volist>
+                    </select>
+                    <i>所属系统套餐类型</i>
+                </li>
+                <li>
+                    <label>所属考试</label>
+                    <select name="ExamID" class="styled-select">
+                        <option value="">-选择考试-</option>
+                        <volist name="exams" id="vo">
+                            <if condition="$vo.id eq $data['examid']">
+                                <option value="{$vo.id}" selected="selected">{$vo.name}</option>
+                            <else/>
+                                <option value="{$vo.id}" >{$vo.name}</option>
+                            </if>
+                        </volist>
+                    </select>
+                    <i>机构设置时选择的考试</i>
+                </li>
+                <li>
+                    <label>分类描述</label>
+                    <textarea name="Desc" class="dfinput" style="width:546px;height:102px;">{$data['desc']}</textarea>
+                    <i></i>
+                </li>
+                <li>
+                    <label>宣传图片</label>
+                    <input name="PicPath" value="{$data['picpath']}" type="text" class="dfinput" />
+                    <i>宣传图片URL地址</i>
+                </li>
+                <li>
+                    <label>试听课程</label>
+                    <input name="ListenID" value="{$data['listenid']}" type="text" class="dfinput" />
+                    <i></i>
+                </li>
+                <li>
+                    <label>使用年份</label>
+                    <input name="UseYear" value="{$data['useyear']}" type="text" class="dfinput" />
+                    <i></i>
+                </li>
+                <li>
+                    <label>销售价格</label>
+                    <input name="sale_price" value="{$data['sale_price']}" type="text" class="dfinput" />
+                    <i></i>
+                </li>
+                <li>
+                    <label>优惠价格</label>
+                    <input name="price" value="{$data['price']}" type="text" class="dfinput" />
+                    <i></i>
+                </li>
+                <li>
+                    <label>VIP协议</label>
+                    <textarea name="VipConent" class="dfinput" style="width:546px;height:102px;">{$data['vipconent']}</textarea>
+                    <i></i>
+                </li>
+                <li>
+                    <label>排序</label>
+                    <input name="SortID" value="{$data['sortid']}" type="text" class="dfinput" />
+                    <i>用于显示排序</i>
+                </li>
+                <li>
+                  <label>&nbsp;</label>
+                  <input type="hidden" name="TCCID" value="{$data['tccid']}" />
+                  <input type="submit" class="btn" value="确认保存"/>
+                </li>
+            </form>
+        </ul>
+    </div>
+</body>
+<include file="Public/view_footer"/>

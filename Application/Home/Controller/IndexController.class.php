@@ -25,7 +25,7 @@ class IndexController extends Controller {
     public function left(){
         $mid = I('mid');
         if(isset($mid) && is_numeric($mid)){
-            $db = M('module');
+            $db = M('AdminModule');
             $data = $db->where('`pid`='.$mid.' and `show`=1')->field('title,id')->order('sortid asc')->select();
             foreach ($data as $k => &$v){
                 if(is_array($v)){

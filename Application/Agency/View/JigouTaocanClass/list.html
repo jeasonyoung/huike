@@ -1,0 +1,73 @@
+<include file="Public/view_header" title="机构套餐分类列表" />
+<body>
+    <!-- 导航栏 -->
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">课程管理</a></li>
+            <li><a href="#">套餐设置</a></li>
+            <li><a href="#">套餐分类</a></li>
+        </ul>
+    </div>
+    <!-- 列表 -->
+    <div class="rightinfo">
+        <!-- 工具栏 -->
+        <div class="tools">
+            <ul class="toolbar">
+                <li class="click">
+                    <a href="{:U('JigouTaocanClass/select')}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a>
+                </li>   
+                <!-- <li onclick="del()">
+                    <a href="javascript:void()"><span><img src="__PUBLIC__/images/t03.png" /></span>删除</a>
+                </li> -->
+            </ul>
+        </div>
+        <!-- 数据列表 -->
+        <table class="tablelist">
+            <thead>
+                <tr>
+                   <!--  <th><input type="checkbox"/></th> -->
+                    <th>分类名称</th>
+                    <th>套餐类型</th>
+                    <th>所属考试</th>
+                    <th>使用年份</th>
+                    <th>销售价格</th>
+                    <th>优惠价格</th>
+                    <th>修改时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            <volist name="data_list" id="vo">
+                <tr>
+                    <!-- <td><input name="id" type="checkbox" value="{$vo.id}" /></td> -->
+                    <td>{$vo.name}</td>
+                    <td>{$vo.type_name}({$vo.discount})</td>
+                    <td>{$vo.exam_name}</td>
+                    <td>{$vo.use_year}</td>
+                    <td>{$vo.sale_price}</td>
+                    <td>{$vo.price}</td>
+                    <td>{$vo.last_time}</td>
+                    <td>
+                        <a href="{:U('JigouTaocanClass/edit',array('id' => $vo['id']))}" class="tablelink">修改</a>     
+                        <a href="{:U('JigouTaocanClass/del',array('id' => $vo['id']))}" onclick="javascript:return confirm('确定删除此班级吗?')" class="tablelink"> 删除</a>
+                    </td>
+                </tr>
+            </volist>
+            </tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+    <!--
+    $(function(){
+        //删除
+        del = function(){
+            alert('删除');
+        };
+    });
+    -->
+    </script>
+</body>
+<include file="Public/view_footer"/>

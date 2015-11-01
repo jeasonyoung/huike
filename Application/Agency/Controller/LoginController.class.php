@@ -31,7 +31,7 @@ class LoginController extends Controller{
         $data = array();
         $data['UserName'] = I('UserName');
         $pwd = I('PassWords');
-        $data['PassWords'] = md5(C('psw_key').I('PassWords'));
+        //$data['PassWords'] = md5(I('PassWords'));
         if(empty($data['UserName']) || empty($pwd)){
             $this->error('用户名或密码不能为空!',U('Login/login'));
         }
@@ -42,7 +42,7 @@ class LoginController extends Controller{
         }
         $result = $model->query_jigou_user($data);
         if($result){
-            if($result['lock']==1){
+            if($result['lock']==0){
                 $this->error('对不起无法登陆！用户已经被锁定，请联系管理员',U('Login/login'));
             }
             session('JGID',$result['jgid']);
