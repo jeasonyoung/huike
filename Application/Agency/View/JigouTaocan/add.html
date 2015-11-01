@@ -28,9 +28,9 @@
                         <option value="" val="">-选择机构套餐分类-</option>
                         <volist name="taocanClasses" id="vo">
                             <if condition="$vo.id eq $type_id">
-                                <option value="{$vo['id']}" val="所属考试:{$vo['exam_name']}  套餐折扣:{$vo['discount']} 使用年份:{$vo['use_year']}" exam_id="{$vo['exam_id']}" use_year="{$vo['use_year']}" url_class="{:U('JigouTaocan/select_subject',array('typeId'=>$vo['id']))}" url_taocan="{:U('JigouTaocan/add_taocan',array('typeId'=>$vo['id']))}" selected="selected">{$vo['name']}</option>
+                                <option value="{$vo['id']}" val="所属考试:{$vo['exam_name']}  套餐折扣:{$vo['discount']} 使用年份:{$vo['use_year']}" exam_id="{$vo['exam_id']}" use_year="{$vo['use_year']}" url_class="{:U('JigouTaocan/select_subject',array('typeId'=>$vo['id']))}" url_taocan="{:U('JigouTaocan/select_taocan',array('typeId'=>$vo['id']))}" selected="selected">{$vo['name']}</option>
                             <else/>
-                                <option value="{$vo['id']}" val="所属考试:{$vo['exam_name']}  套餐折扣:{$vo['discount']} 使用年份:{$vo['use_year']}" exam_id="{$vo['exam_id']}" use_year="{$vo['use_year']}" url_class="{:U('JigouTaocan/select_subject',array('typeId'=>$vo['id']))}" url_taocan="{:U('JigouTaocan/add_taocan',array('typeId'=>$vo['id']))}">{$vo['name']}</option>
+                                <option value="{$vo['id']}" val="所属考试:{$vo['exam_name']}  套餐折扣:{$vo['discount']} 使用年份:{$vo['use_year']}" exam_id="{$vo['exam_id']}" use_year="{$vo['use_year']}" url_class="{:U('JigouTaocan/select_subject',array('typeId'=>$vo['id']))}" url_taocan="{:U('JigouTaocan/select_taocan',array('typeId'=>$vo['id']))}">{$vo['name']}</option>
                             </if>
                         </volist>
                     </select>
@@ -62,9 +62,9 @@
                                 <li name="add_jigou_class" class="click">
                                     <a href="#add_jigou_class"><span><img src="__PUBLIC__/images/t01.png" /></span>添加自定义班级</a>
                                 </li>   
-                                <li name="add_sys_taocan" class="click">
+                                <!-- <li name="add_sys_taocan" class="click">
                                     <a href="#add_sys_taocan"><span><img src="__PUBLIC__/images/t01.png" /></span>添加系统套餐</a>
-                                </li> 
+                                </li>  -->
                             </ul>
                         </div>
                         <table class="tablelist">

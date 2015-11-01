@@ -41,6 +41,21 @@ class JigouTaocanModel extends Model{
     }
 
     /**
+     * 加载系统套餐数据集合。
+     * @param  string $agencyId 机构ID
+     * @param  string $examId   考试ID
+     * @return mixed            系统套餐数据
+     */
+    public function loadSysTaocans($agencyId,$examId){
+        if(APP_DEBUG) trace("加载机构[$agencyId]系统套餐数据集合...");
+        $_result = $this->table('hk_sys_group_view')
+                        ->where("`agency_id` = '%s' and `exam_id` = '%s'", array($agencyId,$examId))
+                        ->order('`order_no` desc')
+                        ->select();
+        return $_result;
+    }
+
+    /**
      * 加载套餐数据。
      * @param  string $id 套餐ID
      * @return mixed      加载数据结果

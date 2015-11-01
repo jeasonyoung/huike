@@ -232,12 +232,31 @@ class JigouTaocanController extends AdminController{
      * 添加系统套餐到自定义套餐。
      * @return void
      */
-    public function add_taocan(){
-        if(APP_DEBUG) trace('调用add...');
-
-
-        //显示
-        $this->display();
+    public function select_taocan(){
+        if(APP_DEBUG) trace('调用select_taocan...');
+        //加载当前机构ID
+        $_agencyId = I('session.JGID','');
+        //获取套餐ID
+        $_groupId = I('get.groupId','');
+        //获取套餐分类ID
+        $_typeId = I('get.typeId','');
+        //初始化模型
+        $_model = D('JigouTaocan');
+        $_type = $_model->loadTaocanClass($_typeId);
+        if(!$_type){
+            $this->error("加载套餐分类[$_typeId]失败,请联系技术人员!");
+        }else{
+            //设置套餐ID
+            $this->assign('group_id',$_groupId);
+            //设置套餐分类ID
+            $this->assign('type_id',$_typeId);
+            //设置考试名称
+            $this->assign('exam_name',$_type['exam_name']);
+            //设置科目集合
+            $this->assign('sysTaocans',$_model->loadSysTaocans($_agencyId,$_type['exam_id']));
+            //显示(选择科目)
+            $this->display();
+        }
     }
 
     /**

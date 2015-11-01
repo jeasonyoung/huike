@@ -1,5 +1,5 @@
-<include file="Public/view_header" title="选择机构套餐分类" />
-<body>
+<include file="Public/view_header" title="系统套餐分类添加" />
+<body><!-- 选择系统套餐-->
     <!-- 导航栏 -->
     <div class="place">
         <span>位置：</span>
@@ -15,14 +15,14 @@
         <table class="tablelist" style="text-align:center">
             <thead>
                 <tr>
-                    <th align="center" colspan="10">选择套餐分类</th>
+                    <th align="center" colspan="10">选择系统套餐(考试:{$exam_name})</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <volist name="taocanClasses" id="vo" mod="5">
+                    <volist name="sysTaocans" id="vo" mod="5">
                         <td>
-                            <a href="{:U('JigouTaocan/add',array('typeId'=>$vo['id']))}" title="所属考试:{$vo['exam_name']}&#10;折扣:{$vo['discount']}&#10;使用年份:{$vo['use_year']}">{$vo.name}</a>
+                            <a href="{:U('JigouTaocan/add_taocan',array('typeId'=>$type_id,'subjectId'=>$vo['id'],'groupId'=>$group_id))}">{$vo.name}</a>
                         </td>
                         <eq name="mod" value="4">
                             </tr><tr>
