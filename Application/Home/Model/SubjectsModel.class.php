@@ -12,17 +12,17 @@ class SubjectsModel extends Model{
     public function insert_user($data=array()){
         return $this->add($data);
     }
-    
+    //查询考试
+    public function query_exam(){
+        return $this->table('HK_ExamClass')->field('examid,CnName')->order('SortID')->select();
+    }
     /**
      * 查询考试科目表数据
      * @param int $examid 考试id
      */
     public function query_user($examid){
         if(isset($examid) && !empty($examid)){
-            return $this->where('examid='.$examid)->select();
-        }
-		else{
-            return $this->table('HK_ExamClass')->field('examid,CnName')->order('SortID')->select();
+            return $this->join('LEFT JOIN HK_ExamClass as EC ON HK_Subjects.ExamID = EC.ExamID')->where('HK_Subjects.examid='.$examid)->select();
         }
     }
     

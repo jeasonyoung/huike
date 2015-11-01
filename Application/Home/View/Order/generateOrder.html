@@ -1,0 +1,363 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>生成订单</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+<script type="text/javascript"  src="__PUBLIC__/laydate/laydate.js" charset="utf-8" ></script>
+<script type="text/javascript">
+function LoadExamId(id,value){
+	var obj=$('#'+id);
+	obj.find('option').each(function(){
+	  if($(this).val()==value){
+		  examid=$(this).attr('examid');
+		  $('#tempexamid').val(examid);
+		  $('#subid').empty();
+		  $('#subid').append("<option value=''>-考试科目-</option>");
+		  LoadAjaxData('ExamID','examtype',examid);
+	  }
+	})
+}
+
+function LoadSubject(examid){
+	var uri="{:U('order/loadsubject')}";
+	$.ajax({
+		url:uri,
+		type:'post',
+		data:{examid:examid},
+		dataType:'JSON',
+		success: function(json){
+			$('#subid').empty();
+			var json_obj=eval("(" + json + ")");
+			if(json_obj.length>0){
+			  for(i=0;i<=json_obj.length;i++){
+				  $("#subid").append("<option value='"+json_obj[i].subid+"'>"+json_obj[i].subname+"</option>")
+			  }
+			}else{
+				$('#subid').append("<option value=''>-考试科目-</option>");
+			}
+		},
+	})
+}
+
+function LoadAjaxData(obj_id,type,opt_id){
+	var uri="{:U('order/loadexam')}";
+	$.ajax({
+		url:uri,
+		type:'post',
+		data:{examid:opt_id},
+		dataType:'JSON',
+		success: function(json){
+			$('#examid').empty();
+			var json_obj=eval("(" + json + ")");
+			if(typeof(json_obj)=='object'){
+				$('#examid').append("<option value=''>-考试类别-</option>");
+			}
+			for(var i=0;i<=json_obj.length;i++){
+				$("#examid").append("<option value='"+json_obj[i].examid+"'>"+json_obj[i].cnname+"</option>")
+			}
+		},
+		error: function(){
+			alert('error');
+		}
+    })
+}
+
+function chkform(){
+	if($('#JGID').val()==""){
+		alert('请选择机构');
+		return false;
+	}	
+	if($('#ProType').val()==""){
+		alert('请选择产品类型');
+		return false;
+	}	
+	if($('#examid').val()==""){
+		alert('请选择考试类别');
+		return false;
+	}
+}
+
+/*加入购物车*/
+function addtocart(pid,ptype){
+	if(ptype=='单科'){
+		typeid = 2;
+	}else{
+		typeid = 1;
+	}
+	uri="{:U('order/addtocart')}";
+	$.ajax({
+		url:uri,
+		type:'post',
+		data:{pid:pid,ptype:typeid,rnd:Math.random()},
+		dataType:'text',
+		success: function(callback){
+			if(typeid==2){
+				pro_num=$('#dk').html();
+			}else{
+				pro_num=$('#tc').html();
+			}
+			
+			if(callback!='extist'){
+				alert('成功加入一个产品');
+				if(typeid==2){
+					$('#dk').html(parseInt(pro_num)+1);
+				}else{
+					$('#tc').html(parseInt(pro_num)+1);
+				}
+			}else{
+				alert('此产品已存在');
+			}
+		},
+		error: function(){
+			alert('error');
+		}
+	})
+}
+
+/*清空购物车*/
+function emptyCart(){
+	uri="{:U('order/emptycart')}";
+	$.get(uri,function(callback){
+		alert(callback);
+	 $('#dk').html('0');
+	 $('#tc').html('0');
+	})
+}
+
+/*删除一个产品*/
+function removeproduct(pid,ptype){
+	uri="{:U('order/removefromcart')}";
+	$.ajax({
+		url:uri,
+		type:'post',
+		data:{pid:pid,ptype:ptype,rnd:Math.random()},
+		dataType:'JSON',
+		success: function(json){
+			var json_obj = eval("(" + json + ")");
+			alert(json_obj.msg);
+		}
+	})
+}
+
+$(function(){
+  $('#ProType option').each(function(){
+	if($(this).val()==$('#pt').val()){
+		$(this).attr('selected',true);
+	}
+  })
+  
+  var uri="{:U('order/viewcart')}";
+  $.getJSON(uri,function(json){
+	 $('#dk').html(json.dk);
+	 $('#tc').html(json.tc);
+  })
+  
+  if($('#ctype').val()==1){
+	  $('#sel_tc').show();
+  }
+  if($('#ctype').val()==2){
+	  $('#sel_dk').show();
+  }
+})
+
+function SelCouse(val){
+	$('#ctype').val(val);
+	if(val==1){
+		$('#sel_tc').show();
+		$('#sel_dk').hide();
+	}else{
+		$('#sel_dk').show();
+		$('#sel_tc').hide();
+	}
+}
+
+function LoadTcClass(tcid){
+	uri="{:U('order/loadtcclass')}";
+	examid = $('#examid').val();
+	$.ajax({
+		url:uri,
+		type:'post',
+		data:{tcid:tcid,examid:examid,rnd:Math.random()},
+		dataType:'JSON',
+		success: function(json){
+			$('#tccid').empty();
+			var json_obj=eval("(" + json + ")");
+			if(typeof(json_obj)=='object'){
+				$('#tccid').append("<option value=''>-套餐分类-</option>");
+			}
+			for(var i=0;i<=json_obj.length;i++){
+				$("#tccid").append("<option value='"+json_obj[i].tccid+"'>"+json_obj[i].tccname+"</option>")
+			}
+		}
+	})
+}
+</script>
+<style>
+#search input,select{height:24px;border:1px solid #dedede}
+.shopcart{border:1px solid #ebb683;line-height: 35px;text-indent: 10px;clear:both}
+.shopcart span,select{display:inline-block;float:left;margin-right:5px}
+.shopcart select{margin-top:5px}
+.shopcart ul li{line-height:35px;float:left}
+.button {
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    line-height: 20px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    text-shadow: 1px 1px 1px #333;
+    width: 60px;
+	cursor:pointer;
+}
+.button.gray {
+    background: -moz-linear-gradient(center top , #f2f3f7, #e4e8ec) repeat scroll 0 0;
+    border: 1px solid #dce1e6;
+    box-shadow: 0 1px 2px #fff inset, 0 -1px 0 #a8abae inset;
+    color: #8c96a0;
+    text-shadow: 1px 1px 1px #fff;
+}
+</style>
+</head>
+
+
+<body>
+
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">订单管理</a></li>
+    <li><a href="#">生成订单</a></li>
+    </ul>
+    </div>
+    
+    <div class="rightinfo">
+    
+    <div class="tools">
+    	<ul class="toolbar">
+        <li class="click"><a href="{:U('order/makeorder')}"><span><img src="__PUBLIC__/images/t01.png" /></span>生成订单</a></li>
+        <li class="click"><a href="javascript:emptyCart()"><span><img src="__PUBLIC__/images/t03.png" /></span>清空所选</a></li>
+        </ul>    
+        <ul class="toolbar1" style="float:left">
+        <li class="click"><span><img src="/manage/Public/images/t05.png"></span> 已选单科: <font color="#FF0000" id="dk">0</font> 科  套餐: <font id="tc" color="#0000FF">0</font> 套 <a href="{:U('order/makeorder')}" style="color:green">[查看详情]</a></li>
+        </ul>
+    </div>
+    <div class="tools shopcart">
+    <span>搜索产品</span>
+    <ul>
+    <form name="search" action="{:U('order/generateorder')}" method="get" onsubmit="return chkform()">
+    <li>
+    <select name="JGID" id="JGID" style="width:150px" onchange="LoadExamId(this.id,this.value)">
+    <option value="">-选择机构-</option>
+    <volist name="agency" id="agency">
+    <eq name="agency.jgid" value="$_GET['JGID']">
+    <option examid="{$agency.allexams}" value="{$agency.jgid}" selected="selected">{$agency.abbr_cn}</option>
+    <else />
+    <option examid="{$agency.allexams}" value="{$agency.jgid}">{$agency.abbr_cn}</option>
+    </eq>
+    </volist>
+    </select>
+    </li>
+    <li>
+    <select name="ProType" id="ProType" style="width:100px" onchange="SelCouse(this.value)">
+    <option value="">-产品类型-</option>
+    <option value="1">-套餐-</option>
+    <option value="2">-单科-</option>
+    </select>
+    <input type="hidden" id="pt" value="{$_GET['ProType']}" />
+    </li>
+    <li>
+    <select name="ExamID" id="examid" style="width:150px" onchange="LoadSubject(this.value)">
+    <option value="">-考试类别-</option>
+    <volist name="examlist" id="exam">
+    <eq name="exam.examid" value="$_GET['ExamID']">
+    <option value="{$exam.examid}" selected="selected">{$exam.cnname}</option>
+    <else />
+    <option value="{$exam.examid}">{$exam.cnname}</option>
+    </eq>
+    </volist>
+    </select>
+    </li>
+    <li id="sel_dk" style="display:none">
+    <select name="SubID" id="subid" style="width:150px">
+    <option value="">-考试科目-</option>
+    <volist name="sublist" id="subject">
+    <eq name="subject.subid" value="$_GET['SubID']">
+    <option value="{$subject.subid}" selected="selected">{$subject.subname}</option>
+    <else />
+    <option value="{$subject.subid}">{$subject.subname}</option>
+    </eq>
+    </volist>
+    </select>
+    </li>
+    <li id="sel_tc" style="display:none">
+    <select name="TcTypeID" id="tctypeid" style="width:150px" onchange="LoadTcClass(this.value)">
+    <option value="">-套餐类型-</option>
+    <volist name="taocantype" id="tctype">
+    <eq name="tctype.tctypeid" value="$_GET['TcTypeID']">
+    <option value="{$tctype.tctypeid}" selected="selected">{$tctype.tctypename}</option>
+    <else />
+    <option value="{$tctype.tctypeid}">{$tctype.tctypename}</option>
+    </eq>
+    </volist>
+    </select>
+    <select name="TCCID" id="tccid" style="width:150px">
+    <option value="">-套餐分类-</option>
+    <volist name="tc_class" id="tcc">
+    <option value="{$tcc.tccid}">{$tcc.tccname}</option>
+    </volist>
+    </select>
+    </li>
+    <li><input type="submit" value="搜索" class="button gray" /></li>
+    <input type="hidden" id="tempexamid" name="TempExamID" value="{$_GET['TempExamID']}" />
+    <input type="hidden" id="ctype" name="CTYPE" value="{$_GET['CTYPE']}" />
+    </form>
+    </ul>
+    </div>
+    <table class="tablelist" style="clear:both">
+    	<thead>
+    	<tr>
+        <th><input name="" type="checkbox" value="" checked="checked"/></th>
+        <th>编号<i class="sort"><img src="__PUBLIC__/images/px.gif" /></i></th>
+        <th>产品名称</th>
+        <th>产品类型</th>
+        <th>原价</th>
+        <th>售价</th>
+        <th>使用年份</th>
+        <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist id="vo" name="prolist">
+        <tr>
+        <td><input name="" type="checkbox" value="" /></td>
+        <td>{$vo.pid}</td>
+        <td>{$vo.proname}</td>
+        <td>{$vo.type}</td>
+        <td>{$vo.price}</td>
+        <td>{$vo.sale_price}</td>
+        <td>
+        <if condition="$vo.useyear eq ''">
+        考试后一周
+        <else />
+        {$vo.useyear}
+        </if>
+        </td>
+        <td><a href="javascript:addtocart({$vo.pid},'{$vo.type}')" class="tablelink">加入订单</a>     <a href="javascript:removeproduct({$vo.pid},'{$vo.type}')" onclick="javascript:return confirm('确定删除此产品?')" class="tablelink"> 从订单去除</a></td>
+        </tr>   
+        </volist>   
+        </tbody>
+    </table>
+    <div class="pagin">
+    {$page}
+    </div>
+    </div>
+    
+    <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script>
+</body>
+</html>

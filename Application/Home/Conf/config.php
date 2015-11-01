@@ -23,4 +23,6 @@ return array(
         array('Md5Key','require','机构秘钥不能为空',1),
         array('APPKey','require','手机端秘钥不能为空',1),
     ),
+    //超级管理绕过权限验证
+    'administrator' => array('1')
 );

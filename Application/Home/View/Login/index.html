@@ -52,10 +52,10 @@ function chklogin(){
         <input name="UserName" id="UserName" type="text" class="loginuser" onclick="JavaScript:this.value=''"/>
       </li>
       <li>
-        <input name="PassWords" id="PassWords" type="text" class="loginpwd" value="密码" onclick="JavaScript:this.value=''"/>
+        <input name="PassWords" id="PassWords" type="password" class="loginpwd" onclick="JavaScript:this.value=''"/>
       </li>
       <li class="yzm"> <span>
-        <input name="verifycode" id="verifycode" type="text" value="验证码" onclick="JavaScript:this.value=''"/>
+        <input name="verifycode" id="verifycode" type="text" onclick="JavaScript:this.value=''"/>
         </span><img src="{:U('Login/verify_c',array())}" onClick="javascript:this.src=this.src+'?time='+Math.random()" /></li>
       <li>
         <input name="" type="submit" class="loginbtn" value="登录" />

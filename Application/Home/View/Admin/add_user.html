@@ -9,7 +9,7 @@
 <div class="place"> <span>位置：</span>
   <ul class="placeul">
     <li><a href="#">首页</a></li>
-    <li><a href="#">用户和权限管理</a></li>
+    <li><a href="#">系统用户管理</a></li>
     <li><a href="#">添加管理员</a></li>
   </ul>
 </div>
@@ -44,6 +44,9 @@
       <label>管理组</label>
       <select name="GroupID" class="styled-select">
       <option value="0">选择管理组</option>
+      <volist name="group" id="gr">
+      <option value="{$gr.id}">{$gr.title}</option>
+      </volist>
       </select>
     </li>
     <li>

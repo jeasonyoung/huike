@@ -28,6 +28,7 @@
     	<thead>
     	<tr>
         <th>编号<i class="sort"><img src="__PUBLIC__/images/px.gif" /></i></th>
+        <th>公司名称</th>
         <th>机构名称</th>
         <th>机构域名</th>
         <th>机构状态</th>
@@ -45,6 +46,7 @@
         <tr>
         <td>{$vo.jgid}</td>
         <td>{$vo.company}</td>
+        <td>{$vo.abbr_cn}</td>
         <td>{$vo.domain}</td>
         <td>
         <if condition="$vo.statetf eq 1">
@@ -59,7 +61,7 @@
         <td>{$vo.create_time}</td>
         <td>{$vo.marketname}</td>
         <td>{$vo.kfname}</td>
-        <td><a href="{:U('agency/edit_agency',array('jgid' => $vo['jgid']))}" class="tablelink">修改</a>     <a href="{:U('agency/del_agency',array('jgid' => $vo['jgid']))}" onclick="javascript:return confirm('确定删除此机构?')" class="tablelink"> 删除</a></td>
+        <td><a href="{:U('agency/edit_agency',array('JGID' => $vo['jgid']))}" class="tablelink">修改</a>     <a href="{:U('agency/del_agency',array('jgid' => $vo['jgid']))}" onclick="javascript:return confirm('确定删除此机构?')" class="tablelink"> 删除</a></td>
         </tr>   
         </volist>   
         </tbody>

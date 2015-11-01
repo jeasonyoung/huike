@@ -46,11 +46,11 @@ class AuthModel extends Model{
     public function query_rule($condition='',$multi=TRUE){
         $db = M('admin_rule');
         if($multi){
-            if(!empty($condition)){return $db->where($condition)->field('t2.title as modname,hk_admin_rule.*')->join('left join hk_module t2 ON t2.id=hk_admin_rule.mid')->select();}
-            return $db->field('t2.title as modname,hk_admin_rule.*')->join('left join hk_module t2 ON t2.id=hk_admin_rule.mid')->select();
+            if(!empty($condition)){return $db->where($condition)->field('t2.title as modname,hk_admin_rule.*')->join('left join hk_admin_module t2 ON t2.id=hk_admin_rule.mid')->select();}
+            return $db->field('t2.title as modname,hk_admin_rule.*')->join('left join hk_admin_module t2 ON t2.id=hk_admin_rule.mid')->select();
         }else{
-            if(!empty($condition)){return $db->where($condition)->field('t2.title as modname,hk_admin_rule.*')->join('left join hk_module t2 ON t2.id=hk_admin_rule.mid')->find();}
-            return $db->field('t2.title as modname,hk_admin_rule.*')->join('left join hk_module t2 ON t2.id=hk_admin_rule.mid')->find();
+            if(!empty($condition)){return $db->where($condition)->field('t2.title as modname,hk_admin_rule.*')->join('left join hk_admin_module t2 ON t2.id=hk_admin_rule.mid')->find();}
+            return $db->field('t2.title as modname,hk_admin_rule.*')->join('left join hk_admin_module t2 ON t2.id=hk_admin_rule.mid')->find();
         }
     }
     
@@ -96,7 +96,7 @@ class AuthModel extends Model{
 
     /*返回权限模块数据*/
     public function query_module($mid){
-        $db = M('module');
+        $db = M('admin_module');
         $fields = array('id','title','module','pid','sortid','path',"concat(path,'-',id)" => 'bpath','show');
         if(isset($mid) && is_numeric($mid)){
             return $db->field($fields)->where('id='.$mid)->order('bpath')->find();
@@ -109,7 +109,7 @@ class AuthModel extends Model{
      * @param array $data 模块数据
      */
     public function insert_module($data=array()){
-        $db = M('module');
+        $db = M('admin_module');
         $id = $db->add($data);
         if($this->setPath($id)){
             return true;
@@ -121,7 +121,7 @@ class AuthModel extends Model{
      * @param array $data 模块数据 需包含主键
      */
     public function update_module($data=array()){
-        $db = M('module');
+        $db = M('admin_module');
         return $db->save($data);
     }
     
@@ -138,7 +138,7 @@ class AuthModel extends Model{
      * @param int $mid 权限模块id
      */
     private function setPath($mid){
-        $db = M('module');
+        $db = M('admin_module');
         $array = array();
         $path ='';
         if(isset($mid) && !empty($mid)){
@@ -166,7 +166,7 @@ class AuthModel extends Model{
     
     //判断是否为顶级模块
     private function isTopClass($id,&$array){  
-        $db = M('module');
+        $db = M('admin_module');
         $data = $db->field('id,pid')->where('id='.$id)->find();
         if($data['pid']!=0){
             array_push($array, $data['pid']);

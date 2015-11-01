@@ -2,69 +2,64 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>
-<if condition="$_GET['aid'] neq ''">
-机构默认管理员添加
-<else />
-机构管理员添加
-</if>
-</title>
+<title>修改机构管理员</title>
 <link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+<script type="text/javascript">
+$(function(){
+  $('#jgid option').each(function(){
+	 if($(this).val()==$('#st').val()){
+		 $(this).attr('selected',true);
+	 }
+  })
+  $('#groupid option').each(function(){
+	 if($(this).val()==$('#gid').val()){
+		 $(this).attr('selected',true);
+	 }
+  })
+  $("input[name='Lock']").each(function(){
+	 if($(this).val()==$('#sd').val()){
+		 $(this).attr('checked',true);
+	 }
+  })
+})
+</script>
 </head>
 <body>
 <div class="place"> <span>位置：</span>
   <ul class="placeul">
     <li><a href="#">首页</a></li>
     <li><a href="#">机构信息管理</a></li>
-    <li><a href="#">
-  	<if condition="$_GET['aid'] neq ''">
-  	机构默认管理员添加
-  	<else />
-  	机构管理员添加
-  	</if>
-    </a></li>
+    <li><a href="#">修改机构管理员</a></li>
   </ul>
 </div>
 <div class="formbody">
-  <div class="formtitle"><span>
-  <if condition="$_GET['aid'] neq ''">
-  机构默认管理员添加
-  <else />
-  机构管理员添加
-  </if>
-  </span></div>
+  <div class="formtitle"><span>修改机构管理员</span></div>
   <ul class="forminfo">
-  <form name="user" action="{:U('agency/add_user')}" method="post">
+  <form name="user" action="{:U('agency/edit_user')}" method="post">
     <li>
       <label>用户名</label>
-      <input name="UserName" type="text" class="dfinput" value="{$info['username']}" />
+      <input name="UserName" type="text" class="dfinput" value="{$data['username']}" />
       <i>设置管理员用户名</i></li>
     <li>
       <label>用户密码</label>
       <input name="PassWords" type="password" class="dfinput" />
-      <i>此用户登陆管理后台所使用的密码</i></li>
+      <i><font color="#FF0000">不修改密码,请留空</font></i></li>
     <li>
       <label>确认密码</label>
       <input name="RePassWords" type="password" class="dfinput" />
       <i>确认密码</i></li>
-    <if condition="$_GET['aid'] neq ''">
     <li>
-      <label>机构ID</label>
-      <input name="JGID" type="text" class="dfinput" value="{$_GET['aid']}"{:empty($_GET['aid'])?'':' readonly'} />
-      <i>合作机构ID</i></li>
-    <else />
-    <li>
-    <label>选择机构</label>
-    <select name="JGID" class="styled-select">
+    <label>选择机构<input type="hidden" id="st" value="{$data['jgid']}" /></label>
+    <select name="JGID" id="jgid" class="styled-select">
     <option value="">-选择机构-</option>
     <volist name="agency" id="ag">
-    <option value="{$ag.jgid}">{$ag.abbr_cn}</option>
+    <option value="{$ag.jgid}">{$ag.company}</option>
     </volist>
     </select>
     </li>  
-    </if>  
     <li>
-      <label>是否锁定</label>
+      <label>是否锁定<input type="hidden" id="sd" value="{$data['lock']}" /></label>
       <cite>
       <input name="Lock" type="radio" value="1" checked="checked" />
       是&nbsp;&nbsp;&nbsp;&nbsp;
@@ -72,11 +67,11 @@
       否</cite></li>
     <li>
       <label>真实姓名</label>
-      <input name="RealName" type="text" class="dfinput" value="{$info['realname']}" />
+      <input name="RealName" type="text" class="dfinput" value="{$data['realname']}" />
     </li>
     <li>
-      <label>管理组</label>
-      <select name="GroupID" class="styled-select">
+      <label>管理组<input type="hidden" id="gid" value="{$data['groupid']}" /></label>
+      <select name="GroupID" id="groupid" class="styled-select">
       <option value="0">选择管理组</option>
       </select>
     </li>
@@ -84,6 +79,7 @@
       <label>&nbsp;</label>
       <input name="" type="submit" class="btn" value="确认保存"/>
     </li>
+    <input type="hidden" name="UID" value="{$data['uid']}" />
     </form>
   </ul>
 </div>

@@ -1,6 +1,7 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
+//use Home\Controller\BaseController;
 
 class AdminController extends Controller{
     /*添加系统用户*/
@@ -9,6 +10,7 @@ class AdminController extends Controller{
         if(IS_POST){
             $model = D('Home/Admin');
             $data = array();
+            $groupid = I('GroupID');  //用户组ID
             $data['UserName'] = I('UserName');
             //密码加上配置文件中的key
             $data['PassWords'] = md5(C('md5_key').I('PassWords'));
@@ -17,6 +19,7 @@ class AdminController extends Controller{
             $data['RealName'] = I('RealName');
             $data['RegTime'] = date('Y-m-d',time());
             $data['LoginNum'] = 0;
+            $data['GroupID'] = $groupid;
             if(empty($data['RealName']) || empty($data['UserName']) || empty($data['PassWords'])){
                 $this->error('用户名、真实姓名、密码必须填写!');
             }
@@ -24,12 +27,23 @@ class AdminController extends Controller{
                 $this->error('两次输入密码不相同!');
                 //exit("alert('两次输入密码不相同');history.go(-1)");
             }
-            if($model->insert_user($data)){
-                $this->success('新增系统用户成功!',U('admin/add_user'));
+            if($uid=$model->insert_user($data)){
+                /*操作权限验证表*/
+                $auth = M('admin_group_access');
+                $in_data['uid'] = $uid;
+                $in_data['group_id'] = $groupid;
+                if($auth->add($in_data)){
+                    $this->success('新增系统用户成功!',U('admin/add_user'));  
+                }else{
+                    $this->error('设置权限出现错误');
+                }
             }else{
                 $this->error('新增系统用户失败!',U('admin/add_user'));
             }
         }else{
+            $group = M('admin_group');
+            $groupList = $group->field('id,title')->select();
+            $this->assign('group',$groupList);
             $this->display();
         }
     }
@@ -58,22 +72,34 @@ class AdminController extends Controller{
             $data = array();
             $psw = I('PassWords');
             $repsw = I('RePassWords');
+            $adminid = I('uid');
+            $groupid = I('GroupID');
             if(!empty($psw)){
                 if($psw!==$repsw){$this->error('两次输入密码不一样',U('admin/edit_user',array('uid' => $uid)));}
                 $data['PassWords'] = md5(C('md5_key').$psw);
             }
-            $data['AdminID'] = I('uid');
+            $data['AdminID'] = $adminid;
             $data['UserName'] = I('UserName');
             $data['RealName'] = I('RealName');
             $data['Lock'] = I('Lock');
+            $data['GroupID'] = $groupid;
             if($model->update_user($data)){
-                $this->success('用户修改成功',U('admin/list_user'));
+                //更新权限验证表
+                $auth = M('admin_group_access');
+                if($auth->where('uid='.$adminid)->setField('group_id',$groupid)){
+                    $this->success('用户修改成功',U('admin/list_user'));
+                }else{
+                    $this->error('更新权限时出现错误!');
+                }
             }else{
                 $this->error('修改失败或未做修改',U('admin/edit_user',array('uid' => $uid)));
             }
         }else{
+            $group = M('admin_group');
+            $groupList = $group->field('id,title')->select();
             $data = $model->query_user($uid);
             $this->assign('info',$data);
+            $this->assign('group',$groupList);
             $this->display('edit_user');
         }
     }

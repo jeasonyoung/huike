@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>生成订单</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+<script type="text/javascript"  src="__PUBLIC__/laydate/laydate.js" charset="utf-8" ></script>
+<script type="text/javascript">
+/*删除一个产品*/
+function removeproduct(pid,ptype,price,sale_price){
+	uri="{:U('order/removefromcart')}";
+	$.ajax({
+		url:uri,
+		type:'post',
+		data:{pid:pid,ptype:ptype,rnd:Math.random()},
+		dataType:'JSON',
+		success: function(json){
+			var json_obj = eval("(" + json + ")");
+			if(json_obj.status=="success"){
+				$('.tablelist').find("tr[type='"+ptype+"']").each(function(){
+				  if($(this).attr('pid')==pid){
+					  $(this).remove();
+				  	  var total=$('#total').html();
+				      var goodprice=$('#goodprice').html();
+				      $('#total').html(parseInt(total-price));
+				      $('#goodprice').html(parseInt(goodprice-sale_price));
+				  }
+		        })
+			}
+		}
+	})
+}
+
+function addmember(){
+	var users=$('#user').val();
+	var pwd=$('#pwd').val();
+	var u_array=new Array();
+	u_array = users.split(',');
+	var cur_num = $('#uuser tr').length+1;
+	$('#add_user').show();
+	$('#user').val('');
+	$('#pwd').val('');
+	for(i=0;i<=u_array.length;i++){
+		if(typeof(u_array[i])!=='undefined' && u_array[i]!=''){
+			d=parseInt(cur_num)+parseInt(i);
+			$('#uuser').append("<tr id='uu_"+i+"'><td>"+d+"</td><td><input type='text' name='UserName[]' value='"+u_array[i]+"'></td><td><input type='text' name='PassWords[]' value='"+pwd+"'></td><td><a href='javascript:deltr("+i+")'>删除</a></td></tr>");
+		}
+	}
+	$('#is_add_user').val(cur_num);
+}
+
+function deltr(id_num){
+	$('#uu_'+id_num).remove();
+	var temp = $('#is_add_user').val();
+	$('#is_add_user').val(parseInt(temp)-1);
+}
+
+function ChkSubmit(){
+	if($('#is_add_user').val()==0){
+		alert('请先添加用户,再提交订单');
+		return false;
+	}
+	$('#mk').submit();
+}
+$(function(){
+  $('#is_add_user').val(0);
+})
+</script>
+<style>
+#search input,select{height:24px;border:1px solid #dedede}
+.shopcart{border:1px solid #ebb683;line-height: 35px;text-indent: 10px;clear:both}
+.shopcart span,select{display:inline-block;float:left;margin-right:5px}
+.shopcart select{margin-top:5px}
+.shopcart ul li{line-height:35px;float:left}
+#add_user{display:none}
+#add_user input{line-height:24px;height:24px;border:1px solid #dedede}
+</style>
+</head>
+
+
+<body>
+
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">订单管理</a></li>
+    <li><a href="#">产生订单</a></li>
+    </ul>
+    </div>
+    
+    <div class="rightinfo">
+    <form name="mk" id="mk" action="{:U('order/makeorder')}" method="post">
+    <div class="tools">
+    	<ul class="toolbar">
+        <li class="click"><a href="javascript:javascript(0)" onclick="ChkSubmit();"><span><img src="__PUBLIC__/images/t01.png" /></span>产生订单</a></li>
+        <li class="click"><a href="javascript:history.go(-1);"><span><img src="__PUBLIC__/images/t02.png" /></span>继续选产品</a></li>
+        <li class="click"><span><img src="__PUBLIC__/images/t05.png" /></span> 用户名 <input type="text" name="username" id="user" style="height: 18px;width:200px;border:1px solid #dedede;" /> 密码 <input type="text" id="pwd" name="password" style="height: 18px;border:1px solid #dedede;" /> <input type="button" onclick="addmember()" value="添加用户" style="border:1px solid #dedede" /> <font color="#FF0000">* 一次添加多个用户名用","分割</font></li>
+        </ul>    
+    </div>
+    <table class="tablelist" style="clear:both">
+    	<thead>
+    	<tr>
+        <th><input name="" type="checkbox" value="" /></th>
+        <th>编号<i class="sort"><img src="__PUBLIC__/images/px.gif" /></i></th>
+        <th>产品名称</th>
+        <th>产品类型</th>
+        <th>原价</th>
+        <th>售价</th>
+        <th>使用年份</th>
+        <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist id="vo" name="prolist">
+        <tr pid="{$vo.pid}" type="{$vo.type}">
+        <td><input name="" type="checkbox" value="" /></td>
+        <td>{$vo.pid}</td>
+        <td>{$vo.proname}</td>
+        <td>
+        <if condition="$vo.type eq 2">
+        单科
+        <else />
+        套餐
+        </if>
+        </td>
+        <td>{$vo.price}</td>
+        <td>{$vo.sale_price}</td>
+        <td>
+        <if condition="$vo.useyear eq ''">
+        考试后一周
+        <else />
+        {$vo.useyear}
+        </if>
+        </td>
+        <td><a href="javascript:removeproduct({$vo.pid},'{$vo.type}',{$vo.price},{$vo.sale_price})" onclick="javascript:return confirm('确定删除此产品?')" class="tablelink"> 从订单去除</a></td>
+        </tr>   
+        </volist>   
+        </tbody>
+    </table>
+    <div class="pagin" style="text-align:right;font-size:14px;">
+    总价格: <font color="#FF0000" id="total">{$total['price']}</font> 元 优惠价: <font color="#008000" id="goodprice">{$total['sale_price']}</font> 元 <a href="{:U('order/makeorder',array('price' => $total['price'],'sale_price' => $total['sale_price']))}" style="font-size:14px;color:#F00;font-weight:bold">[确认订单]</a>
+    </div><br />
+    <table class="tablelist" style="clear:both" id="add_user">
+    	<thead>
+    	<tr>
+        <th>序号<i class="sort"><img src="__PUBLIC__/images/px.gif" /></i></th>
+        <th>用户名</th>
+        <th>用户密码</th>
+        <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="uuser">  
+        </tbody>
+    </table><input type="hidden" id="is_add_user" value="0" />
+    <input type="hidden" name="price" value="{$total['price']}" />
+    <input type="hidden" name="sale_price" value="{$total['sale_price']}" />
+    </form>
+    </div>
+    
+    <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script>
+</body>
+</html>

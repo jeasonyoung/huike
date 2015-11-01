@@ -26,7 +26,7 @@ class AgencyController extends Controller{
                 }
             }
         }else{
-            $exam = A('ExamClass');
+            $exam = A('examclass');
             $admin = A('Admin');
             $examlist = $exam->data_query();
             $adminlist = $admin->get_data();
@@ -41,12 +41,23 @@ class AgencyController extends Controller{
      * 修改合作机构
      * @param int $aid 机构ID
      */
-    public function edit_agency($jgid){
+    public function edit_agency($JGID){
         $model = D('Home/Agency');
         if(IS_POST){
-            
+            $rules = C('agencyRules');
+            $model->setProperty('_validate', $rules);   //设置动态验证
+            if(!$result=$model->create()){
+                $this->error($model->getError());
+            }else{
+                if(is_array($result['AllExams'])){
+                    $result['AllExams']= implode($result['AllExams'],',');
+                }
+                if($model->update_agency($result)){
+                    $this->success('更新合作机构信息成功',U('agency/list_agency'));
+                }
+            }
         }else{
-            $data = $model->get_agencyList('*','jgid='.$jgid,FALSE);
+            $data = $model->get_agencyList('*','jgid='.$JGID,FALSE);
             /*地区相关信息*/
             $citys = A('Citys');
             $citylist = $citys->optSelect(2,array('cityid','shortname'),$data['province']);
@@ -57,7 +68,7 @@ class AgencyController extends Controller{
                 'county'   => $countylist
             );
             /*考试类别*/
-            $exam = A('ExamClass');
+            $exam = A('examclass');
             $examlist = $exam->data_query();
 
             /*管理员相关信息*/
@@ -89,6 +100,7 @@ class AgencyController extends Controller{
         $model = D('Home/Agency');
         if(IS_POST){
             $JGID = I('JGID');
+            if(empty($JGID)){$this->error('请选择合作机构!');}
             $agencyInfo = $model->query_agency('md5key','jgid='.$JGID);
             $data = array();
             $data['UserName'] = I('UserName');
@@ -118,20 +130,76 @@ class AgencyController extends Controller{
             }
         }else{
             if(empty(I('get.aid'))){
-                $agency = $model->get_agencyList(array('`company`','`jgid`'),'statetf=1');
+                $agency = $model->get_agencyList(array('`abbr_cn`','`jgid`'),'statetf=1');
                 $this->assign('agency',$agency);
             }
             $this->display();
         }
     }
     
+    //修改机构管理员
+    public function edit_user($UID){
+        $model = D('Home/Agency');
+        if(IS_POST){
+            $rules = array(
+                array('UserName','require','用户名不能为空'),
+                array('RePassWords','PassWords','确认密码不正确',2,'confirm'),
+                array('JGID','require','请选择合作机构'),
+                array('RealName','require','真实姓名不能为空')
+            );
+            $check = M('jigou_admin');
+            $check->setProperty('_validate', $rules);
+            if(!$result=$check->create()){
+                $this->error($model->getError());
+            }else{
+                if($model->update_user($result)){
+                    $this->success('更新机构管理员信息成功',U('agency/list_users'));
+                }else{
+                    $this->error('更新管理员信息失败');
+                }
+            }
+        }else{
+            $data = $model->query_user('uid='.$UID,FALSE);
+            $agency = $model->get_agencyList(array('`company`','`jgid`'),'statetf=1');
+            $this->assign('data',$data);
+            $this->assign('agency',$agency);
+            $this->display();
+        }
+    }
+    
+    /*机构用户列表*/
+    public function list_users(){
+        $model = D('Home/Agency');
+        $data = $model->query_user();
+        $this->assign('users',$data);
+        $this->display();
+    }
+    
+    //删除结构管理员
+    public function del_users($uid){
+        $model = D('Home/Agency');
+        if($model->delete_user($uid)){
+            $this->success('成功删除一个机构管理员');
+        }
+    }
+    
     //机构列表
     public function list_agency(){
         $model = D('Home/Agency');
-        $field = array('`company`','`domain`','`contact`','`statetf`','`hztel`','`stutel`','`create_time`','`jgid`','`marketid`','`kefuid`','a.realname' => 'kfname','b.realname' => 'marketname');
+        $field = array('`company`','`abbr_cn`','`domain`','`contact`','`statetf`','`hztel`','`stutel`','`create_time`','`jgid`','`marketid`','`kefuid`','a.realname' => 'kfname','b.realname' => 'marketname');
         $info = $model->get_agencyList($field);
         $this->assign('info',$info);
         $this->display();
+    }
+    
+    /**
+     * 公用接口
+     * 获得机构列表
+     * @param string $condition 查询条件
+     */
+    public function getAgencyList($condition='statetf=1',$field=array('`abbr_cn`','`jgid`')){
+        $model = D('Home/Agency');
+        return $model->get_agencyList($field,$condition);
     }
 
     public function _initialize(){

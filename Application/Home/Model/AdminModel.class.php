@@ -19,7 +19,9 @@ class AdminModel extends Model{
         if(isset($uid) && !empty($uid)){
             return $this->where('adminid='.$uid)->find();
         }else{
-            return $this->field('adminid,username,lock,realname,regtime,lastlogintime')->select();
+            return $this->field('adminid,username,lock,realname,regtime,lastlogintime,auth.title as groupname')->
+                   join('left join hk_admin_group auth ON auth.id=hk_admin.groupid')->
+                   select();
         }
     }
     

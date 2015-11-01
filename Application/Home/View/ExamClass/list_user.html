@@ -24,7 +24,7 @@
     <div class="tools">
     
     	<ul class="toolbar">
-        <li class="click"><a href="{:U('ExamClass/add_user')}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
+        <li class="click"><a href="{:U('examclass/add_user')}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
         </ul>
         
         
@@ -60,7 +60,7 @@
         <td>{$vo.create_time}</td>
         <td>{$vo.last_time}</td>
         <td>{$vo.sortid}</td>
-        <td><a href="{:U('ExamClass/edit_user',array('examid' => $vo['examid']))}" class="tablelink">修改</a>     <a href="{:U('ExamClass/del_user',array('examid' => $vo['examid']))}" onclick="javascript:return confirm('确定删除此用户吗?')" class="tablelink"> 删除</a></td>
+        <td><a href="{:U('examclass/edit_user',array('examid' => $vo['examid']))}" class="tablelink">修改</a>     <a href="{:U('examclass/del_user',array('examid' => $vo['examid']))}" onclick="javascript:return confirm('确定删除此用户吗?')" class="tablelink"> 删除</a></td>
         </tr>   
         </volist>   
         </tbody>

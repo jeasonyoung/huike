@@ -35,6 +35,7 @@ $(function(){
   var province=$('#tprovince').val();
   var city=$('#tcity').val();
   var county=$('#tcounty').val();
+  var ks=$('#ks').val();
   $("input[name='StateTF']").each(function(){
 	 if($(this).val()==$("#st").val()){
 		 $(this).attr("checked",true);
@@ -66,6 +67,13 @@ $(function(){
 		 $(this).attr('selected',true);
 	 }
   })
+  //考试ID
+  var ksid=$('#ks').val();
+  var ksarr = new Array();
+  ksarr=ksid.split(',');
+  for(i=0;i<=ksarr.length;i++){
+	$('.iexams').find(":checkbox[value='"+ksarr[i]+"']").attr("checked",true);
+  }
 })
 </script>
 </head>
@@ -234,7 +242,7 @@ $(function(){
       <label>&nbsp;</label>
       <input name="" type="submit" class="btn" value="确认保存"/>
     </li>
-    <input type="hidden" name="jgid" value="{$data['jgid']}" />
+    <input type="hidden" name="JGID" value="{$data['jgid']}" />
     </form>
   </ul>
 </div>

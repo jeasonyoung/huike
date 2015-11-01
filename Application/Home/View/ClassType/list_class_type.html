@@ -24,7 +24,7 @@
     <div class="tools">
     
     	<ul class="toolbar">
-        <li class="click"><a href="{:U('ClassType/add_class_type')}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
+        <li class="click"><a href="{:U('classtype/add_class_type')}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
         </ul>
         <ul class="toolbar1">
         <li><span><img src="__PUBLIC__/images/t05.png" /></span>设置</li>
@@ -48,7 +48,7 @@
         <td>{$vo.ctid}</td>
         <td>{$vo.classtypename}</td>
         <td>{$vo.sortid}</td>
-        <td><a href="{:U('ClassType/edit_class_type',array('ctid' => $vo['ctid']))}" class="tablelink">修改</a>     <a href="{:U('ClassType/del_class_type',array('ctid' => $vo['ctid']))}" onclick="javascript:return confirm('确定删除此班级吗?')" class="tablelink"> 删除</a></td>
+        <td><a href="{:U('classtype/edit_class_type',array('ctid' => $vo['ctid']))}" class="tablelink">修改</a>     <a href="{:U('classtype/del_class_type',array('ctid' => $vo['ctid']))}" onclick="javascript:return confirm('确定删除此班级吗?')" class="tablelink"> 删除</a></td>
         </tr>   
         </volist>   
         </tbody>

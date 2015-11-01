@@ -30,7 +30,8 @@ class LoginController extends Controller{
     
     //登陆验证
     public function loginCheck(){
-        $user = A('Admin');    //实例化Admin控制器
+        //$user = A('Admin');    //实例化Admin控制器
+        $user=M('admin');
         $username = I('UserName');
         $psw = md5(C('md5_key').I('PassWords'));
         $verify = I('verifycode');
@@ -40,7 +41,7 @@ class LoginController extends Controller{
         if(!$this->check_verify($verify)){
             $this->error('对不起，验证码错误!');
         }
-        $userinfo = $user->getUser($username,$psw);
+        $userinfo = $user->where("username='".$username."' and passwords='".$psw."'")->find();
         if($userinfo['lock'] == 1){
             $this->error('对不起，您的管理帐号已被锁定!');
             die();
@@ -49,6 +50,7 @@ class LoginController extends Controller{
             $this->error('用户名或密码错误，请重试');
         }else{
             session('username',$userinfo['username']);
+            session('adminid',$userinfo['adminid']);
             session('groupid',$userinfo['groupid']);
             session('lastlogintime',$userinfo['lastlogintime']);
             /*记录登陆信息开始*/
@@ -68,6 +70,7 @@ class LoginController extends Controller{
     public function logOut(){
         session('username',null);
         session('groupid',null);
+        session('adminid',null);
         session('lastlogintime',null);
         $this->success('您已退出登陆',U('Login/Index'));
     }

@@ -34,8 +34,8 @@ class AgencyModel extends Model{
         $where[]['_string']=$condition;
         if($mulit){
             return $this->where($where)->field($field)->
-                   join('LEFT JOIN hk_admin a ON a.adminid=hk_jigou.kefuid')->
-                   join('LEFT JOIN hk_admin b ON a.adminid=hk_jigou.marketid')->
+                   join('Right JOIN hk_admin a ON a.adminid=hk_jigou.kefuid')->
+                   join('Right JOIN hk_admin b ON b.adminid=hk_jigou.marketid')->
                    order('create_time asc')->
                    select();
         }else{
@@ -57,13 +57,35 @@ class AgencyModel extends Model{
      * @param string $condition 查询条件
      * @param $mulit 返回结果集
      */
-    public function query_user($condition,$mulit){
+    public function query_user($condition="username<>''",$mulit=true){
         $db = M('jigou_admin');
         $where[]['_string']=$condition;
         if($mulit){
-            return $db->where($where)->select(); 
+            return $db->field('hk_jigou_admin.*,jg.company')->where($where)->
+                    join('left join hk_jigou jg ON jg.jgid=hk_jigou_admin.jgid')->
+                    select(); 
         }else{
             return $db->where($where)->find(); 
         }
+    }
+    
+    /**
+     * 更新机构管理员信息
+     * @param array $data 机构管理员信息 需包含主键
+     */
+    public function update_user($data=array()){
+        $db = M('jigou_admin');
+        return $db->save($data);
+    }
+    
+    /**
+     * 删除机构管理员
+     * @param int $uid 管理员ID
+     */
+    public function delete_user($uid){
+        $db = M('jigou_admin');
+        //同事将此管理员在机构表中默认JG_UID清除
+        $this->where('jg_uid='.$uid)->setField('JG_UID',null);
+        return $db->where('uid='.$uid)->delete();
     }
 }

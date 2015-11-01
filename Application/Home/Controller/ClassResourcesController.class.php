@@ -79,7 +79,7 @@ class ClassResourcesController extends Controller{
             $data['ExamID'] = I('examid');
             $data['SubID'] = I('subid');
             $data['Year'] = I('yearid');
-            $data['create_time'] = date('Y-m-d H:i:s',time());
+            $data['last_time'] = date('Y-m-d H:i:s',time());
             $data['SortID'] = I('SortID');
 			$data['TimeLen'] = I('TimeLen');
             if(empty($data['CnName']) || empty($data['StartDate']) || empty($data['VideoUrl']) || empty($data['SortID']) || empty($data['Year'])){

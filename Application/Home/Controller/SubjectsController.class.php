@@ -19,7 +19,7 @@ class SubjectsController extends Controller{
             if($model->insert_user($data)){
                 $this->success('新增考试科目成功!',U('Subjects/list_user').'&examid='.$examid);
             }else{
-                $this->error('新增考试科目失败!',U('Subjects/add_user'));
+                $this->error('新增考试科目失败!',U('Subjects/add_user',array('examid' => $examid)));
             }
         }else{
             $ExamName = array();
@@ -37,7 +37,7 @@ class SubjectsController extends Controller{
     public function del_user($subid){
         $model = D('Home/Subjects');
         if($model->delete_user($subid)){
-            $this->success('删除考试科目成功',U('Subjects/list_user'));
+            $this->success('删除考试科目成功',U('Subjects/list_user',array('examid' => $examid)));
         }else{
             $this->error('删除考试科目失败,请联系技术人员');
         }
@@ -74,6 +74,12 @@ class SubjectsController extends Controller{
     }
     
     /*考试列表*/
+	public function list_exam(){
+        $model = D('Home/Subjects');
+        $data = $model->query_exam();
+        $this->assign('exams',$data);
+        $this->display();
+    }
     public function list_user($examid){
         $model = D('Home/Subjects');
         $data = $model->query_user($examid);
@@ -81,7 +87,7 @@ class SubjectsController extends Controller{
                 $this->assign('sublist',$data);
         }
         else{
-                $this->assign('exams',$data);
+            $this->error('考试ID不存在',U('Subjects/list_exam'));
         }
         $this->display();
     }
