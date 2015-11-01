@@ -28,9 +28,9 @@
                         <option value="" val="">-选择机构套餐分类-</option>
                         <volist name="taocanClasses" id="vo">
                             <if condition="$vo.id eq $type_id">
-                                <option value="{$vo['id']}" val="所属考试:{$vo['exam_name']}  套餐折扣:{$vo['discount']} 使用年份:{$vo['use_year']}" exam_id="{$vo['exam_id']}" use_year="{$vo['use_year']}" url_class="{:U('JigouTaocan/select_subject',array('typeId'=>$vo['id']))}" url_taocan="{:U('JigouTaocan/select_taocan',array('typeId'=>$vo['id']))}" selected="selected">{$vo['name']}</option>
+                                <option value="{$vo['id']}" val="所属考试:{$vo['exam_name']}  套餐折扣:{$vo['discount']} 使用年份:{$vo['use_year']}" exam_id="{$vo['exam_id']}" discount="{$vo['discount']}" use_year="{$vo['use_year']}" url_class="{:U('JigouTaocan/select_subject',array('typeId'=>$vo['id']))}" url_taocan="{:U('JigouTaocan/select_taocan',array('typeId'=>$vo['id']))}" selected="selected">{$vo['name']}</option>
                             <else/>
-                                <option value="{$vo['id']}" val="所属考试:{$vo['exam_name']}  套餐折扣:{$vo['discount']} 使用年份:{$vo['use_year']}" exam_id="{$vo['exam_id']}" use_year="{$vo['use_year']}" url_class="{:U('JigouTaocan/select_subject',array('typeId'=>$vo['id']))}" url_taocan="{:U('JigouTaocan/select_taocan',array('typeId'=>$vo['id']))}">{$vo['name']}</option>
+                                <option value="{$vo['id']}" val="所属考试:{$vo['exam_name']}  套餐折扣:{$vo['discount']} 使用年份:{$vo['use_year']}" exam_id="{$vo['exam_id']}" discount="{$vo['discount']}" use_year="{$vo['use_year']}" url_class="{:U('JigouTaocan/select_subject',array('typeId'=>$vo['id']))}" url_taocan="{:U('JigouTaocan/select_taocan',array('typeId'=>$vo['id']))}">{$vo['name']}</option>
                             </if>
                         </volist>
                     </select>
@@ -88,7 +88,7 @@
                                     <td>{$vo['type_name']}</td>
                                     <td>{$vo['subject_name']}</td>
                                     <td>{$vo['use_year']}</td>
-                                    <td>{$vo['old_price']}</td>
+                                    <td name="old_price">{$vo['old_price']}</td>
                                     <td>{$vo['cost_price']}</td>
                                     <td>{$vo['sale_price']}</td>
                                     <td>{$vo['price']}</td>
@@ -109,12 +109,12 @@
                 <li>
                     <label>销售价格</label>
                     <input name="Sale_Price" value="0.0" type="text" class="dfinput" />
-                    <i></i>
+                    <i name="total_price_info"></i>
                 </li>
                 <li>
                     <label>优惠价格</label>
                     <input name="Real_Price" value="0.0" type="text" class="dfinput" />
-                    <i></i>
+                    <i name="total_price_info"></i>
                 </li>
                 <li>
                     <label>排序</label>
@@ -124,7 +124,12 @@
                 <li>
                   <label>&nbsp;</label>
                   <input type="hidden" name="ExamID"/>
-                  <input type="submit" class="btn" value="确认保存"/>
+                  <input type="hidden" name="Discount"/>
+                  <input type="hidden" name="OldPrice"/>
+                  <input type="hidden" name="TotalPrice"/>
+                  <input type="hidden" name="Cost_Price"/>
+
+                  <input type="submit" onclick="return chk_submit_data();" class="btn" value="确认保存"/>
                 </li>
             </form>
         </ul>
@@ -142,8 +147,75 @@
 
                 var uy = opt.attr('use_year');
                 $("input[name='UseYear']").val(uy ? uy : "{$use_year}");
+
+                //套餐总价
+                var discount = opt.attr('discount');
+                if(discount && discount > 0){
+                    $("input[name='Discount']").val(discount);
+                    var old_price_total = 0;
+                    $("td[name='old_price']").each(function(){
+                        var p = parseFloat($(this).text());
+                        if(p) old_price_total += p;
+                    });
+
+                    $("input[name='OldPrice']").val(old_price_total);
+
+                    var total_price = (parseFloat(discount) * old_price_total);
+                    $("input[name='TotalPrice']").val(total_price);
+                    $("input[name='Cost_Price']").val(total_price);
+
+                    var total_price_info = total_price ? "须大于等于套餐总价("+total_price+")" : "";
+                    $("i[name='total_price_info']").each(function(){
+                        $(this).text(total_price_info);
+                        $(this).val(total_price ? total_price : 0);
+                    });
+                }
             }
         };
+
+        //检查销售价格
+        $("input[name='Sale_Price']").change(function(){
+            var input_val = parseFloat($(this).val());
+            var std_val = parseFloat($(this).next().val());
+            if(input_val < std_val){
+                $(this).val(std_val);
+            }
+        });
+        //优惠价格
+        $("input[name='Real_Price']").change(function(){
+            var input_val = parseFloat($(this).val());
+            var std_val = parseFloat($(this).next().val());
+            if(input_val < std_val){
+                $(this).val(std_val);
+            }
+        });
+
+        //检查提交数据
+        chk_submit_data = function(){
+            //检查销售价格
+            var result = chk_input_price($("input[name='Sale_Price']"));
+            if(result){
+                //检查优惠价格
+                result = chk_input_price($("input[name='Real_Price']"));
+            }
+            return result;
+        };
+        //检查输入价格
+        function chk_input_price(input_obj){
+            if(input_obj){
+                var price = input_obj;
+                var price_title = input_obj.prev('label');
+                var price_std = input_obj.next('i');
+                if(price && price_title && price_std){
+                    if(parseFloat(price.attr('value')) < parseFloat(price_std.attr('value'))){
+                        alert(price_title.text() + price_std.text());
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
+
         //select change.
         $("select[name='TCCID']").change(function(){
             show_option_val($(this).find("option:selected"));
