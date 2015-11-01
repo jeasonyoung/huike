@@ -27,8 +27,11 @@ class JigouController extends AdminController{
     /*查询机构用户登陆的机构信息*/
     public function query_jigou(){
         $model = D('Agency/Jigou');
-        $data = $model->query_jigou(session('JGID'));
+        $data = $model->query_jigou(session('JGID'));        
         $this->assign('info',$data);
+        $model1 = D('Agency/Examclass');
+        $allexams = $model1->query_exam_class($data['allexams']);        
+        $this->assign('allexams',$allexams);
         $this->display();
     }
     /*添加当前机构的用户*/
@@ -39,8 +42,8 @@ class JigouController extends AdminController{
             $data = array();
             $data['UserName'] = I('UserName');
             //密码加上配置文件中的key
-            $data['PassWords'] = md5(C('psw_key').I('PassWords'));
-            $data['RePassWords'] = md5(C('psw_key').I('RePassWords'));
+            $data['PassWords'] = md5(I('PassWords'));
+            $data['RePassWords'] = md5(I('RePassWords'));
             $data['Lock'] = I('Lock');
             $data['JGID'] = session('JGID');
             $data['GroupID'] = I('GroupID');
@@ -75,8 +78,10 @@ class JigouController extends AdminController{
             $psw = I('PassWords');
             $repsw = I('RePassWords');
             if(!empty($psw)){
-                if($psw!==$repsw){$this->error('两次输入密码不一样');}
-                $data['PassWords'] = md5(C('md5_key').$psw);
+                if($psw!==$repsw){
+                    $this->error('两次输入密码不一样');
+                }
+                $data['PassWords'] = md5($psw);
             }
             
             $data['UID'] = I('uid');

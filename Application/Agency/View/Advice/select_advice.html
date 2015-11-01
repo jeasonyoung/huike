@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>机构班级列表</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+<script type="text/javascript">
+        function del_class(){
+            var advid = ''; 
+                $('input[name="advid"]:checked').each(function(){
+                    if(this.checked){
+                        advid+= $(this).val();
+                        advid+=',';
+                    }
+                });
+                advid = advid.substr(0,advid.length-1);
+                if(!advid.length>0){
+                    alert('请勾选要删除的留言');
+                }else{
+                    var status = confirm("确定要删除已勾选的留言吗？");
+                    if(!status){
+                     return false;
+                    }                   
+                   window.location.href = "{:U('advice/del_advice')}?advid="+advid;
+                }
+               
+            }   
+
+</script>
+</head>
+
+
+<body>
+
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">学员管理</a></li>
+    <li><a href="#">学员建议</a></li>
+    <li><a href="#">留言列表</a></li>    
+    </ul>
+    </div>
+    <div class="rightinfo">
+    <div class="tools">    
+    	<ul class="toolbar">       
+        <li onclick="del_class()"><a href="javascript:void()"><span><img src="__PUBLIC__/images/t03.png" /></span>删除</a></li>
+        </ul>
+    </div>
+    <table class="tablelist">
+    	<thead>
+    	<tr>
+        <th><input name="" type="checkbox" value="" checked="checked"/></th>
+        <th>学员用户名</th>        
+        <th>学员昵称</th>
+        <th>留言</th>
+        <th>创建时间</th>        
+        <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist id="vo" name="advicelist">
+        <tr>
+        <td><input name="advid" type="checkbox" value="{$vo.advid}" /></td>
+        <td>{$vo.username}</td>        
+        <td>{$vo.nickname}</td>
+        <td>{$vo.content}</td>
+        <td>{$vo.create_time}</td>
+        <td><a href="{:U('advice/del_advice',array('advid' => $vo['advid']))}" onclick="javascript:return confirm('确定删除此留言吗?')" class="tablelink">删除</a></td>
+        </tr>   
+        </volist>   
+        </tbody>
+    </table>   
+    </div>
+    
+    <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script>
+
+</body>
+
+</html>

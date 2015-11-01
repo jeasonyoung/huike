@@ -28,19 +28,33 @@ $(function(){
     <li><a href="#">考试设置</a></li>
     </ul>
     </div>
- <div class="formbody">
-     <div class="formtitle"><span>添加或修改考试类目</span><span style="right:0px;">（添加则勾选,删除则取消勾选）</span><input type="hidden" id='examids' value="{$info['allexams']}"></div>
+ 
   <form name="user" action="{:U('examClass/edit_jigou')}" method="post">
       <div id='rules'>
-   <volist id="vo" name="examlist">
-            <label><input id="AllExam{$vo['examid']}" name="ExamID[]" type="checkbox" align="absmiddle" value="{$vo['examid']}" />&nbsp;{$vo['cnname']}</label><br><br>
-    </volist>
+          <input type="hidden" id='examids' value="{$info['allexams']}">
+            <div class="rightinfo">
+           <table class="tablelist" style="text-align:center;">
+               <thead>
+    	<tr>
+        <th align="center" colspan="10"><span style="right:0px;">考试设置（添加则勾选,删除则取消勾选）</span></th>
+		</tr>
+        </thead>
+        <tbody>
+		<tr>
+   <volist id="vo" name="examlist"  mod="10">
+       <td style=""><label><input id="AllExam{$vo['examid']}" name="ExamID[]" type="checkbox" align="absmiddle" value="{$vo['examid']}" />&nbsp;{$vo['cnname']}</label></td>
+            <eq name="mod" value="5"><br></eq>
+    </volist>   
+                     </tr>
+		</tbody>
+	</table>
     </div>
+         </div>          
+      <div align="center" style="padding-top: 20px">
       <input type="hidden" name='JGID' value="{$Think.session.JGID}">
-      <input name="" type="submit" class="btn" value="确认保存"/>
+      <input name="" type="submit" class="btn" value="确认保存"/></div>
 </form>
- </div>
- </div>
+
 </body>
 
 </html>

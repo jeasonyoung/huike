@@ -5,6 +5,15 @@
 <title>机构信息</title>
 <link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+<script type="text/javascript">
+$(function(){
+  $("input[name='StateTF']").each(function(){
+	 if($(this).val()==$("#statetf").val()){
+		$(this).attr("checked",true);
+	 }
+  })
+})
+</script>
 </head>
 
 
@@ -24,7 +33,7 @@
     
     <div class="tools">
 <div class="formbody">
-  <div class="formtitle"><span>机构信息</span><span style='right: 0px;'>（双击可修改信息，底部点确认保存）</span></div>
+  <div class="formtitle"><span>机构信息</span><input type="hidden" id="statetf" value="{$info['statetf']}" /><span style='right: 0px;'>（底部点确认保存）</span></div>
   <ul class="forminfo">
   <form name="jigou" action="{:U('jigou/edit_jigou')}" method="post">
     <li>
@@ -60,6 +69,10 @@
       <input name="domain" type="text" class="dfinput" value="{$info.domain}" readonly="readonly" />
     </li>
       <li>
+      <label>流媒体域名</label>
+      <input name="FlvDomain" type="text" class="dfinput" value="{$info.flvdomain}" readonly="readonly" />
+    </li>
+      <li>
       <label>机构首页</label>
       <input name="Home_url" type="text" class="dfinput" value="{$info.ome_url}" readonly="readonly" />
     </li>
@@ -68,21 +81,21 @@
       <input name="Login_Url" type="text" class="dfinput" value="{$info.login_url}" readonly="readonly" />
     </li>
       <li>
-      <label>机构状态</label>
-      <input name="StateTF" type="text" class="dfinput" value="{$info.statetf}" readonly="readonly" />
+      <label><input name="" type="text" class="" value="机构状态" readonly="readonly" /></label>      
+      <input name="StateTF" type="radio" value="0" />
+      是&nbsp;&nbsp;&nbsp;&nbsp;
+      <input name="StateTF" type="radio" value="1" />
+      否      
     </li>
       <li>
-      <label>包含考试</label>
-      <input name="AllExams" type="text" class="dfinput" value="{$info.allexams}" readonly="readonly" />
+      <label><input name="" type="text" class="" value="包含考试" readonly="readonly" /></label>      
+      <volist id='vo' name='allexams' key='k' mod='5'>
+          {$vo.cnname}&nbsp;&nbsp;         
+      </volist>
     </li>
       <li>
-          省&nbsp;<select ><option>请选择</option></select>&nbsp;&nbsp;&nbsp;&nbsp;
-                            
-<!--      <input name="Province" type="text" class="dfinput" value="{$info.Province}" readonly="readonly" />-->
-      市&nbsp;<select ><option>请选择</option></select>&nbsp;&nbsp;&nbsp;&nbsp;
-<!--      <input name="City" type="text" class="dfinput" value="{$info.city}" readonly="readonly" />    -->
-      区县&nbsp;<select ><option>请选择</option></select>&nbsp;&nbsp;&nbsp;&nbsp;
-<!--      <input name="County" type="text" class="dfinput" value="{$info.county}" readonly="readonly" />-->
+          <label><input name="" type="text" class="" value="地区" readonly="readonly" /></label>      
+          {$info.Province}省{$info.city}市{$info.county}区县
     </li>
       <li>
       <label>详细地址</label>
@@ -99,18 +112,14 @@
       <li>
       <label>学员联系电话</label>
       <input name="StuTel" type="text" class="dfinput" value="{$info.stutel}" readonly="readonly" />
+    </li>      
+      <li>
+      <label><input name="" type="text" class="" value="机构余额" readonly="readonly" /></label>
+      <input name="" type="text" class="" value="{$info.money}" readonly="readonly" />
     </li>
       <li>
-      <label>机构简介</label>
-      <input name="Introduce" type="textarea" class="dfinput" value="{$info.introduce}" readonly="readonly" />
-    </li>
-      <li>
-      <label>机构余额</label>
-      <input name="" type="text" class="dfinput" value="{$info.money}" readonly="readonly" />
-    </li>
-      <li>
-      <label>机构折扣</label>
-      <input name="dicount" type="text" class="dfinput" value="{$info.dicount}" readonly="readonly" />
+      <label><input name="" type="text" class="" value="机构折扣" readonly="readonly" /></label>
+      <input name="dicount" type="text" class="" value="{$info.dicount}" readonly="readonly" />
     </li>
       <li>
       <label>试听数量</label>
@@ -133,13 +142,13 @@
       <input name="html_footer" type="text" class="dfinput" value="{$info.html_footer}" readonly="readonly" />
     </li>
       <li>
-<!--      <label>创建时间</label>
-      <input name="create_time" type="text" class="dfinput" value="{$info.create_time}" readonly="readonly" />
+      <label><input name="" type="text" class="" value="创建时间" readonly="readonly" /></label>
+      <input name="create_time" type="text" class="" value="{$info.create_time}" readonly="readonly" />
     </li>
       <li>
-      <label>更新时间</label>
-      <input name="last_time" type="text" class="dfinput" value="{$info.last_time}" readonly="readonly" />
-    </li>-->
+      <label><input name="" type="text" class="" value="更新时间" readonly="readonly" /></label>
+      <input name="last_time" type="text" class="" value="{$info.last_time}" readonly="readonly" />
+    </li>
       <li>
       <label>市场负责人</label>
       <input name="MarketID" type="text" class="dfinput" value="{$info.marketid}" readonly="readonly" />
@@ -156,6 +165,10 @@
       <label>苹果下载地址</label>
       <input name="app_url" type="text" class="dfinput" value="{$info.app_url}" readonly="readonly" />
     </li>
+      <li>
+      <label>机构简介</label>
+      <textarea name="Introduce" class="textinput">{$info.introduce}</textarea>      
+    </li>
     <li>
       <label>&nbsp;</label>
       <input type="hidden" name="JGID" value="{$info.jgid}" />
@@ -167,16 +180,7 @@
     <!--<div class="pagin">
     </div>-->
     </div>
-        <script type="text/javascript">
-        $(function(){
-            $('.dfinput').dblclick(function(){
-                this.readOnly=false;
-            }).blur(function(){
-                this.readOnly=true;
-            });
-        })
-    </script>
-
+        
 </body>
 
 </html>

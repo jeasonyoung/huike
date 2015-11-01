@@ -3,6 +3,7 @@ namespace Agency\Controller;
 use Agency\Controller\AdminController;
 class IndexController extends AdminController {
     public function index(){
+        
         $this->display();
     }
     

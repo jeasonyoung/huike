@@ -12,80 +12,45 @@
 		 $(this).attr("checked",true);
 	 }
     });
-})
-    var i_color=($('#i_color').css('color'));
-    function scid_onchange(){
-        var strValue=$("#select_id").val();
-         if(strValue!='false'){
-            var strText=$("#select_id").find("option:selected").text();
-            $('#sysclass_info').css('color',i_color).text('系统班级');
-            $('#class_info').css('color',i_color).text('自定义班级名称，默认系统班级名称');
-            $('#price_info').css('color',i_color).text('单位元');
-            $('#sale_price_info').css('color',i_color).text('单位元');
-            $.ajax({
-               url:"{:U('class/query_sys_class')}",
-               type:'post',
-               data:{scid:strValue},
-               dataType:'JSON',
-               success:function(json){
-                    json_obj = eval("("+json+")");
-                    for(i=0;i<=json_obj.length;i++){
-                            if(typeof(json_obj[i])!='undefined'){
-                            $('#sys_teacher').val(json_obj[i].teachname);
-                            $('#sys_ecnname').val(json_obj[i].ecnname); 
-                            $('#sys_examid').val(json_obj[i].examid); 
-                            $('#sys_subname').val(json_obj[i].subname); 
-                            $('#sys_subid').val(json_obj[i].subid); 
-                            $('#sys_sale_price').val(json_obj[i].price);
-                            $('#sys_price').val(json_obj[i].price);
-                            $('#sys_classnum').val(json_obj[i].classnum);
-                            $('#sys_validity').val(json_obj[i].validity); 
-                        }
-                    }
-                    $('#sys_cnname').val(strText);
-
-               }
-            });
-              
-         }else{
-              $('#sys_cnname').val(null);
-              $('#sys_teacher').val(null);
-              $('#sys_ecnname').val(null);
-              $('#sys_subname').val(null);
-              $('#sys_sale_price').val(null);
-              $('#sys_price').val(null);
-              $('#sys_classnum').val(null);
-              $('#sys_validity').val(null);
-         }
-    }
-    
+});
+    var i_color=$('#i_color').css('color');
     function cnname_onblur(value){
             if(value==undefined || value=="" || value==null){
-                $('#class_info').css('color','#F00').text('不能为空');
+                $('#class_info').css('color','#F00').text('不能为空');                
+                return false;
             }else{
-                $('#class_info').css('color',i_color).text('自定义班级名称，默认系统班级名称');
+                $('#class_info').css('color',i_color).text('班级名称');
+                return true;
             }
     }
     
-    function sale_price_onblur(value){
-         if(isNaN(value)){
+   function sale_price_onblur(value){
+            if(value==undefined || value=="" || value==null){
+                $('#sale_price_info').css('color','#F00').text('不能为空');
+                 return false;
+            }else if(isNaN(value)){
                  $('#sale_price_info').css('color','#F00').text('请输入数值');
                  return false;
-            }else if(value==undefined || value=="" || value==null){
-                $('#sale_price_info').css('color','#F00').text('不能为空');
             }else{
                 $('#sale_price_info').css('color',i_color).text('单位元');
+                return true;
             }
     }
     function price_onblur(value){
-        if(isNaN(value)){
+        var sys_price = $('#price_sys').val();
+            if(value==undefined || value=="" || value==null){
+                $('#price_info').css('color','#F00').text('不能为空');
+                return false;
+            }else if(isNaN(value)){
                 $('#price_info').css('color','#F00').text('请输入数值');
                 return false;
-            }else if(value==undefined || value=="" || value==null){
-                $('#price_info').css('color','#F00').text('不能为空');
+            }else if(value-sys_price<0){                 
+                $('#price_info').css('color','#F00').text('不能低于系统班级销售价格'+sys_price);
+                return false;        
             }else{
                 $('#price_info').css('color',i_color).text('单位元');
-            }
+                return true;
+            }        
     }
     
     function class_submit(){
@@ -94,26 +59,17 @@
             var sale_price = $('#sys_sale_price').val();
             var price = $('#sys_price').val();
             var cnname = $('#sys_cnname').val();
-             if(cnname==undefined || cnname=="" || cnname==null){
-                $('#class_info').css('color','#F00').text('不能为空');
-                return false;
-            }else{
-                $('#class_info').css('color',i_color).text('自定义班级名称，默认系统班级名称');
-            }
-            if(isNaN(sale_price)){
-                 $('#sale_price_info').css('color','#F00').text('请输入数值');
+             if(!cnname_onblur(cnname)){
                  return false;
-            }else if( sale_price==undefined || sale_price=="" || sale_price==null){
-               $('#sale_price_info').css('color','#F00').text('不能为空');
-                return false;
-            }
-            if(isNaN(price)){
-                $('#price_info').css('color','#F00').text('请输入数值');
-                return false;
-            }else if(price==undefined || price=="" || price==null){
-                $('#price_info').css('color','#F00').text('不能为空');
-                return false;
-            }           
+             }
+             if(!price_onblur(price)){
+                 alert(price);
+                 return false;
+             }
+             if(!sale_price_onblur(sale_price)){
+                 alert(sale_price);
+                 return false;
+             }
         }else{
             $('#sysclass_info').css('color','#F00').text('系统班级未选择');
             return false;
@@ -127,23 +83,21 @@
   <ul class="placeul">
     <li><a href="#">首页</a></li>
     <li><a href="#">课程管理</a></li>
-    <li><a href="#">班级设置</a></li>
-    <li><a href="#">添加班级</a></li>
+    <li><a href="#">班级管理</a></li>
+    <li><a href="#">班级列表</a></li>
+    <li><a href="#">{$info['ecnname']}</a></li>
+    <li><a href="#">修改班级</a></li>
   </ul>
 </div>
 <div class="formbody">
-  <div class="formtitle"><span>添加班级</span></div>
+  <div class="formtitle"><span>修改班级</span></div>
   <ul class="forminfo">
       <form name="jigouclass" action="{:U('jigouClass/edit_class')}" method="post" onsubmit="return class_submit()">
      <li>
           <label>班级名称</label>
       <input name="CnName" type="text" value="{$info['cnname']}" class="dfinput" id="sys_cnname" onblur="cnname_onblur(this.value)"/>
-      <i id="class_info" class="info">自定义班级名称，默认系统班级名称</i></li>
-    <li>
-      <li>
-      <label>描述</label>
-      <input name="Desc" type="text" class="dfinput" value="{$info['desc']}"/>
-      <i>班级描述</i></li>
+      <i id="class_info" class="info">班级名称</i><i id="i_color"></i></li>
+    <li>     
         <li>
       <label>宣传图片URL</label>
       <input name="PicPath" type="text" class="dfinput" value="{$info['picpath']}"/>
@@ -153,15 +107,14 @@
       <label>使用年份</label>
       <input name="UsrYear" type="text" class="dfinput" value="{$info['usryear']}"/>
       <i></i></li>
-    <li>
         <li>
       <label>销售价格</label>
-      <input name="sale_price" type="text" value="{$info['sale_price']}" class="dfinput" id="sys_sale_price" onblur="sale_price_onblur(this.value)"/>
-      <i id="sale_price_info">单位元</i></li>
-         <li>
-      <label>优惠价格</label>
       <input name="price" type="text" value="{$info['price']}" class="dfinput" id="sys_price" onblur="price_onblur(this.value)"/>
       <i id="price_info">单位元</i></li>
+        <li>
+      <label>优惠价格</label>
+      <input name="sale_price" type="text" value="{$info['sale_price']}" class="dfinput" id="sys_sale_price" onblur="sale_price_onblur(this.value)"/>
+      <i id="sale_price_info">单位元</i></li>
       <li>
       <label>试听课程ID</label>
       <input name="ListenID" type="text" class="dfinput" value="{$info['listenid']}" />
@@ -173,15 +126,22 @@
         <li>
       <label>是否锁定</label>
       <cite>
-      <input name="StateTF" type="radio" value="1"/>
+      <input name="StateTF" type="radio" value="0"/>
       是&nbsp;&nbsp;&nbsp;&nbsp;
-      <input name="StateTF" type="radio" value="0" />
+      <input name="StateTF" type="radio" value="1" />
       否</cite></li>
+        <li>
+      <label>描述</label>
+      <textarea name="Desc" class="textinput"></textarea>
+      <i>班级描述</i></li>
     <li>
       <label>&nbsp;</label>
       <input type="hidden" name="jgcid" value="{$info['jgcid']}" />
-      <input type="hidden" id="StateTF" value="{$info['statetf']}" />
+      <input type="hidden" name="examid" value="{$info['examid']}" />
+      <input type="hidden" name="" id='price_sys' value="{$info['sys_price']}" />
+      <input type="hidden" id="StateTF" value="{$info['statetf']}" />      
       <input name="" type="submit" class="btn" value="确认保存"/>
+      <a href="javascript:history.go(-1);"><input name="" type="button" class="btn" value="返回"/></a>
     </li>
     </form>
   </ul>

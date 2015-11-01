@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>机构班级列表</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+<script type="text/javascript">
+       $(function(){
+            var validity = $('#sys_validity').val();
+                            if(validity==8){
+                                $('#validity').text('课程有效期：8个月');
+                            }else if(validity==6){
+                                $('#validity').text('课程有效期：半年');
+                            }else if(validity/12>0){
+                                $('#validity').text('课程有效期：'+validity/12+'年');
+                            }
+            var statetf = $('#statetf').val(); 
+            if(statetf==0){
+                $('#state').text('是').css('color','#FF0000'); 
+            }else if(statetf==1){
+                $('#state').text('否').css('color','#008000'); 
+            }
+       });
+
+</script>
+</head>
+
+
+<body>
+
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">课程管理</a></li>
+    <li><a href="#">班级设置</a></li>
+    <li><a href="#">班级列表</a></li>
+    <li>班级详情</li>
+    </ul>
+    </div>
+    <div class="rightinfo">
+    <table class="tablelist" style="text-align:center">
+    	<thead>
+    	<tr>
+        <th align="" colspan="10">班级详情<input type="hidden" name="" id='sys_validity' value="{$classinfo[0]['validity']}" />
+            <input type="hidden" name="" id='statetf' value="{$classinfo[0]['statetf']}" /></th>
+		</tr>
+        </thead>
+        <tbody>
+		<tr>
+                    <td colspan="10">班级名称：{$classinfo[0]['cnname']}</td>                    
+                    
+		</tr>
+                <tr>                                   
+                    <td width="263px">班级类型：{$classinfo[0]['classtypename']}</td>
+                    <td width="263px">主讲老师：{$classinfo[0]['teachname']}</td>     
+		</tr>
+            <tr>
+                    <td>考试类目：{$classinfo[0]['ecnname']}</td>                    
+                    <td>考试科目：{$classinfo[0]['subname']}</td>
+		</tr>
+            <tr>
+                    <td>课时数：{$classinfo[0]['classnum']}</td>
+                    <td id='validity'>课程有效期：</td>                                        
+		</tr>
+            <tr>
+                    <td>销售价格：{$classinfo[0]['sale_price']}</td>                    
+                    <td>优惠价格：{$classinfo[0]['price']}</td>
+		</tr>
+            <tr>                                
+                    <td>使用年份：{$classinfo[0]['usryear']}</td>
+                    <td>宣传图片URL：{$classinfo[0]['picpath']}</td>        
+		</tr>            
+            <tr>
+                    <td>试听课程ID：{$classinfo[0]['listenid']}</td>                    
+                    <td>排序ID：{$classinfo[0]['sortid']}</td>
+		</tr>
+            <tr>
+                    <td>描述：{$classinfo[0]['desc']}</td>                    
+                    <td>锁定：<font id='state'></font></td>
+		</tr>
+            <tr>
+                    <td>创建时间：{$classinfo[0]['create_time']}</td>                    
+                    <td>最后修改时间：{$classinfo[0]['last_time']}</td>
+		</tr>
+            <tr>
+                <td colspan="10"><a href="javascript:history.go(-1);"><input name="" type="button" class="btn" value="返回"/></a></td>                    
+                    
+		</tr>
+            
+		</tbody>
+	</table>
+    </div>     
+    <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+    </script>
+
+</body>
+
+</html>

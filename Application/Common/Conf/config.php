@@ -2,7 +2,7 @@
 return array(
 	//'配置项'=>'配置值'
 	'DEFAULT_CHARSET'       =>  'utf-8', // 默认输出编码
-	'URL_MODEL'		=>  2,		 // URL访问模式: 2 采用Rewrite模式 IIS下需配置webconfig文件
+	'URL_MODEL'		=>  1,		 // URL访问模式: 2 采用Rewrite模式 IIS下需配置webconfig文件
 	
 	/* 数据库设置 */
 	'DB_TYPE'               =>  'mysql',     // 数据库类型

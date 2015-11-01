@@ -22,7 +22,8 @@
                     if(!status){
                      return false;
                     }
-                   window.location.href = "{:U('jigouClass/del_class')}?jgcid="+jgcid;
+                    var examid = $('#examid').val();
+                   window.location.href = "{:U('jigouClass/del_class')}?jgcid="+jgcid+"&examid="+examid;
                 }
                
             }   
@@ -39,16 +40,18 @@
     <li><a href="#">首页</a></li>
     <li><a href="#">课程管理</a></li>
     <li><a href="#">班级设置</a></li>
-    <li><a href="#">班级信息</a></li>
+    <li><a href="#">班级列表</a></li>
+    <li>{$info[0]['cnname']}</li>
     </ul>
     </div>
-    
+    <input type="hidden" name="ExamID" id='examid' value="{$info[0]['examid']}" />
     <div class="rightinfo">
     
     <div class="tools">
     
     	<ul class="toolbar">
-        <li class="click"><a href="{:U('jigouClass/add_class')}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>   
+        <li class="click"><a href="{:U('jigouClass/add_class',array('examid' => $info[0]['examid']))}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>   
+        <li><a href="{:U('jigouClass/add_allclass',array('examid' => $info[0]['examid']))}" onclick="javascript:return confirm('确定要添加当前考试所有班级吗?')"><span><img src="__PUBLIC__/images/t01.png" /></span>添加所有班级</a></li>
         <li onclick="del_class()"><a href="javascript:void()"><span><img src="__PUBLIC__/images/t03.png" /></span>删除</a></li>
         </ul>
     </div>
@@ -56,8 +59,7 @@
     	<thead>
     	<tr>
         <th><input name="" type="checkbox" value="" checked="checked"/></th>
-        <th>班级名称</th>
-        <th>描述</th>
+        <th>班级名称</th>        
         <th>宣传图片URL</th>
         <th>使用年份</th>
         <th>销售价格</th>
@@ -65,6 +67,7 @@
         <th>锁定</th>
         <th>课时数</th>
         <th>试听课程ID</th>
+<!--        <th>描述</th>-->
         <th>创建时间</th>
         <th>最后修改时间</th>
         <th>排序ID</th>
@@ -75,25 +78,25 @@
         <volist id="vo" name="classlist">
         <tr>
         <td><input name="jgcid" type="checkbox" value="{$vo.jgcid}" /></td>
-        <td>{$vo.cnname}</td>
-        <td>{$vo.desc}</td>
+        <td>{$vo.cnname}</td>        
         <td>{$vo.picpath}</td>
-        <td>{$vo.usryear}</td>
-        <td>{$vo.sale_price}</td>
+        <td>{$vo.usryear}</td>        
         <td>{$vo.price}</td>
+        <td>{$vo.sale_price}</td>
         <td>
         <if condition="$vo.statetf eq 1">
-        <font color="#FF0000">是</font>
-        <else />
         <font color="#008000">否</font>
+        <else />
+        <font color="#FF0000">是</font>
         </if>
         </td>
         <td>{$vo.classnum}</td>
         <td>{$vo.listenID}</td>
+<!--        <td>{$vo.desc}</td>-->
         <td>{$vo.create_time}</td>
         <td>{$vo.last_time}</td>
         <td>{$vo.sortid}</td>
-        <td><a href="{:U('jigouClass/edit_class',array('jgcid' => $vo['jgcid']))}" class="tablelink">修改</a>     <a href="{:U('jigouClass/del_class',array('jgcid' => $vo['jgcid']))}" onclick="javascript:return confirm('确定删除此班级吗?')" class="tablelink"> 删除</a></td>
+        <td><a href="{:U('jigouClass/details_class',array('jgcid' => $vo['jgcid'],'examid' => $info[0]['examid']))}" class="tablelink">详情</a>&nbsp;<a href="{:U('jigouClass/edit_class')}?jgcid={$vo['jgcid']}&examid={$info[0]['examid']}" class="tablelink">修改</a>&nbsp;<a href="{:U('jigouClass/del_class',array('jgcid' => $vo['jgcid']))}" onclick="javascript:return confirm('确定删除此班级吗?')" class="tablelink">删除</a></td>
         </tr>   
         </volist>   
         </tbody>

@@ -16,7 +16,7 @@ class ExamClassController extends AdminController{
             $array = I('ExamID');
             $size = count($array);  
             for($i=0; $i< $size; $i++){
-                if($i===0){
+                if($i==0){
                     $AllExamID = $array[$i];
 		}else{
                     $AllExamID = $AllExamID.','.$array[$i];
@@ -37,7 +37,6 @@ class ExamClassController extends AdminController{
             $this->display('list_exam_class');
         }
     }
-    
     /*查询考试类目信息*/
     public function list_exam_class(){
         $model = D('Agency/Examclass');

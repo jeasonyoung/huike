@@ -14,7 +14,10 @@
     <span>位置：</span>
     <ul class="placeul">
     <li><a href="#">首页</a></li>
-    <li><a href="{:U('DefTaoCan/select_exam')}&examid=">选择考试</a></li>
+    <li><a href="#">课程管理</a></li>
+    <li><a href="#">班级管理</a></li>
+    <li><a href="#">班级列表</a></li>
+    <li><a href="{:U('jigouClass/select_exam')}">选择考试</a></li>
     </ul>
     </div>
     
@@ -27,9 +30,9 @@
         </thead>
         <tbody>
 		<tr>
-		<volist id="voa" name="exams" mod="10">
-			<td><a href="{:U('DefTaoCan/list_user')}&examid={$voa.examid}">{$voa.cnname}</a></td>
-			<eq name="mod" value="9"></tr><tr></eq>
+		<volist id="voa" name="exams" mod="5">
+			<td><a href="{:U('jigouClass/list_class')}?examid={$voa.examid}">{$voa.cnname}</a></td>
+			<eq name="mod" value="4"></tr><tr></eq>
 		</volist>
 		</tr>
 		</tbody>

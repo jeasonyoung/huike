@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>机构班级列表</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+<script type="text/javascript">
+$(function(){
+    var anstext = $('#anstext').val();
+    if(anstext==undefined || anstext=="" || anstext==null){
+        $('#ans').text('');
+        $('#Answer').show();
+        $('#Reply').hide();
+        $('#returnbtn').hide();
+    }else{
+        $('#Reply').text('(已回复)');
+        $('#Reply').show();
+        $('#returnbtn').show();
+        $('#Answer').hide();
+    }
+})
+function answer_submit(){    
+   var value = $('#ans_textarea').val();
+            if(value==undefined || value=="" || value==null){
+                 return false;
+            }            
+}
+</script>
+<style type="text/css">    
+/*    .tablelist1{width:526px;  line-height:20px;}
+    .tablelist1{border:solid 1px #ebb683; width:100%; clear:both;}
+    .tablelist1 th{background:url(__PUBLIC__/images/th.gif) repeat-x; height:34px; line-height:34px; border-bottom:solid 1px #d7a372; text-indent:11px; text-align:center;}
+    .tablelist1 td{line-height:35px;text-indent:11px;border-right: dotted 1px #F2BF74;}*/
+    .Ansdiv{width:526px;  line-height:20px;}
+    .Ansdiv{border:solid 1px #ebb683; width:100%; clear:both;}
+    .Ansdiv .Anstop{background:url(__PUBLIC__/images/th.gif) repeat-x; height:34px; line-height:34px; border-bottom:solid 1px #d7a372; text-indent:11px; text-align:center;}
+    .Ansdiv #Anssub{border-bottom: dotted 1px #F2BF74;}    
+    .Ansdiv .Anssub{line-height:35px;text-indent:11px;}    
+</style>
+</head>
+
+
+<body>
+
+    <div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">学员管理</a></li>
+    <li><a href="#">提问答疑</a></li>
+    <li><a href="#">提问列表</a></li>
+    <li><a href="#">提问回复</a></li>
+    </ul>
+    </div>
+    
+<div class="rightinfo">
+<!--    <table class="tablelist1">
+        <thead>
+    	<tr>
+            <th colspan="10">提问主题:{$info['title']} <samp id='Reply'></samp> </th>
+		</tr>
+        </thead>
+        <tr>
+            <td colspan="5" width="262px">{$info['create_time']}<span>学员&nbsp;-&nbsp;{$info['username']}:{$info['content']}</span></td>
+            <td colspan="5" width="262px" id="ans">{$info['anstime']}<span>系统&nbsp;-&nbsp;{$info['jgusername']}:{$info['anstext']}</span></td>
+        </tr>
+             
+    </table>--><div class="Ansdiv">
+        <div class="Anstop"><strong>提问主题:{$info['title']} <samp id='Reply'></samp></strong></div>
+        <div class="Anssub" id="Anssub"><b>{$info['create_time']}</b><span><b>学员提问&nbsp;-&nbsp;{$info['username']}:</b>{$info['content']}</span></div>
+          <div class="Anssub" id="ans"><b>{$info['anstime']}</b><span><b>系统回复&nbsp;-&nbsp;{$info['jgusername']}:</b>{$info['anstext']}</span></div>
+    </div>
+<div id='Answer' style="margin-top: 10px">
+        <form name="LearnAnswer" id="LearnAnswer" action="{:U('Ask/add_answer')}" method="post" onsubmit="return answer_submit()">
+        <input name="" type="hidden" id="anstext" value="{$info['anstext']}" />
+        <input name="AskID" type="hidden" value="{$info['askid']}" />
+        <input name="UID" type="hidden" value="{$info['uid']}" />
+        <textarea name="Content" id="ans_textarea" class="textinput"></textarea><br><br><br>
+        <input name="" type="submit" class="btn" value="回复"/>&nbsp;&nbsp;&nbsp<a href="javascript:history.go(-1);"><input name="" type="button" class="btn" value="返回"/></a>        
+        </form>
+    </div>   
+    <div id="returnbtn" style="text-align:center;margin-top: 10px"><a href="{:U('ask/select_ask')}"><input name="" type="button" class="btn" value="返回"/></a></div>
+</div>
+        
+</body>
+
+</html>

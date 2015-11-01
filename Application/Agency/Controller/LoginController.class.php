@@ -31,7 +31,8 @@ class LoginController extends Controller{
         $data = array();
         $data['UserName'] = I('UserName');
         $pwd = I('PassWords');
-        //$data['PassWords'] = md5(I('PassWords'));
+        $data['PassWords'] = md5(I('PassWords'));
+        
         if(empty($data['UserName']) || empty($pwd)){
             $this->error('用户名或密码不能为空!',U('Login/login'));
         }
@@ -45,10 +46,12 @@ class LoginController extends Controller{
             if($result['lock']==0){
                 $this->error('对不起无法登陆！用户已经被锁定，请联系管理员',U('Login/login'));
             }
+            session('JGUID',$result['uid']);
             session('JGID',$result['jgid']);
             session('UserName',$result['username']);
+            session('LastLoginTime',$result['groupid']);
             session('LoginNum',$result['loginnum']);
-            session('LastLoginTime',$result['lastlogintime']);
+            session('LastLoginTime',$result['lastlogintime']);            
             $this->success('登陆成功',U('Index/Index'));
         }else{
           $this->error('用户名或密码错误!',U('Login/login'));
