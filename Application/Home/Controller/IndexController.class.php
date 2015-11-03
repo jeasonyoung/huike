@@ -43,10 +43,10 @@ class IndexController extends Controller {
     private function getMenu($mid,$menu=array("name" => 'link','title')){
         $db = M('admin_rule');
         $module_name = strtolower(MODULE_NAME);
-        $url_model = C('URL_MODEL');
-        if($url_model!==0){
-            $menu = array("replace(name,'".$module_name."','')" => 'link','title');
-        }
+        // $url_model = C('URL_MODEL');
+        // if($url_model!==0){
+        //     $menu = array("replace(name,'".$module_name."','')" => 'link','title');
+        // }
         //return $db->where('mid='.$mid.' and `status`=1 and `show`=1 and id in ('.$this->rules.')')->order('sortid asc')->field($menu)->select();
         return $db->where('mid='.$mid.' and `status`=1 and `show`=1')->order('sortid asc')->field($menu)->select();
     }
