@@ -4,9 +4,9 @@
  * @author yangyong <jeason1914@qq.com>
  */
 namespace Home\Controller;
-use Think\Controller;
+use Home\Controller\BaseController;
 
-class LoginlogController extends Controller{
+class LoginlogController extends BaseController{
 
      /**
      * 默认入口。

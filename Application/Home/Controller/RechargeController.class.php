@@ -5,9 +5,9 @@
  * @author yangyong <jeason1914@qq.com>
  */
 namespace Home\Controller;
-use Think\Controller;
+use Home\Controller\BaseController;
 
-class RechargeController extends Controller{
+class RechargeController extends BaseController{
 
     /**
      * 默认入口。
@@ -33,17 +33,28 @@ class RechargeController extends Controller{
      */
     public function search(){
         if(APP_DEBUG) trace('执行search...');
+        //获取机构ID
+        $_agencyId = I('agency_id','');
+        //获取类型ID
+        $_typeId = I('type_id','');
+        //获取资金流向ID
+        $_flowId = I('flow_id','');
+        //获取渠道ID
+        $_channelId = I('channel_id','');
+        //获取状态ID
+        $_statusId = I('status_id','');
+
         //初始化数据模型
         $_model = D('Recharge');
         //设置机构
         $this->assign('agencies',$_model->loadAgencies());
-
+        $this->assign('agencyId',$_agencyId);
+        $this->assign('typeId',$_typeId);
+        $this->assign('flowId',$_flowId);
+        $this->assign('channelId',$_channelId);
+        $this->assign('statusId',$_statusId);
         //查询数据
-        $_result = $_model->loadRecharges(I('agency_id',''),
-                                          I('type_id',''),
-                                          I('flow_id',''),
-                                          I('channel_id',''),
-                                          I('status_id',''));
+        $_result = $_model->loadRecharges($_agencyId,$_typeId,$_flowId,$_channelId,$_statusId);
         //设置数据
         $this->assign($_result);
         //显示

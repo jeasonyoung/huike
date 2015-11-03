@@ -140,7 +140,28 @@
     <script type="text/javascript">
     <!--
     $(function(){
+        //
         $('.tablelist tbody tr:odd').addClass('odd');
+        //选择机构
+        <if condition="isset($agencyId)">
+        $("select[name='agency_id']").val('{$agencyId}');
+        </if>
+        //选择交易类型
+        <if condition="isset($typeId)">
+        $("select[name='type_id']").val('{$typeId}');
+        </if>
+        //选择资金流向
+        <if condition="isset($flowId)">
+        $("select[name='flow_id']").val('{$flowId}');
+        </if>
+        //选择资金渠道
+        <if condition="isset($channelId)">
+        $("select[name='channel_id']").val('{$channelId}');
+        </if>
+        //选择流水状态
+        <if condition="isset($channelId)">
+        $("select[name='status_id']").val('{$statusId}');
+        </if>
     });
     //-->
     </script>

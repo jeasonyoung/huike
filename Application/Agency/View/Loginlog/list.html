@@ -64,9 +64,11 @@
             <thead>
                 <tr>
                     <th>编号<i class="sort"><img src="__PUBLIC__/images/px.gif" /></i></th>
+                    <th>用户类型</th>
                     <th>用户名</th>
                     <th>真实姓名</th>
                     <th>登录时间</th>
+                    <th>登录终端</th>
                     <th>登录IP</th>
                     <th>浏览器</th>
                 </tr>
@@ -75,9 +77,11 @@
                 <volist name="data" id="vo">
                 <tr>
                     <td>{$vo['id']}</td>
+                    <td>{$vo['type_name']}</td>
                     <td>{$vo['user_name']}</td>
                     <td>{$vo['real_name']}</td>
                     <td>{$vo['login_time']}</td>
+                    <td>{$vo['login_type_name']}</td>
                     <td>{$vo['login_ip']}</td>
                     <td>{$vo['browser']}</td>
                 </tr>
