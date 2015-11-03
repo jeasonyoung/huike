@@ -49,7 +49,7 @@ class LoginController extends Controller{
             session('JGUID',$result['uid']);
             session('JGID',$result['jgid']);
             session('UserName',$result['username']);
-            session('LastLoginTime',$result['groupid']);
+            session('groupid',$result['groupid']);
             session('LoginNum',$result['loginnum']);
             session('LastLoginTime',$result['lastlogintime']);            
             $this->success('登陆成功',U('Index/Index'));

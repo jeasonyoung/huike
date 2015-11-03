@@ -1,6 +1,7 @@
 <?php
 /**
  * 机构充值数据模型。
+ * @author yangyong <jeason1914@qq.com>
  */
 namespace Home\Model;
 use Think\Model;
