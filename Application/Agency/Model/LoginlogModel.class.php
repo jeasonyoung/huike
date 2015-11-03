@@ -113,36 +113,27 @@ class LoginlogModel extends Model{
      * 删除一个月前的日志数据。
      * @return int 删除的数据量
      */
-    public function deleteMonthLogs($type=0){
+    public function deleteMonthLogs(){
         if(APP_DEBUG) trace("删除一个月前的日志数据...");
         $_end_time = date("Y-m-d",strtotime("last month"));
         if(APP_DEBUG) trace("删除[$_end_time]以前的数据!");
-        switch ($type) {
-            case 0:{
-                //删除系统用户日志
-                $_model = $this->table('HK_admin_log')
-                               ->where(array('LoginTime' => array('lt', $_end_time)))
-                               ->delete();
-                if(APP_DEBUG) trace("删除系统日志...$_model");
-                return $_model;
-            }
-            case 1:{
-                //删除机构用户日志
-                $_model = $this->table('HK_JiGou_Loginlog')
-                               ->where(array('LoginTime' => array('lt', $_end_time)))
-                               ->delete(); 
-                if(APP_DEBUG) trace("删除机构用户日志...$_model");
-                return $_model;
-            }
-            case 2:{
-                //删除机构学员日志
-                $_model = $this->table('HK_User_Log')
-                               ->where(array('create_time' => array('lt', $_end_time)))
-                               ->delete();
-                if(APP_DEBUG) trace("删除机构学员日志...$_model");
-                return $_model;
-            }
-            default:return false;
+        $_deleteRows = 0;
+         //删除机构用户日志
+        $_model = $this->table('HK_JiGou_Loginlog')
+                       ->where(array('LoginTime' => array('lt', $_end_time)))
+                       ->delete(); 
+        if(APP_DEBUG) trace("删除机构用户日志...$_model");
+        if($_model){
+            $_deleteRows += $_model;
         }
+        //删除机构学员日志
+        $_model = $this->table('HK_User_Log')
+                       ->where(array('create_time' => array('lt', $_end_time)))
+                       ->delete();
+        if(APP_DEBUG) trace("删除机构学员日志...$_model");
+        if($_model){
+            $_deleteRows += $_model;
+        }
+        return $_deleteRows
     }
 }
