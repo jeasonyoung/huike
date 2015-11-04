@@ -1,8 +1,8 @@
 <?php
 namespace Home\Controller;
-use Think\Controller;
+use Home\Controller\BaseController;
 
-class MemberController extends Controller{
+class MemberController extends BaseController{
     private static $model;
     private $agencyList;
 
@@ -63,13 +63,13 @@ class MemberController extends Controller{
 
                 if(isset($result['PassWords']) && !empty($result['PassWords'])){
                     $result['Psw'] = I('PassWords');
-                    foreach($result as &$v){
+					$result['PassWords'] = md5(I('PassWords'));
+                    /*foreach($result as &$v){
                         if($key=="PassWords"){
                             $v=md5(I('PassWords'));
                         }
-                    }
+                    }*/
                 }
-                
                 if(self::$model->update_memeber($result)){
                     $this->success('学员信息更新成功!',U('member/member_list'));
                 }else{
@@ -77,7 +77,7 @@ class MemberController extends Controller{
                 }
             }
         }else{
-            $data = self::$model->query_memeber(array('userid' => $UserID),FALSE);
+            $data = self::$model->query_memeber(array('UserID' => $UserID),FALSE);
             $this->assign('agency',$this->agencyList);
             $this->assign('data',$data);
             $this->display();

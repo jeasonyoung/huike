@@ -78,6 +78,9 @@
       <label>管理组</label>
       <select name="GroupID" class="styled-select">
       <option value="0">选择管理组</option>
+      <volist name="group" id="vo_group">
+      <option value="{$vo_group.id}">{$vo_group.title}</option>
+      </volist>
       </select>
     </li>
     <li>

@@ -23,11 +23,11 @@
     <div class="rightinfo">
 	<div class="tools">
     	<ul class="toolbar">
-        <li class="click"><a href="{:U('SysClass/add_user')}&examid={$Think.get.examid}&subid={$Think.get.subid}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
+        <li class="click"><a href="{:U('SysClass/add_user',array('examid' => $_GET['examid'],'subid' => $_GET['subid']))}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
         </ul>
-        <ul class="toolbar1">
+        <!--ul class="toolbar1">
         <li><span><img src="__PUBLIC__/images/t05.png" /></span>设置</li>
-        </ul>
+        </ul-->
     </div>
     <table class="tablelist">
     	<thead>

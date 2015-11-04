@@ -42,6 +42,7 @@
         <th>锁定</th>
         <th>姓名</th>
         <th>所属机构</th>
+        <th>用户权限</th>
         <th>注册时间</th>
         <th>最后登录时间</th>
         <th>操作</th>
@@ -62,6 +63,7 @@
         </td>
         <td>{$vo.realname}</td>
         <td>{$vo.company}</td>
+        <td>{$vo.title}</td>
         <td>{$vo.regtime}</td>
         <td>{$vo.lastlogintime}</td>
         <td><a href="{:U('agency/edit_user',array('UID' => $vo['uid']))}" class="tablelink">修改</a>     <a href="{:U('agency/del_users',array('uid' => $vo['uid']))}" onclick="javascript:return confirm('确定删除此用户吗?')" class="tablelink"> 删除</a></td>

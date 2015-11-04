@@ -1,8 +1,8 @@
 <?php
 namespace Home\Controller;
-use Think\Controller;
+use Home\Controller\BaseController;
 
-class AgencyController extends Controller{   
+class AgencyController extends BaseController{   
     private $province;
     //添加机构用户
     public function add_agency(){
@@ -101,10 +101,9 @@ class AgencyController extends Controller{
         if(IS_POST){
             $JGID = I('JGID');
             if(empty($JGID)){$this->error('请选择合作机构!');}
-            $agencyInfo = $model->query_agency('md5key','jgid='.$JGID);
             $data = array();
             $data['UserName'] = I('UserName');
-            $data['PassWords'] = md5($agencyInfo['md5key'].I('PassWords'));
+            $data['PassWords'] = md5(I('PassWords'));
             $data['JGID'] = $JGID;
             $data['Lock'] = I('Lock');
             $data['RegTime'] = date('Y-m-d H:i:s',time());
@@ -133,6 +132,8 @@ class AgencyController extends Controller{
                 $agency = $model->get_agencyList(array('`abbr_cn`','`jgid`'),'statetf=1');
                 $this->assign('agency',$agency);
             }
+            $db_group = M('jigou_group');
+            $this->assign('group',$db_group->field('id,title')->select());
             $this->display();
         }
     }
@@ -152,7 +153,11 @@ class AgencyController extends Controller{
             if(!$result=$check->create()){
                 $this->error($model->getError());
             }else{
-                if($model->update_user($result)){
+                $update_info = array_filter($result);
+                if(!empty($update_info['PassWords'])){
+                    $update_info['PassWords'] = md5(I('PassWords'));
+                }
+                if($model->update_user($update_info)){
                     $this->success('更新机构管理员信息成功',U('agency/list_users'));
                 }else{
                     $this->error('更新管理员信息失败');
@@ -160,9 +165,11 @@ class AgencyController extends Controller{
             }
         }else{
             $data = $model->query_user('uid='.$UID,FALSE);
-            $agency = $model->get_agencyList(array('`company`','`jgid`'),'statetf=1');
+            $agency = $model->get_agencyList(array('`abbr_cn`','`jgid`'),'statetf=1');
             $this->assign('data',$data);
             $this->assign('agency',$agency);
+            $db_group = M('jigou_group');
+            $this->assign('group',$db_group->field('id,title')->select());
             $this->display();
         }
     }

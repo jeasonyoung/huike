@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>订单列表</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+<script type="text/javascript">
+$(function(){
+  var osv=$('#osv').val();
+  $('#os option').each(function(){
+	 if($(this).val()==osv){
+		 $(this).attr('selected',true);
+	 }
+  })
+})
+</script>
+<style>
+#search,.shopcart input,select{height:24px;line-height:24px;border:1px solid #dedede}
+.shopcart{border:1px solid #ebb683;line-height: 35px;text-indent: 10px;clear:both}
+.shopcart span,select{display:inline-block;float:left;margin-right:5px}
+.shopcart select{margin-top:5px}
+
+.shopcart ul li{line-height:35px;float:left;margin-right:5px}
+.button {
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    line-height: 20px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    text-shadow: 1px 1px 1px #333;
+    width: 60px;
+	cursor:pointer;
+}
+.button.gray {
+    background: -moz-linear-gradient(center top , #f2f3f7, #e4e8ec) repeat scroll 0 0;
+    border: 1px solid #dce1e6;
+    box-shadow: 0 1px 2px #fff inset, 0 -1px 0 #a8abae inset;
+    color: #8c96a0;
+    text-shadow: 1px 1px 1px #fff;
+}
+</style>
+</head>
+
+
+<body>
+
+	<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">订单管理</a></li>
+    <li><a href="#">订单列表</a></li>
+    </ul>
+    </div>
+    
+    <div class="rightinfo">
+    
+    <div class="tools">
+    	<ul class="toolbar">
+        <li class="click"><a href="{:U('order/generateorder')}"><span><img src="__PUBLIC__/images/t01.png" /></span>生成订单</a></li>
+        </ul>
+        <ul class="toolbar1">
+        <li><span><img src="__PUBLIC__/images/t05.png" /></span>设置</li>
+        </ul>
+    </div>
+    <div class="tools shopcart">
+    <span>搜索订单</span>
+    <ul>
+    <form name="search" action="{:U('order/list_orders')}" method="get">
+    <li>订单号: <input type="text" name="OrderID" style="width:160px" value="{$_GET['OrderID']}" /></li>
+    <li>用户名: <input type="text" name="UserName" style="width:80px" value="{$_GET['UserName']}" /></li>
+    <li>真实姓名: <input type="text" name="RealName" style="width:80px" value="{$_GET['RealName']}" /></li>
+    <li>联系电话: <input type="text" name="Mobile" value="{$_GET['Mobile']}" /></li>
+    <li>
+    <select name="JGID" id="JGID" style="width:150px">
+    <option value="">-选择机构-</option>
+    <volist name="agencyList" id="agency">
+    <eq name="agency.jgid" value="$_GET['JGID']">
+    <option value="{$agency.jgid}" selected="selected">{$agency.abbr_cn}</option>
+    <else />
+    <option value="{$agency.jgid}">{$agency.abbr_cn}</option>
+    </eq>
+    </volist>
+    </select>
+    </li>
+    <li>
+    <select name="OrderState" id="os">
+    <option value="">-订单状态-</option>
+    <option value="0">未付费</option>
+    <option value="1">已付费</option>
+    <option value="2">已开通</option>
+    <option value="-1">已关闭</option>
+    <option value="-2">已删除</option>
+    </select>
+    </li>
+    <li><input type="submit" value="搜索" class="button gray" style="line-height: 18px"/></li>
+    <input type="hidden" name="Submit" value="1" />
+    <input type="hidden" id="osv" value="{$_GET['OrderState']}" />
+    </form>
+    </ul>
+    </div>
+    
+    <table class="tablelist" >
+    	<thead>
+    	<tr>
+        <th>订单号<i class="sort"><img src="__PUBLIC__/images/px.gif" /></i></th>
+        <th>用户名</th>
+        <th>真实姓名</th>
+        <th>所属机构</th>
+        <th>原始价格</th>
+        <th>订单成本</th>
+        <th>优惠价</th>
+        <th>电话</th>
+        <th>状态</th>
+        <th>生成时间</th>
+        <th>详情</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist id="vo" name="orders['data']">
+        <tr>
+        <td>{$vo.orderid}</td>
+        <td>{$vo.username}</td>
+        <td>{$vo.realname}</td>
+        <td>{$vo.agency}</td>
+        <td>{$vo.oldprice}</td>
+        <td>{$vo.costprice}</td>
+        <td>{$vo.salesprice}</td>
+        <td>{$vo.mobile}</td>
+        <td>
+        <switch name="$vo.orderstate" >
+        <case value="0" break="1"><font color="#FF0000">未付费</font></case>
+        <case value="1" break="1"><font color="#008000">已付费</font></case>
+        <case value="2" break="1"><font color="#008000">已开通</font></case>
+        <case value="-1" break="1"><font color="#FF0000">已关闭</font></case>
+        <case value="-2" break="1"><font color="#0000FF">已删除</font></case>
+        <default /><font color="#FF0000">未付费</font>
+        </switch>
+        </td>
+        <td>{$vo.create_time}</td>
+        <td>[<a href="{:U('order/view_order',array('orderid' => $vo['orderid']))}" class="tablelink">查看详情</a>]</td>
+        </tr>   
+        </volist>   
+        </tbody>
+    </table>
+    <div class="pagin">
+    {$orders['page']}
+    </div>
+    </div>
+    
+    <script type="text/javascript">
+	$('.tablelist tbody tr:odd').addClass('odd');
+	</script>
+
+</body>
+
+</html>

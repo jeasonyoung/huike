@@ -36,7 +36,7 @@ class MemberModel extends Model{
         }
         $totalRows = $this->user_total($condition);
         $page = new \Think\Page($totalRows,20);
-        $fields = array('userid','hk_user.username','hk_user.realname','mobile','hk_user.regtime','hk_user.lock','hk_user.jgid','jgadminname','adminname','jigou.company' => 'agency','jga.username' => 'agencyuser');
+        $fields = array('userid','hk_user.username','hk_user.realname','mobile','hk_user.regtime','hk_user.lock','hk_user.jgid','jgadminname','adminname','jigou.abbr_cn' => 'agency','jga.username' => 'agencyuser');
         $data = $this->field($fields)->limit($page->firstRow.','.$page->listRows)->
                 join('left join hk_jigou jigou ON jigou.jgid=hk_user.jgid')->
                 join('left join hk_jigou_admin jga ON jga.username=hk_user.jgadminname')->

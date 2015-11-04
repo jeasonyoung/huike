@@ -5,6 +5,7 @@ use Think\Model;
 class OrderModel extends Model{
     protected $autoCheckFields =false;
     private $condition;
+    private static $db_jigou;
     private static $db_exam;
     private static $db_subject;
     private static $db_class;
@@ -78,8 +79,9 @@ class OrderModel extends Model{
     public function getOneProduct($pid,$ptype){
         if($ptype==2){
             $data = self::$db_class->where('jgcid='.$pid)->
-                    field(array('jgcid' => 'pid','kemu.subname',"concat(kemu.subname,'--',cnname)" => 'proname','price','useyear','sale_price','jgid'))->
+                    field(array('jgcid' => 'pid','kemu.subname',"concat(kemu.subname,'--',cnname)" => 'proname','hk_jigou_class.price','useyear','hk_jigou_class.sale_price','jgid','sys.price' => 'oldprice','sys.sale_price' => 'cost_price'))->
                     join('left join hk_subjects kemu ON kemu.subid=hk_jigou_class.subid')->
+                    join('left join hk_class_sys sys ON sys.scid=hk_jigou_class.scid')->
                     find();
             $data['type'] = $ptype;
         }else{
@@ -98,7 +100,11 @@ class OrderModel extends Model{
      * @param array $order 订单信息
      */
     public function insertOrder($order=array()){
-        $this->insertOrderDetail($order['OrderID'],$order['UID'],$order['UserName']);
+        $detail = $this->insertOrderDetail($order['OrderID'],$order['UID'],$order['UserName']);
+        $order['OldPrice'] = $detail['OldPrice'];
+        $order['CostPrice'] = $detail['CostPrice'];
+        $order['TotalPrice'] = $detail['TotalPrice'];
+        $order['SalesPrice'] = $detail['SalesPrice'];
         return self::$db_orders->add($order);
     }
     
@@ -106,7 +112,10 @@ class OrderModel extends Model{
     private function insertOrderDetail($orderId,$uid,$userName){
         //购物车中商品
         $products = session('myCart');
-        show_bug($products);
+        $oldPrice = 0;
+        $costPrice = 0;
+        $totalPrice = 0;
+        $salesPrice = 0;
         foreach ($products as $key => $values){
             if(is_array($values)){
                 $insert['OrderID'] = $orderId;
@@ -117,26 +126,36 @@ class OrderModel extends Model{
                 $insert['JG_ProID'] = $values['pid'];
                 $insert['JGID'] = $values['jgid'];
                 $insert['create_time'] = date('Y-m-d H:i:s');
-                $insert['OldPrice'] = 0;
+                $insert['OldPrice'] = $values['oldprice'];
                 if($values['type']==1){
                     $tccid = self::$db_taocan->where('taocanid='.$values['pid'].' and jgid='.$values['jgid'])->getField('TCCID');
                     $discount = self::$db_taocan_class->where('tccid='.$tccid)->
                             join('left join HK_Class_TaoCanType t2 ON t2.tctypeid=hk_jigou_taocan_class.tctypeid')->getField('t2.discount');
                     $insert['Discount'] = $discount; //系统套餐折扣
                     $insert['JG_Discount'] = self::$db_taocan->where('taocanid='.$values['pid'])->getField('Discount'); //机构套餐折扣
+                    $insert['TotalPrice'] = $values['totalprice'];
+                    $insert['Cost_Price'] = $values['totalprice'];
                 }else{
-                    $insert['Discount'] = 1;
-                    $insert['JG_Discount'] = 1;
-                }
-                $insert['TotalPrice'] = $values['price'];
-                //$insert['Cost_Price'] = '';
-                $insert['Sale_Price'] = $values['sale_price'];
-                //$insert['Real_Price'] = $values['sale_price'];
+                    $jg_discount = self::$db_jigou->where('jgid='.$values['jgid'])->getField('Dicount');
+                    $insert['Discount'] = $jg_discount;
+                    $insert['JG_Discount'] = $jg_discount;
+                    $insert['TotalPrice'] = $values['oldprice'] * $jg_discount;
+                    $insert['Cost_Price'] = $values['oldprice'] * $jg_discount;
+                }                
+                $insert['Sale_Price'] = $values['price'];
+                $insert['Real_Price'] = $values['sale_price'];
                 $insert['OrderState'] = 0;
                 $insert['OrderType'] = 2;
+                
+                $oldPrice += $values['oldprice'];
+                $costPrice += $insert['Cost_Price'];
+                $totalPrice += $insert['TotalPrice'];
+                $salesPrice += $insert['Real_Price'];
                 self::$db_order_detail->add($insert);
             }
         }
+        //此处更新订单表
+        return array('OldPrice' => $oldPrice,'CostPrice' => $costPrice,'TotalPrice' => $totalPrice,'SalesPrice' => $salesPrice);
     }
 
     //格式化查询条件
@@ -149,6 +168,41 @@ class OrderModel extends Model{
         }
         return $tempArr;
     }
+    
+    //返回订单表数据
+    public function query_orders($condition="orderid <> ''",$field=array('orderid','hk_orders.username' => 'username','user.realname' => 'realname','jg.abbr_cn' => 'agency','oldprice','costprice','salesprice','hk_orders.mobile','hk_orders.create_time','orderstate')){
+        $totalRows = $this->total_orders($condition);
+        $page = new \Think\Page($totalRows,20);
+        $data = self::$db_orders->field($field)->join('left join hk_user user ON user.userid=hk_orders.uid')->
+                join('left join hk_jigou jg ON jg.jgid=hk_orders.jgid')->
+                limit($page->firstRow.','.$page->listRows)->
+                order('create_time desc')->
+                where($condition)->
+                select();
+        return array(
+            'data'  => $data,           //数据
+            'page'  => $page->show()    //分页字符串
+        );
+    }
+    
+    //取得某订单详情
+    public function order_detail($orderid){
+        return self::$db_orders->where("orderid='$orderid'")->
+                field(array('abbr_cn' => 'agency','user.realname','uid','OrderID','hk_orders.create_time','hk_orders.UserName','hk_orders.Mobile','OrderType','OldPrice','TotalPrice','CostPrice','SalesPrice','OrderState','PayState','PayTime','OpenTime','hk_orders.JGAdminName','hk_orders.AdminName'))->
+                join('left join hk_jigou jg ON jg.jgid=hk_orders.jgid')->
+                join('left join hk_user user ON user.userid=hk_orders.uid')->
+                find();
+    }
+    
+    //取得某订单商品列表
+    public function order_prolist($orderid){
+        return self::$db_order_detail->field(array('JG_ProID','ProName','ProType','OldPrice','Cost_Price','Sale_Price','Real_Price'))->where("orderid='$orderid'")->select();
+    }
+
+    //按条件查询订单数
+    private function total_orders($condition="orderid <> ''"){
+        return self::$db_orders->where($condition)->count();
+    }
 
     /*初始化表*/
     public function _initialize() {
@@ -160,7 +214,7 @@ class OrderModel extends Model{
             unset($para['SubID']);
         }
         $this->condition = $para;
-        
+        self::$db_jigou = M('jigou');
         self::$db_exam = M('examclass');
         self::$db_subject = M('subjects');
         self::$db_class = M('jigou_class');

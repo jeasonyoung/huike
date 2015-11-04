@@ -9,7 +9,7 @@
 <script type="text/javascript">
 <!--
 function MM_jumpMenu(targ,selObj,restore){ //v3.0
-  eval(targ+".location='{:U('ClassResources/list_user')}&scid={$Think.get.scid}&yearid="+selObj.options[selObj.selectedIndex].value+"'");
+  eval(targ+".location='{:U('ClassResources/list_user')}?scid={$Think.get.scid}&yearid="+selObj.options[selObj.selectedIndex].value+"'");
   if (restore) selObj.selectedIndex=0;
 }
 //-->
@@ -29,7 +29,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
     <div class="rightinfo">
 	<div class="tools">
     	<ul class="toolbar">
-        <li class="click"><a href="{:U('ClassResources/add_user')}&scid={$Think.get.scid}&yearid={$Think.get.yearid}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
+        <li class="click"><a href="{:U('ClassResources/add_user',array('yearid' => $_GET['yearid'],'scid' => $_GET['scid']))}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
 		<li class="click">&nbsp;课时年份
 		<select name="Province" class="dfinput" style="width:120px;" id="Province" onchange="MM_jumpMenu('window',this,0)">
 		<volist id="pro" name="examyears">
@@ -42,9 +42,9 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
       </select>&nbsp;{$Think.get.yearid}年{$sysclass['scname']}</li>
 		
         </ul>
-        <ul class="toolbar1">
+        <!--ul class="toolbar1">
         <li><span><img src="__PUBLIC__/images/t05.png" /></span>设置</li>
-        </ul>
+        </ul-->
     </div>
     <table class="tablelist">
     	<thead>

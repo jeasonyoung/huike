@@ -1,9 +1,8 @@
 <?php
 namespace Home\Controller;
-use Think\Controller;
-//use Home\Controller\BaseController;
+use Home\Controller\BaseController;
 
-class AdminController extends Controller{
+class AdminController extends BaseController{
     /*添加系统用户*/
     public function add_user(){
         //IS_POST 表示当前请求为POST方式 即表单产生提交
@@ -88,8 +87,6 @@ class AdminController extends Controller{
                 $auth = M('admin_group_access');
                 if($auth->where('uid='.$adminid)->setField('group_id',$groupid)){
                     $this->success('用户修改成功',U('admin/list_user'));
-                }else{
-                    $this->error('更新权限时出现错误!');
                 }
             }else{
                 $this->error('修改失败或未做修改',U('admin/edit_user',array('uid' => $uid)));
@@ -104,6 +101,41 @@ class AdminController extends Controller{
         }
     }
     
+    /**
+     * 修改密码
+     */
+    public function edit_pass(){
+        if(IS_POST){
+            $model = D('Home/Admin');
+            $data = array();
+            $result = $model->queryCondition(array('AdminID' => I('AdminID'),'PassWords' => md5(C('md5_key').I('CurPass'))),FALSE);
+            if(!$result){
+                $this->error('您输入的密码不对!');
+            }
+            $data['AdminID'] = I('AdminID');
+            $data['PassWords'] = md5(C('md5_key').I('PassWords'));
+            $data['RePassWords'] = md5(C('md5_key').I('RePassWords'));
+            if(I('PassWords')==I('CurPass')){
+                $this->error('新密码和当前使用密码不能相同!');
+            }
+            if(empty($data['PassWords'])){
+                $this->error('请输入新的密码!');
+            }
+            if($data['PassWords']!==$data['RePassWords']){
+                $this->error('两次输入密码不一样,请确认');
+            }
+            if($model->update_user($data)){
+                //$this->success('您的密码已成功修改,请重新登陆',U('login/logout'));
+                exit("<script>alert('您的密码已成功修改,请重新登陆');window.top.location.href='".U('login/logout')."';</script>");
+            }else{
+                $this->error('密码修改失败');
+            }
+        }else{
+            $this->display();
+        }
+    }
+
+
     /*系统用户列表*/
     public function list_user(){
         $model = D('Home/Admin');

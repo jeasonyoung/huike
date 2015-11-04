@@ -1,8 +1,8 @@
 <?php
 namespace Home\Controller;
-use Think\Controller;
+use Home\Controller\BaseController;
 
-class AuthController extends Controller{
+class AuthController extends BaseController{
     /*添加权限*/
     public function add_rule(){
         $model = D('Home/Auth');
@@ -87,7 +87,13 @@ class AuthController extends Controller{
     /*权限列表*/
     public function list_rule(){
         $model = D('Home/Auth');
-        $rules = $model->query_rule();
+        $module = $this->show_module();
+        $condition = '';
+        if(IS_POST){
+            $condition = array('mid' => I('module'));
+        }
+        $rules = $model->query_rule($condition);
+        $this->assign('module',$module);
         $this->assign('rules',$rules);
         $this->display();
     }

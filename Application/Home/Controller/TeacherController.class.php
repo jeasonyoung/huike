@@ -1,8 +1,8 @@
 <?php
 namespace Home\Controller;
-use Think\Controller;
+use Home\Controller\BaseController;
 
-class TeacherController extends Controller{
+class TeacherController extends BaseController{
     /*添加主讲老师*/
     public function add_user(){
         //IS_POST 表示当前请求为POST方式 即表单产生提交

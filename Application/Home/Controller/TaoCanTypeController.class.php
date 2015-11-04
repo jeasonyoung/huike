@@ -1,8 +1,8 @@
 <?php
 namespace Home\Controller;
-use Think\Controller;
+use Home\Controller\BaseController;
 
-class TaocantypeController extends Controller{
+class TaocantypeController extends BaseController{
     /*添加套餐类型*/
     public function add_class_taocantype(){
         //IS_POST 表示当前请求为POST方式 即表单产生提交

@@ -34,8 +34,8 @@ class AgencyModel extends Model{
         $where[]['_string']=$condition;
         if($mulit){
             return $this->where($where)->field($field)->
-                   join('Right JOIN hk_admin a ON a.adminid=hk_jigou.kefuid')->
-                   join('Right JOIN hk_admin b ON b.adminid=hk_jigou.marketid')->
+                   join('Left JOIN hk_admin a ON a.adminid=hk_jigou.kefuid')->
+                   join('Left JOIN hk_admin b ON b.adminid=hk_jigou.marketid')->
                    order('create_time asc')->
                    select();
         }else{
@@ -61,11 +61,14 @@ class AgencyModel extends Model{
         $db = M('jigou_admin');
         $where[]['_string']=$condition;
         if($mulit){
-            return $db->field('hk_jigou_admin.*,jg.company')->where($where)->
+            return $db->field('hk_jigou_admin.*,jg.company,jg.abbr_cn,jgg.title')->where($where)->
                     join('left join hk_jigou jg ON jg.jgid=hk_jigou_admin.jgid')->
-                    select(); 
+                    join('left join HK_JiGou_group jgg ON jgg.id=hk_jigou_admin.groupid')->
+                    select();
         }else{
-            return $db->where($where)->find(); 
+            return $db->where($where)->field('hk_jigou_admin.*,jg.company,jg.abbr_cn')->
+                    join('left join hk_jigou jg ON jg.jgid=hk_jigou_admin.jgid')->
+                    find(); 
         }
     }
     

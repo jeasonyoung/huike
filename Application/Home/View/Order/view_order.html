@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>查看订单详情</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
+<style>
+.info{float:left;width:100%;}
+.info li{ float:left; line-height:30px;border-bottom:1px solid #dedede;clear:both;width:100%}
+.title{height:30px;background:#f99331;line-height: 30px;text-indent: 10px;font-weight: bold;color: #fff}
+.tableclass{ background:#d6c3a5; text-align:center;border-spacing:1px !important;border-collapse:separate; margin:0 auto;margin-top:5px;color:#6a4318}
+.tableclass tr{ background:#fff}
+.tableclass tr.bg{ background:#f6e0b7}
+
+</style>
+</head>
+<body>
+<div class="place"> <span>位置：</span>
+  <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">订单管理</a></li>
+    <li><a href="#">查看订单详情</a></li>
+  </ul>
+</div>
+<div class="formbody">
+  <div class="formtitle" style="margin-bottom:10px"><span>查看订单信息</span></div>
+  <ul class="info">
+  <li class="title">订单详情:</li>
+  <li>
+  <table border="0" width="85%" style="text-indent:5px">
+  <tr>
+  <td colspan="4"><strong>买家信息</strong></td>
+  </tr>
+  <tr>
+  <td width="30%">姓名: {$order['realname']} <a href="#" style="color:#F00">[查看学员详情]</a></td>
+  <td width="30%">用户名: {$order['username']}</td>
+  <td width="20%">所属机构: <font color="#008000">{$order['agency']}</font></td>
+  <td>联系电话: {$order['mobile']}</td>
+  </tr>
+  </table>
+  </li>
+  <li>
+  <table border="0" width="85%" style="text-indent:5px">
+  <tr>
+  <td colspan="4"><strong>订单信息</strong></td>
+  </tr>
+  <tr>
+  <td width="30%">订单编号: {$order['orderid']}</td>
+  <td width="30%">创建时间: {$order['create_time']}</td>
+  <td width="20%">创建者: 
+  <if condition="$order['jgadminname'] neq ''">
+  {$order['jgadminname']}<font color="#008000">[机构]</font>
+  <else />
+  {$order['adminname']}<font color="#0000FF">[系统]</font>
+  </if>
+  </td>
+  <td width="30%">订单类型: 
+  <if condition="$order['ordertype'] eq 2">
+  <font color="#0000FF">自助开通订单</font>
+  <else />
+  <font color="#0000FF">机构开通订单</font>
+  </if>
+  </td>
+  </tr>
+  <tr>
+  <td width="30%">原始价格: ￥{$order['oldprice']}</td>
+  <td width="30%">订单总价: ￥{$order['totalprice']}</td>
+  <td width="20%">订单成本: <b style="color:#F00">￥{$order['costprice']}</b></td>
+  <td width="30%">实际价格:<b style="color:green"> ￥{$order['salesprice']}</b></td>
+  </tr>  
+  </table>
+  </li>
+  <li>
+  <table border="0" width="85%" style="text-indent:5px">
+  <tr>
+  <td colspan="4"><strong>支付信息</strong></td>
+  </tr>
+  <tr>
+  <td width="30%">订单状态: 
+    <switch name="$order['orderstate']" >
+    <case value="0" break="1"><font color="#FF0000">未付费</font></case>
+    <case value="1" break="1"><font color="#008000">已付费</font></case>
+    <case value="2" break="1"><font color="#008000">已开通</font></case>
+    <case value="-1" break="1"><font color="#FF0000">已关闭</font></case>
+    <case value="-2" break="1"><font color="#0000FF">已删除</font></case>
+    <default /><font color="#FF0000">未付费</font>
+    </switch>
+  </td>
+  <td width="30%">支付状态: 
+    <switch name="$order['orderstate']" >
+    <case value="0" break="1"><font color="#FF0000">未付费</font></case>
+    <case value="1" break="1"><font color="#008000">已付费</font></case>
+    <case value="2" break="1"><font color="#008000">已开通</font></case>
+    <case value="-1" break="1"><font color="#FF0000">已关闭</font></case>
+    <case value="-2" break="1"><font color="#0000FF">已删除</font></case>
+    <default /><font color="#FF0000">未付费</font>
+    </switch>
+  </td>
+  <td width="20%">支付时间: 
+  <if condition="$order['paytime'] eq ''">
+  -
+  <else />
+  {$order['paytime']}
+  </if>
+  </td>
+  <td width="30%">开通时间: 
+  <if condition="$order['opentime'] eq ''">
+  -
+  <else />
+  {$order['opentime']}
+  </if>
+  </td>
+  </tr>
+  <tr>
+  <td width="30%">原始价格: ￥{$order['oldprice']}</td>
+  <td width="30%">订单总价: ￥{$order['totalprice']}</td>
+  <td width="20%">订单成本: ￥{$order['costprice']}</td>
+  <td width="30%">实际价格: ￥{$order['salesprice']}</td>
+  </tr>  
+  </table>
+  </li>
+  <li class="title">订单商品列表:</li>
+  <li style="border-bottom:none">
+  <table width="99%" align="center" cellpadding="0" cellspacing="1" class="tableclass">
+  <tr class="bg">
+  <td>产品编号</td>
+  <td>产品名称</td>
+  <td>产品类型</td>
+  <td>原始价格</td>
+  <td>产品成本</td>
+  <td>最终售价</td>
+  </tr>
+  <volist name="prolist" id="vp">
+  <tr>
+  <td>{$vp.jg_proid}</td>
+  <td>{$vp.proname}</td>
+  <td>
+  <if condition="$vp.protype eq 1">
+  套餐
+  <else />
+  单科
+  </if>
+  </td>
+  <td>￥{$vp.oldprice}</td>
+  <td>￥{$vp.cost_price}</td>
+  <td>￥{$vp.real_price}</td>
+  </tr>
+  </volist>
+  <tr>
+  <td colspan="4"></td>
+  <td>总 <font color="#FF0000">￥{$cost}</font></td>
+  <td>总 <font color="#FF0000">￥{$sale}</font></td>
+  </tr>
+  </table>
+  </li>
+  </ul>
+</div>
+<div style="height:30px; clear:both"></div>
+</body>
+</html>

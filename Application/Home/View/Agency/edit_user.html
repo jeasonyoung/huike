@@ -50,13 +50,8 @@ $(function(){
       <input name="RePassWords" type="password" class="dfinput" />
       <i>确认密码</i></li>
     <li>
-    <label>选择机构<input type="hidden" id="st" value="{$data['jgid']}" /></label>
-    <select name="JGID" id="jgid" class="styled-select">
-    <option value="">-选择机构-</option>
-    <volist name="agency" id="ag">
-    <option value="{$ag.jgid}">{$ag.company}</option>
-    </volist>
-    </select>
+    <label>机构名称</label>
+    <input type="text" readonly="readonly" class="dfinput" value="{$data['abbr_cn']}" style="color:gray" />
     </li>  
     <li>
       <label>是否锁定<input type="hidden" id="sd" value="{$data['lock']}" /></label>
@@ -71,8 +66,15 @@ $(function(){
     </li>
     <li>
       <label>管理组<input type="hidden" id="gid" value="{$data['groupid']}" /></label>
-      <select name="GroupID" id="groupid" class="styled-select">
+      <select name="GroupID" class="styled-select">
       <option value="0">选择管理组</option>
+      <volist name="group" id="vo_group">
+      <eq name="$vo_group.id" value="$data['groupid']">
+      <option value="{$vo_group.id}" selected="selected">{$vo_group.title}</option>
+      <else />
+      <option value="{$vo_group.id}">{$vo_group.title}</option>
+      </eq>
+      </volist>
       </select>
     </li>
     <li>
@@ -80,6 +82,7 @@ $(function(){
       <input name="" type="submit" class="btn" value="确认保存"/>
     </li>
     <input type="hidden" name="UID" value="{$data['uid']}" />
+    <input type="hidden" name="JGID" value="{$data['jgid']}" />
     </form>
   </ul>
 </div>

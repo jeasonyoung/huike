@@ -1,8 +1,8 @@
 <?php
 namespace Home\Controller;
-use Think\Controller;
+use Home\Controller\BaseController;
 
-class OrderController extends Controller{
+class OrderController extends BaseController{
     private static $model;
     private $agency;
     //生成订单
@@ -158,11 +158,11 @@ class OrderController extends Controller{
                 $order['JGID'] = $value['JGID'];
                 $order['create_time'] = date('Y-m-d H:i:s');
 
-                $order['OldPrice'] = $price;   //原始价格 需改
-                $order['CostPrice'] = $price;  //成本价格 需改
+                $order['OldPrice'] = $price;   //原始价格 需改 此处价格将更新
+                $order['CostPrice'] = $price;  //成本价格 需改 此处价格将更新
                 
-                $order['TotalPrice'] = $price;
-                $order['SalesPrice'] = $sale_price;
+                $order['TotalPrice'] = $price;        //此处价格将更新
+                $order['SalesPrice'] = $sale_price;   //此处价格将更新
                 
                 $order['OrderType'] = 2;
                 $order['OrderState'] = 0;
@@ -170,7 +170,7 @@ class OrderController extends Controller{
                 $order['AdminName'] = session('username');
                 //此处做订单表插入操作
                 if(!self::$model->insertOrder($order)){
-                    $member->simple_del_user($uid);
+                    $member->simple_del_user($uid); //订单创建失败 删除此用户
                 }else{
                     $success+=1;
                 }
@@ -185,10 +185,44 @@ class OrderController extends Controller{
         );
     }
     
-    public function tempt(){
-        show_bug(session('myCart'));
+    //订单列表
+    public function list_orders(){
+        $condition = array();
+        $submit = I('Submit');
+        if($submit==1){
+            $filter['hk_orders.UserName'] = I('UserName');
+            $filter['OrderID'] = I('OrderID');
+            if(!empty(I('RealName'))){
+                $db_user = M('user');
+                $filter['UID'] = $db_user->where("realname='".I('RealName')."'")->getField('UserID'); 
+            }
+            $filter['hk_orders.Mobile'] = I('Mobile');
+            $filter['hk_orders.JGID'] = I('JGID');
+            $filter['OrderState'] = I('OrderState');
+            $condition = array_filter($filter);     //去除空值
+            if(I('OrderState')==0){                 //array_filter去除空值将去除0也就是false 此操作将为0情况补充
+                $condition['OrderState'] = 0;
+            }
+        }
+        $data = self::$model->query_orders($condition);
+        $this->assign('orders',$data);
+        $this->assign('agencyList',$this->agency);
+        $this->display();
     }
     
+    //查看订单详情
+    public function view_order($orderid){
+        $order_data = self::$model->order_detail($orderid);
+        $proList = self::$model->order_prolist($orderid);
+        $this->assign('order',$order_data);
+        $this->assign('prolist',$proList);
+        $cost = array_sum(array_column($proList,'cost_price'));
+        $sale = array_sum(array_column($proList,'real_price'));
+        $this->assign('cost',$cost);
+        $this->assign('sale',$sale);
+        $this->display();
+    }
+
     /**
      * 生成订单号
      * @param mix $fix 防止重复值

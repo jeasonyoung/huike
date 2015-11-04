@@ -140,7 +140,7 @@ $(function(){
         </tbody>
     </table>
     <div class="pagin" style="text-align:right;font-size:14px;">
-    总价格: <font color="#FF0000" id="total">{$total['price']}</font> 元 优惠价: <font color="#008000" id="goodprice">{$total['sale_price']}</font> 元 <a href="{:U('order/makeorder',array('price' => $total['price'],'sale_price' => $total['sale_price']))}" style="font-size:14px;color:#F00;font-weight:bold">[确认订单]</a>
+    原价: <font color="#FF0000" id="total">{$total['price']}</font> 元 售价: <font color="#008000" id="goodprice">{$total['sale_price']}</font> 元 <a href="{:U('order/makeorder',array('price' => $total['price'],'sale_price' => $total['sale_price']))}" style="font-size:14px;color:#F00;font-weight:bold">[确认订单]</a>
     </div><br />
     <table class="tablelist" style="clear:both" id="add_user">
     	<thead>
