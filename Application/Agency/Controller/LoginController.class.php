@@ -31,7 +31,7 @@ class LoginController extends Controller{
         $data = array();
         $data['UserName'] = I('UserName');
         $pwd = I('PassWords');
-        $data['PassWords'] = md5(I('PassWords'));
+        //$data['PassWords'] = md5(I('PassWords'));
         
         if(empty($data['UserName']) || empty($pwd)){
             $this->error('用户名或密码不能为空!',U('Login/login'));

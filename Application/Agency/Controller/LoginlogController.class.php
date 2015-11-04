@@ -52,13 +52,13 @@ class LoginlogController extends AdminController{
      */
     public function del(){
         if(APP_DEBUG) trace('执行del...');
-        if(I('session.groupid',0) != 1){
-            $this->error('无权限删除!');
-        }
+        // if(I('session.groupid',0) != 1){
+        //     $this->error('无权限删除!');
+        // }
         //初始化数据模型
         $_model = D('Loginlog');
         //删除一个月前日志
-        if($_model->deleteMonthLogs()){
+        if($_model->deleteMonthLogs(I('session.JGID',''))){
             $this->success("删除系统用户登录日志成功(共删除:$_model条数据)!",U('Agency/Loginlog/index'));
         }else{
             $this->error('删除系统用户登录日志失败,请联系技术人员!');

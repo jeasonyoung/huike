@@ -113,27 +113,31 @@ class LoginlogModel extends Model{
      * 删除一个月前的日志数据。
      * @return int 删除的数据量
      */
-    public function deleteMonthLogs(){
+    public function deleteMonthLogs($agencyId){
         if(APP_DEBUG) trace("删除一个月前的日志数据...");
         $_end_time = date("Y-m-d",strtotime("last month"));
         if(APP_DEBUG) trace("删除[$_end_time]以前的数据!");
         $_deleteRows = 0;
-         //删除机构用户日志
-        $_model = $this->table('HK_JiGou_Loginlog')
-                       ->where(array('LoginTime' => array('lt', $_end_time)))
-                       ->delete(); 
-        if(APP_DEBUG) trace("删除机构用户日志...$_model");
-        if($_model){
-            $_deleteRows += $_model;
+        //删除机构用户日志
+        $_jgModel = M('JigouLoginlog');
+        $_jgModel = $_jgModel->where(array('logintime' => array('lt',$_end_time)))
+                             ->where(array('_string' => "`uid` in (select `UID` from hk_jigou_admin where `JGID` = '$agencyId')"))
+                             ->delete();
+
+        if(APP_DEBUG) trace("删除机构用户日志...$_jgModel");
+        if($_jgModel){
+            $_deleteRows += $_jgModel;
         }
         //删除机构学员日志
-        $_model = $this->table('HK_User_Log')
-                       ->where(array('create_time' => array('lt', $_end_time)))
-                       ->delete();
-        if(APP_DEBUG) trace("删除机构学员日志...$_model");
-        if($_model){
-            $_deleteRows += $_model;
+        $_userModel = M('UserLog');
+        $_userModel = $_userModel->where(array('create_time' => array('lt', $_end_time)))
+                                 ->where(array('_string' => "`uid` in (select `UserID` from HK_User where `JGID` = '$agencyId')"))
+                                 ->delete();
+
+        if(APP_DEBUG) trace("删除机构学员日志...$_userModel");
+        if($_userModel){
+            $_deleteRows += $_userModel;
         }
-        return $_deleteRows
+        return $_deleteRows;
     }
 }
