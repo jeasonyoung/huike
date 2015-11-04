@@ -1,4 +1,4 @@
-<include file="Public/view_header" title="机构列表" />
+<include file="Public/view_header" title="机构用户日志列表"/>
 <body>
     <!-- 导航 -->
     <div class="place">
@@ -6,7 +6,7 @@
         <ul class="placeul">
             <li><a href="#">首页</a></li>
             <li><a href="#">机构管理</a></li>
-            <li><a href="#">机构充值</a></li>
+            <li><a href="#">机构登录日志</a></li>
         </ul>
     </div>
 
@@ -22,7 +22,7 @@
                 <tr>
                     <volist name="agencies" id="vo" mod="5">
                         <td>
-                            <a href="{:U('Home/Recharge/add',array('agencyId'=>$vo['id']))}">{$vo.name}</a>
+                            <a href="{:U('Home/Jigouloginlog/search',array('agencyId'=>$vo['id']))}">{$vo.name}</a>
                         </td>
                         <eq name="mod" value="4">
                             </tr><tr>
@@ -40,5 +40,6 @@
     });
     //-->
     </script>
+
 </body>
 <include file="Public/view_footer"/>

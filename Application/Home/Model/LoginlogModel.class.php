@@ -12,29 +12,16 @@ class LoginlogModel extends Model{
     protected $tableName = 'log_view';
 
     /**
-     * 查询全部登录日志数据。
-     * @param  string $agencyId  机构ID
-     * @param  string $username  用户名
-     * @param  string $startTime 开始日期
-     * @param  string $endTime   结束日期
-     * @return mixed             返回数据
+     * 加载机构数据。
+     * @return array 机构数据。
      */
-    public function searchAllLogs($agencyId=null,$username=null,$startTime=null,$endTime=null){
-        if(APP_DEBUG) trace("查询全部用户登录日志数据[agencyId=>$agencyId][username=>$username][startTime=>$startTime,endTime=>$endTime]...");
-        return $this->searchLogs($agencyId,$username,$startTime,$endTime);
-    }
-
-    /**
-     * 查询全部登录日志数据。
-     * @param  string $agencyId  机构ID
-     * @param  string $username  用户名
-     * @param  string $startTime 开始日期
-     * @param  string $endTime   结束日期
-     * @return mixed             返回数据
-     */
-    public function searchAgencyLogs($agencyId=null,$username=null,$startTime=null,$endTime=null){
-        if(APP_DEBUG) trace("查询机构用户登录日志数据[agencyId=>$agencyId][username=>$username][startTime=>$startTime,endTime=>$endTime]...");
-        return $this->searchLogs($agencyId,$username,$startTime,$endTime,'1,2');
+    public function loadAgencies(){
+        if(APP_DEBUG) trace('加载机构数据...');
+        $_model = $this->field('`JGID` id,`abbr_cn` name')
+                       ->table('HK_JiGou')
+                       ->order('`abbr_cn` asc')
+                       ->select();
+        return $_model;
     }
 
     /**
@@ -50,6 +37,45 @@ class LoginlogModel extends Model{
     }
 
     /**
+     * 查询机构用户登录日志数据。
+     * @param  string $agencyId  机构ID
+     * @param  string $username  用户名
+     * @param  string $startTime 开始日期
+     * @param  string $endTime   结束日期
+     * @return mixed             返回数据
+     */
+    public function searchAgencyLogs($agencyId=null,$username=null,$startTime=null,$endTime=null){
+        if(APP_DEBUG) trace("查询机构用户登录日志数据[agencyId=>$agencyId][username=>$username][startTime=>$startTime,endTime=>$endTime]...");
+        return $this->searchLogs($agencyId,$username,$startTime,$endTime,'1');
+    }
+
+    /**
+     * 查询学员用户登录日志数据。
+     * @param  string $agencyId  机构ID
+     * @param  string $username  用户名
+     * @param  string $startTime 开始日期
+     * @param  string $endTime   结束日期
+     * @return mixed             返回数据
+     */
+    public function searchStudengLogs($agencyId=null,$username=null,$startTime=null,$endTime=null){
+        if(APP_DEBUG) trace("查询学员用户登录日志数据[agencyId=>$agencyId][username=>$username][startTime=>$startTime,endTime=>$endTime]...");
+        return $this->searchLogs($agencyId,$username,$startTime,$endTime,'2');
+    }
+
+    /**
+     * 查询全部登录日志数据。
+     * @param  string $agencyId  机构ID
+     * @param  string $username  用户名
+     * @param  string $startTime 开始日期
+     * @param  string $endTime   结束日期
+     * @return mixed             返回数据
+     */
+    public function searchAllLogs($agencyId=null,$username=null,$startTime=null,$endTime=null){
+        if(APP_DEBUG) trace("查询全部用户登录日志数据[agencyId=>$agencyId][username=>$username][startTime=>$startTime,endTime=>$endTime]...");
+        return $this->searchLogs($agencyId,$username,$startTime,$endTime);
+    }
+
+    /**
      * 查询登录日志数据。
      * @param  string $agencyId  机构ID
      * @param  string $username  用户名
@@ -62,7 +88,7 @@ class LoginlogModel extends Model{
         if(APP_DEBUG) trace("查询用户[type=$type]登录日志...");
         $_where = array();
         //机构ID
-        if(isset($agencyId) && !empty($agencyId)){
+        if(isset($agencyId)){
             $_where['agency_id'] = $agencyId;
         }
         //用户名
@@ -111,9 +137,10 @@ class LoginlogModel extends Model{
 
     /**
      * 删除一个月前的日志数据。
+     * @param int $type 类型(0:系统,1:机构,2:学员)
      * @return int 删除的数据量
      */
-    public function deleteMonthLogs($type=0){
+    public function deleteMonthLogs($type=0,$agencyId=null){
         if(APP_DEBUG) trace("删除一个月前的日志数据...");
         $_end_time = date("Y-m-d",strtotime("last month"));
         if(APP_DEBUG) trace("删除[$_end_time]以前的数据!");
@@ -127,17 +154,23 @@ class LoginlogModel extends Model{
                 return $_model;
             }
             case 1:{
+                if(APP_DEBUG) trace("机构ID=>$agencyId");
+                if(!isset($agencyId)) return false;
                 //删除机构用户日志
                 $_model = $this->table('HK_JiGou_Loginlog')
-                               ->where(array('LoginTime' => array('lt', $_end_time)))
+                               ->where(array('logintime' => array('lt', $_end_time)))
+                               ->where(array('_string' => "`uid` in (select `UID` from hk_jigou_admin where `JGID` = '$agencyId')"))
                                ->delete(); 
                 if(APP_DEBUG) trace("删除机构用户日志...$_model");
                 return $_model;
             }
             case 2:{
+                if(APP_DEBUG) trace("机构ID=>$agencyId");
+                if(!isset($agencyId)) return false;
                 //删除机构学员日志
                 $_model = $this->table('HK_User_Log')
                                ->where(array('create_time' => array('lt', $_end_time)))
+                               ->where(array('_string' => "`uid` in (select `UserID` from HK_User where `JGID` = '$agencyId')"))
                                ->delete();
                 if(APP_DEBUG) trace("删除机构学员日志...$_model");
                 return $_model;
