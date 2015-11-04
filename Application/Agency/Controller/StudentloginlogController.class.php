@@ -3,10 +3,10 @@
  * 学员用户登录日志控制器。
  * @author yangyong <jeason1914@qq.com>
  */
-namespace Home\Controller;
-use Home\Controller\BaseController;
+namespace Agency\Controller;
+use Agency\Controller\AdminController;
 
-class StudentloginlogController extends BaseController{
+class StudentloginlogController extends AdminController{
 
     /**
      * 默认入口。
@@ -14,12 +14,7 @@ class StudentloginlogController extends BaseController{
      */
     public function index(){
         if(APP_DEBUG) trace('执行index...');
-        //初始化数据模型
-        $_model = D('Loginlog');
-        //设置机构
-        $this->assign('agencies',$_model->loadAgencies());
-        //显示
-        $this->display('select_agency');
+        $this->search();
     }
 
     /**
@@ -28,18 +23,14 @@ class StudentloginlogController extends BaseController{
      */
     public function search(){
         if(APP_DEBUG) trace('执行search...');
-        //获取机构ID
-        $_agencyId = I('agencyId','');
         //获取用户名
         $_username = I('user_name','');
         //初始化数据模型
         $_model = D('Loginlog');
         //查询数据
-        $_result = $_model->searchStudengLogs($_agencyId,$_username);
+        $_result = $_model->searchStudengLogs(I('session.JGID',''),$_username);
         //设置查询用户名
         $this->assign('username',$_username);
-        //设置机构ID
-        $this->assign('agency_id',$_agencyId);
         //设置数据
         $this->assign($_result);
         //显示
@@ -58,7 +49,7 @@ class StudentloginlogController extends BaseController{
         //初始化数据模型
         $_model = D('Loginlog');
         //删除一个月前日志
-        if($_model->deleteMonthLogs(2,I('agencyId',''))){
+        if($_model->deleteMonthLogs(2,I('session.JGID',''))){
             $this->success("删除学员用户登录日志成功(共删除:$_model条数据)!",U('Home/Studentloginlog/index'));
         }else{
             $this->error('删除学员用户登录日志失败,请联系技术人员!');

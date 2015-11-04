@@ -37,7 +37,7 @@ class LoginlogController extends AdminController{
         //初始化数据模型
         $_model = D('Loginlog');
         //查询数据
-        $_result = $_model->searchAgencyLogs(I('session.JGID'),$_username);
+        $_result = $_model->searchAgencyLogs(I('session.JGID',''),$_username);
         //设置查询用户名
         $this->assign('username',$_username);
         //设置数据
@@ -58,10 +58,10 @@ class LoginlogController extends AdminController{
         //初始化数据模型
         $_model = D('Loginlog');
         //删除一个月前日志
-        if($_model->deleteMonthLogs(I('session.JGID',''))){
-            $this->success("删除系统用户登录日志成功(共删除:$_model条数据)!",U('Agency/Loginlog/index'));
+        if($_model->deleteMonthLogs(1,I('session.JGID',''))){
+            $this->success("删除机构用户登录日志成功(共删除:$_model条数据)!",U('Agency/Loginlog/index'));
         }else{
-            $this->error('删除系统用户登录日志失败,请联系技术人员!');
+            $this->error('删除机构用户登录日志失败,请联系技术人员!');
         }
     }
 }
