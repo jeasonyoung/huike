@@ -15,3 +15,13 @@ function check_recharge_money($money){
     }
     return false;
 }
+
+
+/**
+ * 创建随机字符串。
+ * @return string 随机字符串
+ */
+function create_rand_str(){
+    if(APP_DEBUG) trace("创建随机字符串...");
+    return Org\Util\String::randString();
+}

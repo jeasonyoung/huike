@@ -1,76 +1,87 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>修改权限模块</title>
-<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
-<script type="text/javascript">
-$(function(){
-  $("input[name='show']").each(function(){
-	 if($(this).val()==$("#show").val()){
-		 $(this).attr("checked",true);
-	 }
-  })
-  $(".styled-select option").each(function(){
-	 if($(this).val()==$("#pid").val()){
-		 $(this).attr("selected",true);
-	 }						  
-  })
-})
-</script>
-</head>
+<include file="Public/view_header" title="修改权限模块"/>
 <body>
-<div class="place"> <span>位置：</span>
-  <ul class="placeul">
-    <li><a href="#">首页</a></li>
-    <li><a href="#">用户和权限管理</a></li>
-    <li><a href="#">修改权限模块</a></li>
-  </ul>
-</div>
-<div class="formbody">
-  <div class="formtitle"><span>修改权限模块</span></div>
-  <ul class="forminfo">
-  <form name="user" action="{:U('auth/edit_module')}" method="post">
-    <li>
-      <label>模块名称</label>
-      <input name="title" type="text" class="dfinput" value="{$info['title']}" />
-      <i>如: 系统管理</i></li>
-    <li>
-      <label>英文名称</label>
-      <input name="module" type="text" class="dfinput" value="{$info['module']}" />
-      <i>"system"</i></li>
-    <li>
-      <label>排序</label>
-      <input name="sortid" type="text" class="dfinput" value="{$info['sortid']}" style="width: 100px" />
-      <i>从小到大</i></li>
-    <li>
-      <label>菜单显示<input type="hidden" id="show" value="{$info['show']}" /></label>
-      <cite>
-      <input name="show" type="radio" value="1" checked="checked" />
-      是&nbsp;&nbsp;&nbsp;&nbsp;
-      <input name="show" type="radio" value="0" />
-      否</cite></li>
-    <li>
-      <label>模块归属<input type="hidden" id="pid" value="{$info['pid']}" /></label>
-      <select name="pid" class="styled-select">
-      <option value="0">不属于任何模块</option>
-      <volist name="module" id="vo">
-      <if condition="$vo.pid neq 0">
-      <option value="{$vo.id}">--{$vo.title}</option>
-      <else />
-      <option value="{$vo.id}">{$vo.title}</option>
-      </if>
-      </volist>
-      </select>
-    </li>
-    <li>
-      <label>&nbsp;</label>
-      <input name="" type="submit" class="btn" value="确认保存"/>
-    </li>
-    <input type="hidden" name="mid" value="{$info['id']}" />
+
+  <div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+      <li><a href="#">首页</a></li>
+      <li><a href="#">用户和权限管理</a></li>
+      <li><a href="#">修改权限模块</a></li>
+    </ul>
+  </div>
+
+  <div class="formbody">
+
+    <div class="formtitle">
+      <span>修改权限模块</span>
+    </div>
+
+    <ul class="forminfo">
+    <form action="{:U('Home/Auth/edit_module')}" method="POST">
+      <li>
+        <label>模块名称</label>
+        <input name="title" value="{$info['title']}" type="text" class="dfinput"/>
+        <i>如: 系统管理</i>
+      </li>
+      <li>
+        <label>英文名称</label>
+        <input name="module" value="{$info['module']}" type="text" class="dfinput"/>
+        <i>"system"</i>
+      </li>
+      <li>
+        <label>排序</label>
+        <input name="sortid" value="{$info['sortid']}" type="text" class="dfinput" style="width:100px"/>
+        <i>从小到大</i>
+      </li>
+      <li>
+        <label>菜单显示</label>
+        <cite>
+          <input name="show" type="radio" value="1" checked="checked"/>&nbsp;是
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <input name="show" type="radio" value="0"/>&nbsp;否
+        </cite>
+      </li>
+      <li>
+        <label>模块归属</label>
+        <select name="pid" class="styled-select">
+          <option value="0">不属于任何模块</option>
+          <volist name="module" id="vo">
+          <if condition="$vo.pid neq 0">
+            <option value="{$vo.id}">--{$vo.title}</option>
+          <else />
+            <option value="{$vo.id}">{$vo.title}</option>
+          </if>
+          </volist>
+        </select>
+      </li>
+      <li>
+        <label>&nbsp;</label>
+        <input type="hidden" name="mid" value="{$info['id']}"/>
+        <input type="submit" class="btn" value="确认保存"/>
+      </li>
     </form>
-  </ul>
-</div>
+    </ul>
+  </div>
+  <script type="text/javascript">
+  <!--
+  $(function(){
+    //
+    <if condition="isset($info['show'])">
+      //菜单显示
+      $("input[name='show']").each(function(){
+        if($(this).val() == {$info['show']}){
+          $(this).attr('checked',true);
+          return;
+        }
+      });
+    </if>
+    //
+    <if condition="isset($info['pid'])">
+      //模块归属
+      $("select[name='pid']").val("{$info['pid']}");
+    </if>
+  });
+  //-->
+  </script>
 </body>
-</html>
+<include file="Public/view_footer"/>

@@ -1,10 +1,61 @@
 <?php
+/**
+ * 机构管理数据模型。
+ */
 namespace Home\Model;
 use Think\Model;
 
 class AgencyModel extends Model{
     protected $trueTableName = 'HK_JiGou';
-    //添加合作机构
+
+    //验证
+    protected $_validate = array(
+        array('Company','require','公司名称不能为空'),
+        array('Company','','此公司已存在',0,'unique',3),
+
+        array('abbr_cn','require','对外名称不能为空',1),
+        array('abbr_cn','','对外名称已经存在!',0,'unique',1),
+
+        array('abbr_en','require','英文简称不能为空',1),
+        array('abbr_en','','英文简称已经存在!',0,'unique',1),
+
+        array('domain','','机构域名已经存在!',0,'unique',1),
+
+        array('login_icon','require','登陆logo不能为空',1),
+        array('logo_icon','require','登陆后logo不能为空',1),
+        array('video_icon','require','视频logo不能为空',1),
+        array('video_icon','require','视频logo不能为空',1),
+        array('domain','require','机构合作域名不能为空',1),
+        array('AllExams','chk_arrEmpty','包含考试不能为空',0,'function'),
+        array('Province','require','请选择所在省',1),
+        array('City','require','请选择所在市',1),
+        array('County','require','请选择所在区县',1),
+        array('Address','require','详细地址不能为空',1),
+        array('Contact','require','联系人不能为空',1),
+        array('HZTel','tel_validate','合作电话不正确',0,'function'),
+        array('StuTel','tel_validate','学员联系电话不正确',0,'function'),
+        array('Introduce','require','机构简介不能为空',1),
+        array('Md5Key','require','机构秘钥不能为空',1),
+        array('APPKey','require','手机端秘钥不能为空',1),
+    );
+
+    /**
+     * 加载机构数据。
+     * @param  string $agencyId 机构ID
+     * @return mixed            返回数据
+     */
+    public function loadAgency($agencyId=null){
+        if(APP_DEBUG) trace("加载机构[$agencyId]数据...");
+        if(!isset($agencyId)) return null;
+        return $this->where("`JGID` = '%s'", $agencyId)
+                    ->find();
+    }
+
+    /**
+     * 添加合作机构
+     * @param  [type] $data [description]
+     * @return [type]       [description]
+     */
     public function insert_agency($data){
         return $this->add($data);
     }
@@ -33,15 +84,20 @@ class AgencyModel extends Model{
     public function get_agencyList($field,$condition="domain <> ''",$mulit=true){
         $where[]['_string']=$condition;
         if($mulit){
-            return $this->where($where)->field($field)->
-                   join('Left JOIN hk_admin a ON a.adminid=hk_jigou.kefuid')->
-                   join('Left JOIN hk_admin b ON b.adminid=hk_jigou.marketid')->
-                   order('create_time asc')->
-                   select();
+            return $this->where($where)
+                        ->field($field)
+                        ->join('Left JOIN hk_admin a ON a.adminid=hk_jigou.kefuid')
+                        ->join('Left JOIN hk_admin b ON b.adminid=hk_jigou.marketid')
+                        ->order('jgid desc')
+                        ->select();
         }else{
-            return $this->where($where)->field($field)->find();  
+            return $this->where($where)
+                        ->field($field)
+                        ->find();  
         }
     }
+
+
     
     /**
      * 添加机构用户
@@ -90,5 +146,24 @@ class AgencyModel extends Model{
         //同事将此管理员在机构表中默认JG_UID清除
         $this->where('jg_uid='.$uid)->setField('JG_UID',null);
         return $db->where('uid='.$uid)->delete();
+    }
+
+    /**
+     * 根据管理组ID加载管理员。
+     * @param  array $groups 管理组ID数组
+     * @return mixed         返回数据
+     */
+    public function loadAdminUsers($groups=null){
+        if(APP_DEBUG) trace('根据管理组ID['.serialize($groups).']加载管理员用户...');
+        if(!isset($groups)) return null;
+        $_model = M('Admin');
+        if(is_array($groups)){
+            $_model = $_model->where(array('GroupID' => array('in', $groups)));
+        }else{
+            $_model = $_model->where("`GroupID` = '%s'", $groups);
+        }
+        $_model = $_model->field('AdminID,UserName,RealName')
+                         ->select();
+        return $_model;
     }
 }

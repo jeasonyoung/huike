@@ -1,11 +1,19 @@
 <?php
+/**
+ * 权限管理控制器。
+ * 
+ */
 namespace Home\Controller;
 use Home\Controller\BaseController;
 
 class AuthController extends BaseController{
-    /*添加权限*/
+
+    /**
+     * 添加权限。
+     * @return void
+     */
     public function add_rule(){
-        $model = D('Home/Auth');
+        $model = D('Auth');
         $module = $this->show_module();
         $this->assign('module',$module);
         if(IS_POST){
@@ -24,13 +32,33 @@ class AuthController extends BaseController{
             if($model->query_rule("name='".$rules['name']."'",FALSE)){$this->error('此条规则已存在');}
             //开始新增规则
             if($model->insert_rule($rules)){
-                $this->success('新增一条规则成功',U('auth/add_rule'));
+                $this->success('新增一条规则成功',U('Home/Auth/add_rule'));
             }else{
-                $this->error('新增规则失败',U('auth/add_rule'));
+                $this->error('新增规则失败',U('Home/Auth/add_rule'));
             }
         }else{
            $this->display(); 
         }
+    }
+
+    /**
+     * 权限列表。
+     * @return void
+     */
+    public function list_rule(){
+        $model = D('Auth');
+        $module = $this->show_module();
+        $condition = '';
+        if(IS_POST){
+            $_moduleId = I('module','');
+            if(isset($_moduleId) && !empty($_moduleId)){
+                $condition = array('mid' => $_moduleId);
+            }
+        }
+        $rules = $model->query_rule($condition);
+        $this->assign('module',$module);
+        $this->assign('rules',$rules);
+        $this->display();
     }
     
     /**
@@ -38,9 +66,9 @@ class AuthController extends BaseController{
      * @param int $rid 权限ID
      */
     public function del_rule($rid){
-        $model = D('Home/Auth');
+        $model = D('Auth');
         if($model->del_rule($rid)){
-            $this->success('成功删除一条权限',U('auth/rule_list'));
+            $this->success('成功删除一条权限',U('Home/Auth/rule_list'));
         }else{
             $this->error('删除权限失败,请联系技术人员');
         }
@@ -51,7 +79,7 @@ class AuthController extends BaseController{
      * @param int $rid 权限ID
      */
     public function edit_rule($rid){
-        $model = D('Home/Auth');
+        $model = D('Auth');
         $module = $this->show_module();
         $this->assign('module',$module);
         if(IS_POST){
@@ -72,9 +100,9 @@ class AuthController extends BaseController{
                 $this->error($result['error']);
             }
             if($result){
-                $this->success('规则修改成功!',U('auth/list_rule'));
+                $this->success('规则修改成功!',U('Home/Auth/list_rule'));
             }else{
-                $this->error('规则修改失败或未做修改',U('auth/edit_rule',array('rid' => $rid)));
+                $this->error('规则修改失败或未做修改',U('Home/Auth/edit_rule',array('rid' => $rid)));
             }
         }else{
             $singlerule = $model->query_rule('hk_admin_rule.id='.$rid,FALSE);
@@ -83,24 +111,12 @@ class AuthController extends BaseController{
         }
     }
 
-
-    /*权限列表*/
-    public function list_rule(){
-        $model = D('Home/Auth');
-        $module = $this->show_module();
-        $condition = '';
-        if(IS_POST){
-            $condition = array('mid' => I('module'));
-        }
-        $rules = $model->query_rule($condition);
-        $this->assign('module',$module);
-        $this->assign('rules',$rules);
-        $this->display();
-    }
-    
-    //添加用户组
+    /**
+     * 添加用户组。
+     * @return void
+     */
     public function add_group(){
-        $model = D('Home/Auth');
+        $model = D('Auth');
         if(!IS_POST){
             $this->assign('rules',$model->ModuleAndRule());
             $this->display();
@@ -120,13 +136,24 @@ class AuthController extends BaseController{
             }
         }
     }
+
+    /**
+     * 用户组列表。
+     * @return void
+     */
+    public function list_group(){
+        $model = D('Auth');
+        $data = $model->query_group();
+        $this->assign('group',$data);
+        $this->display();
+    }
     
     /**
-     * 修改用户组
+     * 修改用户组。
      * @param int $gid 用户组ID
      */
     public function edit_group($gid){
-        $model = D('Home/Auth');
+        $model = D('Auth');
         if(!IS_POST){
             $data=$model->query_group($gid);
             $this->assign('info',$data);
@@ -143,29 +170,43 @@ class AuthController extends BaseController{
                 $this->error('角色名称，角色简述，权限都必须指定');
             }
             if($model->update_group($data)){
-                $this->success('用户组更新成功',U('auth/list_group'));
+                $this->success('用户组更新成功',U('Home/Auth/list_group'));
             }else{
-                $this->error('用户组更新失败',U('auth/list_group',array('gid' => $gid)));
+                $this->error('用户组更新失败',U('Home/Auth/list_group',array('gid' => $gid)));
             }
         }
     }
     
     /**
-     * 删除用户组
+     * 删除用户组。
      * @param int $gid 用户组id
      */
     public function del_group($gid){
-        $model = D('Home/Auth');
+        $model = D('Auth');
         if($model->del_group($gid)){
-            $this->success('成功删除一个用户组',U('auth/list_group'));
+            $this->success('成功删除一个用户组',U('Home/Auth/list_group'));
         }else{
             $this->error('删除用户组失败');
         }
     }
     
-    //添加系统权限模块
+    /**
+     * 系统权限模块列表。
+     * @return void
+     */
+    public function list_module(){
+        $model = D('Auth');
+        $data = $model->query_module();
+        $this->assign('module',$data);
+        $this->display();
+    }
+
+    /**
+     * 添加系统权限模块。
+     * @return void
+     */
     public function add_module(){
-        $model = D('Home/Auth');
+        $model = D('Auth');
         if(IS_POST){
             $data = array();
             $data['title'] = I('title');
@@ -177,7 +218,7 @@ class AuthController extends BaseController{
                 $this->error('模块名称,所属模块是必填选项');
             }
             if($model->insert_module($data)){
-                $this->success('新增权限模块成功!',U('auth/list_module'));
+                $this->success('新增权限模块成功!',U('Home/Auth/list_module'));
             }else{
                 $this->error('新增权限模块失败');
             }
@@ -188,20 +229,12 @@ class AuthController extends BaseController{
         }
     }
     
-    //系统权限模块列表
-    public function list_module(){
-        $model = D('Home/Auth');
-        $data = $model->query_module();
-        $this->assign('module',$data);
-        $this->display();
-    }
-    
     /**
      * 修改系统权限模块
      * @param int $mid 模块ID
      */
     public function edit_module($mid){
-        $model = D('Home/Auth');
+        $model = D('Auth');
         if(IS_POST){
             $data = array();
             $data['id'] = I('mid');
@@ -214,12 +247,12 @@ class AuthController extends BaseController{
                 $this->error('模块名称,所属模块是必填选项');
             }
             if($model->update_module($data)){
-                $this->success('修改权限模块成功!',U('auth/list_module'));
+                $this->success('修改权限模块成功!',U('Home/Auth/list_module'));
             }else{
-                $this->error('修改权限模块失败',U('auth/edit_module',array('mid' => $mid)));
+                $this->error('修改权限模块失败',U('Home/Auth/edit_module',array('mid' => $mid)));
             }
         }else{
-            $module = $model->query_module();
+            $module = $model->query_module(null);
             $data = $model->query_module($mid);
             $this->assign('module',$module);
             $this->assign('info',$data);
@@ -227,19 +260,10 @@ class AuthController extends BaseController{
         }
     }
     
-    //用户组列表
-    public function list_group(){
-        $model = D('Home/Auth');
-        $data = $model->query_group();
-        $this->assign('group',$data);
-        $this->display();
-    }
-
-
-    /*权限所属模块*/
+    //权限所属模块
     private function show_module(){
-        $model = D('Home/Auth');
-        $module = $model->query_module();
+        $model = D('Auth');
+        $module = $model->query_module(null);
         return $module;
     }
 }

@@ -1,13 +1,20 @@
 <?php
+/**
+ * 系统用户管理。
+ */
 namespace Home\Controller;
 use Home\Controller\BaseController;
 
 class AdminController extends BaseController{
-    /*添加系统用户*/
+
+    /**
+     * 添加系统用户。
+     * @return void
+     */
     public function add_user(){
         //IS_POST 表示当前请求为POST方式 即表单产生提交
         if(IS_POST){
-            $model = D('Home/Admin');
+            $model = D('Admin');
             $data = array();
             $groupid = I('GroupID');  //用户组ID
             $data['UserName'] = I('UserName');
@@ -22,6 +29,9 @@ class AdminController extends BaseController{
             if(empty($data['RealName']) || empty($data['UserName']) || empty($data['PassWords'])){
                 $this->error('用户名、真实姓名、密码必须填写!');
             }
+            if(!isset($groupid) || empty($groupid)){
+                $this->error('请选择管理组!');
+            }
             if($data['PassWords']!==$data['RePassWords']){
                 $this->error('两次输入密码不相同!');
                 //exit("alert('两次输入密码不相同');history.go(-1)");
@@ -32,41 +42,40 @@ class AdminController extends BaseController{
                 $in_data['uid'] = $uid;
                 $in_data['group_id'] = $groupid;
                 if($auth->add($in_data)){
-                    $this->success('新增系统用户成功!',U('admin/add_user'));  
+                    $this->success('新增系统用户成功!',U('Home/Admin/add_user'));  
                 }else{
                     $this->error('设置权限出现错误');
                 }
             }else{
-                $this->error('新增系统用户失败!',U('admin/add_user'));
+                $this->error('新增系统用户失败!',U('Home/Admin/add_user'));
             }
         }else{
             $group = M('admin_group');
-            $groupList = $group->field('id,title')->select();
+            $groupList = $group->field('id,title')
+                               ->where('`status` = 1')
+                               ->select();
             $this->assign('group',$groupList);
             $this->display();
         }
     }
-    
+
     /**
-     * 删除系统用户
-     * @param int $AdminId 用户ID
-     * @return int 影响行数
+     * 系统用户列表
+     * @return void
      */
-    public function del_user($uid){
-        $model = D('Home/Admin');
-        if($model->delete_user($uid)){
-            $this->success('删除用户成功',U('admin/list_user'));
-        }else{
-            $this->error('删除失败,请联系技术人员');
-        }
+    public function list_user(){
+        $model = D('Admin');
+        $data = $model->query_user(null);
+        $this->assign('users',$data);
+        $this->display();
     }
     
     /**
      * 修改系统用户
-     * @param int $AdminId 用户ID
+     * @return void
      */
-    public function edit_user($uid){
-        $model = D('Home/Admin');
+    public function edit_user(){
+        $model = D('Admin');
         if(IS_POST){    //IS_POST 表示当前请求为POST方式 即表单产生提交
             $data = array();
             $psw = I('PassWords');
@@ -74,8 +83,11 @@ class AdminController extends BaseController{
             $adminid = I('uid');
             $groupid = I('GroupID');
             if(!empty($psw)){
-                if($psw!==$repsw){$this->error('两次输入密码不一样',U('admin/edit_user',array('uid' => $uid)));}
+                if($psw!==$repsw){$this->error('两次输入密码不一样',U('Home/Admin/edit_user',array('uid' => $adminid)));}
                 $data['PassWords'] = md5(C('md5_key').$psw);
+            }
+            if(!isset($groupid) || empty($groupid)){
+                $this->error('请选择管理组!',U('Home/Admin/edit_user',array('uid' => $adminid)));
             }
             $data['AdminID'] = $adminid;
             $data['UserName'] = I('UserName');
@@ -86,18 +98,34 @@ class AdminController extends BaseController{
                 //更新权限验证表
                 $auth = M('admin_group_access');
                 if($auth->where('uid='.$adminid)->setField('group_id',$groupid)){
-                    $this->success('用户修改成功',U('admin/list_user'));
+                    $this->success('用户修改成功',U('Home/Admin/list_user'));
+                }else{
+                    $this->success('用户修改成功',U('Home/Admin/list_user'));
                 }
             }else{
-                $this->error('修改失败或未做修改',U('admin/edit_user',array('uid' => $uid)));
+                $this->error('修改失败或未做修改',U('Home/Admin/edit_user',array('uid' => $adminid)));
             }
         }else{
             $group = M('admin_group');
             $groupList = $group->field('id,title')->select();
-            $data = $model->query_user($uid);
+            $data = $model->query_user(I('uid',''));
             $this->assign('info',$data);
             $this->assign('group',$groupList);
             $this->display('edit_user');
+        }
+    }
+
+    /**
+     * 删除系统用户
+     * @param int $AdminId 用户ID
+     * @return int 影响行数
+     */
+    public function del_user($uid){
+        $model = D('Admin');
+        if($model->delete_user($uid)){
+            $this->success('删除用户成功',U('Home/Admin/list_user'));
+        }else{
+            $this->error('删除失败,请联系技术人员');
         }
     }
     
@@ -106,7 +134,7 @@ class AdminController extends BaseController{
      */
     public function edit_pass(){
         if(IS_POST){
-            $model = D('Home/Admin');
+            $model = D('Admin');
             $data = array();
             $result = $model->queryCondition(array('AdminID' => I('AdminID'),'PassWords' => md5(C('md5_key').I('CurPass'))),FALSE);
             if(!$result){
@@ -126,7 +154,7 @@ class AdminController extends BaseController{
             }
             if($model->update_user($data)){
                 //$this->success('您的密码已成功修改,请重新登陆',U('login/logout'));
-                exit("<script>alert('您的密码已成功修改,请重新登陆');window.top.location.href='".U('login/logout')."';</script>");
+                exit("<script>alert('您的密码已成功修改,请重新登陆');window.top.location.href='".U('Home/Login/logout')."';</script>");
             }else{
                 $this->error('密码修改失败');
             }
@@ -136,13 +164,7 @@ class AdminController extends BaseController{
     }
 
 
-    /*系统用户列表*/
-    public function list_user(){
-        $model = D('Home/Admin');
-        $data = $model->query_user();
-        $this->assign('users',$data);
-        $this->display();
-    }
+    
     
     /**
      * 返回查询结果，供其他控制器调用
@@ -150,7 +172,7 @@ class AdminController extends BaseController{
      */
     public function get_data(){
         $adminid = I('aid');
-        $model = D('Home/Admin');
+        $model = D('Admin');
         return $model->query_user();
     }
     
@@ -160,7 +182,7 @@ class AdminController extends BaseController{
      * @param string $psw 用户密码
      */
     public function getUser($username,$psw){
-        $model = D('Home/Admin');
+        $model = D('Admin');
         return $model->queryCondition("username='$username' and passwords='$psw'",FALSE);
     }
 }

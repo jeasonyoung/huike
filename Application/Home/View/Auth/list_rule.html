@@ -1,143 +1,149 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>权限列表</title>
-<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
-<script type="text/javascript">
-$(function(){
-  $('#md option').each(function(){
-	if($(this).val()==$('#st').val()){
-		$(this).attr('selected',true);
-	}
-  })
-})
-</script>
-<style>
-#search,.shopcart input,select{height:24px;line-height:24px;border:1px solid #dedede}
-.shopcart{border:1px solid #ebb683;line-height: 35px;text-indent: 10px;clear:both}
-.shopcart span,select{display:inline-block;float:left;margin-right:5px}
-.shopcart select{margin-top:5px}
-
-.shopcart ul li{line-height:35px;float:left;margin-right:5px}
-.button {
-    border-radius: 5px;
-    color: #fff;
-    font-weight: bold;
-    line-height: 20px;
-    overflow: hidden;
-    position: relative;
-    text-align: center;
-    text-shadow: 1px 1px 1px #333;
-    width: 60px;
-	cursor:pointer;
-}
-.button.gray {
-    background: -moz-linear-gradient(center top , #f2f3f7, #e4e8ec) repeat scroll 0 0;
-    border: 1px solid #dce1e6;
-    box-shadow: 0 1px 2px #fff inset, 0 -1px 0 #a8abae inset;
-    color: #8c96a0;
-    text-shadow: 1px 1px 1px #fff;
-}
-</style>
-</head>
+<include file="Public/view_header" title="权限列表"/>
 <body>
+    <style type="text/css">
+    #search,.shopcart input,select{
+        height:24px;
+        line-height:24px;
+        border:1px solid #dedede;
+    }
+    .shopcart{
+        border:1px solid #ebb683;
+        line-height:35px;
+        text-indent:10px;
+        clear:both;
+    }
+    .shopcart span,select{
+        display:inline-block;
+        float:left;
+        margin-right:5px;
+    }
+    .shopcart select{margin-top:5px;}
+    .shopcart ul li{
+        line-height:35px;
+        float:left;
+        margin-right:5px;
+    }
+    .button {
+        border-radius:5px;
+        color:#fff;
+        font-weight:bold;
+        line-height:20px;
+        overflow:hidden;
+        position:relative;
+        text-align:center;
+        text-shadow: 1px 1px 1px #333;
+        width:60px;
+        cursor:pointer;
+    }
+    .button.gray {
+        background:-moz-linear-gradient(center top, #f2f3f7, #e4e8ec) repeat scroll 0 0;
+        border: 1px solid #dce1e6;
+        box-shadow: 0 1px 2px #fff inset,0 -1px 0 #a8abae inset;
+        color: #8c96a0;
+        text-shadow: 1px 1px 1px #fff;
+    }
+    </style>
 
 	<div class="place">
-    <span>位置：</span>
-    <ul class="placeul">
-    <li><a href="#">首页</a></li>
-    <li><a href="#">用户和权限管理</a></li>
-    <li><a href="#">权限列表</a></li>
-    </ul>
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">用户和权限管理</a></li>
+            <li><a href="#">权限列表</a></li>
+        </ul>
     </div>
     
     <div class="rightinfo">
     
-    <div class="tools">
-    	<ul class="toolbar">
-        <li class="click"><a href="{:U('auth/add_rule')}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
-        </ul>
-        <ul class="toolbar1">
-        <li><span><img src="__PUBLIC__/images/t05.png" /></span>设置</li>
-        </ul>
+        <div class="tools">
+        	<ul class="toolbar">
+                <li class="click">
+                    <a href="{:U('Home/Auth/add_rule')}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a>
+                </li>
+            </ul>
+            <ul class="toolbar1">
+                <li><span><img src="__PUBLIC__/images/t05.png" /></span>搜索规则</li>
+            </ul>
+        </div>
+        <div class="tools shopcart">
+            <span>&nbsp;&nbsp;</span>
+            <ul>
+                <form action="{:U('Home/Auth/list_rule')}" method="POST">
+                <li>
+                    <select name="module" style="width:150px">
+                        <option value=""></option>
+                        <volist name="module" id="md">
+                            <if condition="$md.pid neq 0">
+                                <option value="{$md.id}">--{$md.title}</option>
+                            <else />
+                                <option value="{$md.id}">{$md.title}</option>
+                            </if>
+                        </volist>
+                    </select>
+                </li>
+                <li>
+                    <input type="submit" value="搜索" class="button gray" style="line-height: 18px"/>
+                </li>
+                </form>
+            </ul>
+        </div>
+
+        <table class="tablelist">
+            <thead>
+            	<tr>
+                    <th>编号<i class="sort"><img src="__PUBLIC__/images/px.gif" /></i></th>
+                    <th>所属模块</th>
+                    <th>规则标识</th>
+                    <th>规则简述</th>
+                    <th>附加条件</th>
+                    <th>状态</th>
+                    <th>菜单显示</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <volist id="vo" name="rules">
+                <tr>
+                    <td>{$vo.id}</td>
+                    <td>{$vo.modname}</td>
+                    <td>{$vo.name}</td>
+                    <td>{$vo.title}</td>
+                    <td>
+                        <if condition="$vo['condition'] eq ''">无<else/>{$vo['condition']}</if>
+                    </td>
+                    <td>
+                        <if condition="$vo.status eq 1">
+                            <font color="#008000">√</font>
+                        <else />
+                            <font color="#FF0000">×</font>
+                        </if>
+                    </td>
+                    <td>
+                        <if condition="$vo.show eq 1">
+                            <font color="#008000">√</font>
+                        <else />
+                            <font color="#FF0000">×</font>
+                        </if>
+                    </td>
+                    <td>
+                        <a href="{:U('Home/Auth/edit_rule',array('rid' => $vo['id']))}" class="tablelink">修改</a>     
+                        <a href="{:U('Home/Auth/del_rule',array('rid' => $vo['id']))}" onclick="javascript:return confirm('确定删除此条规则吗?')" class="tablelink"> 删除</a>
+                    </td>
+                </tr>   
+                </volist>   
+            </tbody>
+        </table>
     </div>
-    <div class="tools shopcart">
-    <span>搜索规则</span>
-    <ul>
-    <form name="seach" action="{:U('auth/list_rule')}" method="post">
-    <li>
-    <select name="module" id="md" style="width:150px">
-    <option value="">所属模块</option>
-    <volist name="module" id="md">
-    <if condition="$md.pid neq 0">
-    <option value="{$md.id}">--{$md.title}</option>
-    <else />
-    <option value="{$md.id}">{$md.title}</option>
-    </if>
-    </volist>
-    </select>
-    </li>
-    <li><input type="submit" value="搜索" class="button gray" style="line-height: 18px"/></li>
-    <input type="hidden" id="st" value="{$_POST['module']}" />
-    </form>
-    </ul>
-    </div>
-    <table class="tablelist">
-    	<thead>
-    	<tr>
-        <th>编号<i class="sort"><img src="__PUBLIC__/images/px.gif" /></i></th>
-        <th>所属模块</th>
-        <th>规则标识</th>
-        <th>规则简述</th>
-        <th>附加条件</th>
-        <th>状态</th>
-        <th>菜单显示</th>
-        <th>操作</th>
-        </tr>
-        </thead>
-        <tbody>
-        <volist id="vo" name="rules">
-        <tr>
-        <td>{$vo.id}</td>
-        <td>{$vo.modname}</td>
-        <td>{$vo.name}</td>
-        <td>{$vo.title}</td>
-        <td>
-        <if condition="$vo['condition'] eq ''">
-        无
-        <else />
-        {$vo['condition']}
-        </if>
-        </td>
-        <td>
-        <if condition="$vo.status eq 1">
-        <font color="#008000">√</font>
-        <else />
-        <font color="#FF0000">×</font>
-        </if>
-        </td>
-        <td>
-        <if condition="$vo.show eq 1">
-        <font color="#008000">√</font>
-        <else />
-        <font color="#FF0000">×</font>
-        </if>
-        </td>
-        <td><a href="{:U('auth/edit_rule',array('rid' => $vo['id']))}" class="tablelink">修改</a>     <a href="{:U('auth/del_rule',array('rid' => $vo['id']))}" onclick="javascript:return confirm('确定删除此条规则吗?')" class="tablelink"> 删除</a></td>
-        </tr>   
-        </volist>   
-        </tbody>
-    </table>
-    <!--<div class="pagin">
-    </div>-->
-    </div>
-    
+
     <script type="text/javascript">
-	$('.tablelist tbody tr:odd').addClass('odd');
-	</script>
-
+    <!--
+    $(function(){
+        //奇偶行处理
+        $('.tablelist tbody tr:odd').addClass('odd');
+        //
+        $("select[name='module']").val("{:I('post.module')}");
+    });
+    //-->
+    </script>
 </body>
-
-</html>
+<include file="Public/view_footer"/>

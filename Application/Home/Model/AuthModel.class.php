@@ -1,4 +1,7 @@
 <?php
+/**
+ * 权限管理数据模型。
+ */
 namespace Home\Model;
 use Think\Model;
 
@@ -20,7 +23,8 @@ class AuthModel extends Model{
      */
     public function del_rule($rid){
         $db = M('admin_rule');
-        return $db->where('id='.$rid)->delete();
+        return $db->where('id='.$rid)
+                  ->delete();
     }
     
     /**
@@ -29,7 +33,8 @@ class AuthModel extends Model{
      */
     public function update_rule($data){
         $db = M('admin_rule');
-        $count = $db->where("name='".$data['name']."'")->count();
+        $count = $db->where("name='".$data['name']."'")
+                    ->count();
         if($count > 1){
             return array(
                 'error'  => '规则标识已存在,不能修改!'
@@ -43,14 +48,32 @@ class AuthModel extends Model{
      * @param string $condition 查询条件
      * @param int $multi 返回结果集 true 二维数组  false 一位数组
      */
-    public function query_rule($condition='',$multi=TRUE){
+    public function query_rule($condition='',$multi=true){
         $db = M('admin_rule');
         if($multi){
-            if(!empty($condition)){return $db->where($condition)->field('t2.title as modname,hk_admin_rule.*')->join('left join hk_admin_module t2 ON t2.id=hk_admin_rule.mid')->select();}
-            return $db->field('t2.title as modname,hk_admin_rule.*')->join('left join hk_admin_module t2 ON t2.id=hk_admin_rule.mid')->select();
+            if(!empty($condition)){
+                return $db->where($condition)
+                          ->field('t2.title as modname,hk_admin_rule.*')
+                          ->join('left join hk_admin_module t2 ON t2.id=hk_admin_rule.mid')
+                          ->order('ifnull(t2.sortId,0),t2.title,ifnull(hk_admin_rule.sortId,0)')
+                          ->select();
+            }
+            return $db->field('t2.title as modname,hk_admin_rule.*')
+                      ->join('left join hk_admin_module t2 ON t2.id=hk_admin_rule.mid')
+                      ->order('ifnull(t2.sortId,0),t2.title,ifnull(hk_admin_rule.sortId,0)')
+                      ->select();
         }else{
-            if(!empty($condition)){return $db->where($condition)->field('t2.title as modname,hk_admin_rule.*')->join('left join hk_admin_module t2 ON t2.id=hk_admin_rule.mid')->find();}
-            return $db->field('t2.title as modname,hk_admin_rule.*')->join('left join hk_admin_module t2 ON t2.id=hk_admin_rule.mid')->find();
+            if(!empty($condition)){
+                return $db->where($condition)
+                          ->field('t2.title as modname,hk_admin_rule.*')
+                          ->join('left join hk_admin_module t2 ON t2.id=hk_admin_rule.mid')
+                          ->order('ifnull(t2.sortId,0),t2.title,ifnull(hk_admin_rule.sortId,0)')
+                          ->find();
+            }
+            return $db->field('t2.title as modname,hk_admin_rule.*')
+                      ->join('left join hk_admin_module t2 ON t2.id=hk_admin_rule.mid')
+                      ->order('ifnull(t2.sortId,0),t2.title,ifnull(hk_admin_rule.sortId,0)')
+                      ->find();
         }
     }
     
@@ -99,9 +122,15 @@ class AuthModel extends Model{
         $db = M('admin_module');
         $fields = array('id','title','module','pid','sortid','path',"concat(path,'-',id)" => 'bpath','show');
         if(isset($mid) && is_numeric($mid)){
-            return $db->field($fields)->where('id='.$mid)->order('bpath')->find();
+            //if(APP_DEBUG) trace("query_module-mid=>$mid");
+            return $db->field($fields)
+                      ->where('id='.$mid)
+                      ->order('bpath')
+                      ->find();
         }
-        return $db->field($fields)->order('bpath')->select();
+        return $db->field($fields)
+                  ->order('bpath')
+                  ->select();
     }
    
     /**
@@ -125,13 +154,13 @@ class AuthModel extends Model{
         return $db->save($data);
     }
     
-    /**
-     * 删除权限模块
-     * @param array $data 模块数据 需包含主键
-     */
-    public function del_module($mid){
+    // *
+    //  * 删除权限模块
+    //  * @param array $data 模块数据 需包含主键
+     
+    // public function del_module($mid){
         
-    }
+    // }
 
     /**
      * 填充权限模块数据path字段
@@ -146,7 +175,8 @@ class AuthModel extends Model{
             foreach(array_reverse($result) as $value){
                 $path.= $value.'-';
             }
-            return $db->where('id='.$mid)->setField('path', rtrim($path,'-'));
+            return $db->where('id='.$mid)
+                      ->setField('path', rtrim($path,'-'));
         }
     }
 
@@ -161,13 +191,17 @@ class AuthModel extends Model{
     
     private function SubRule($mid){
         $db = M('admin_rule');
-        return $db->field('id,title')->where('mid='.$mid)->select();
+        return $db->field('id,title')
+                  ->where('mid='.$mid)
+                  ->select();
     }
     
     //判断是否为顶级模块
     private function isTopClass($id,&$array){  
         $db = M('admin_module');
-        $data = $db->field('id,pid')->where('id='.$id)->find();
+        $data = $db->field('id,pid')
+                   ->where('id='.$id)
+                   ->find();
         if($data['pid']!=0){
             array_push($array, $data['pid']);
             $this->IsTopClass($data['pid'], $array); //递归操作数组加入
