@@ -58,8 +58,8 @@
                     <td>{$vo.kfname}</td>
                     <td>
                         <a href="{:U('Home/Agency/edit_agency',array('JGID' => $vo['jgid']))}" class="tablelink">修改</a>
-                        <a href="{:U('Home/Agency/edit_agency',array('JGID' => $vo['jgid']))}" class="tablelink">设置考试</a>
-                        <a href="{:U('Home/Agency/del_agency',array('jgid' => $vo['jgid']))}" onclick="javascript:return confirm('确定删除此机构?')" class="tablelink"> 删除</a>
+                        <a href="{:U('Home/Agency/agency_exam',array('JGID' => $vo['jgid']))}" class="tablelink">设置考试</a>
+                        <a href="{:U('Home/Agency/del_agency',array('JGID' => $vo['jgid']))}" onclick="javascript:return confirm('确定删除此机构?')" class="tablelink"> 删除</a>
                     </td>
                 </tr>   
                 </volist>   

@@ -1,0 +1,80 @@
+<include file="Public/view_header" title="设置机构考试"/>
+<body>
+    <div class="place"> 
+        <span>位置：</span>
+        <ul class="placeul">
+          <li><a href="#">首页</a></li>
+          <li><a href="#">机构信息管理</a></li>
+          <li><a href="#">合作机构</a></li>
+          <li><a href="#">设置机构考试</a></li>
+        </ul>
+    </div>
+
+    <!-- 选择考试 -->
+    <form action="{:U('Home/Agency/agency_exam')}" method="POST">
+    <div class="rightinfo">
+        <table class="tablelist" style="text-align:center">
+            <thead>
+                <tr>
+                    <th align="center" colspan="10">
+                        <span style="float:left;">设置考试(机构:{$agency_name})</span>
+                        <span style="float:left;">
+                            <input id="all_checked" type="checkbox"/>
+                            <label for="all_checked" style="font-weight:normal;">全选</label>
+                        </span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            
+                <tr>
+                    <volist name="all_exams" id="vo" mod="5">
+                        <td>
+                            <input name="examId[]" type="checkbox" value="{$vo['id']}" />
+                            <spa>{$vo['name']}</span>
+                        </td>
+                        <eq name="mod" value="4">
+                            </tr><tr>
+                        </eq>
+                    </volist>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top:10px;">
+        <center>
+            <input type="hidden" name="JGID" value="{$agency_id}"/>
+            <input type="submit" class="btn" value="确定"/>
+        </center>
+    </div>
+    </form>
+
+    <script type="text/javascript">
+    <!--
+    $(function(){
+        //全选
+        $("#all_checked").click(function(){
+            var chk_value = $(this).attr('checked');
+            $("tbody").find(":checkbox").each(function(){
+                $(this).attr('checked', chk_value);
+            });
+        });
+        //
+        <if condition='isset($exam_ids)'>
+            //已选中
+            var ids = '{$exam_ids}'.split(',');
+            for(var i = 0; i < ids.length; i++){
+               var obj = $(":checkbox[value='"+ids[i]+"']");
+               if(obj){
+                    obj.attr('checked', true);
+               }
+            }
+        
+        </if>
+    });
+    //-->
+    </script>
+
+</body>
+<include file="Public/view_footer"/>

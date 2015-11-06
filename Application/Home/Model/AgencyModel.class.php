@@ -97,8 +97,6 @@ class AgencyModel extends Model{
         }
     }
 
-
-    
     /**
      * 添加机构用户
      * @param array $user 机构用户数据
@@ -165,5 +163,17 @@ class AgencyModel extends Model{
         $_model = $_model->field('AdminID,UserName,RealName')
                          ->select();
         return $_model;
+    }
+
+    /**
+     * 加载全部的考试数据。
+     * @return mixed 考试数据。
+     */
+    public function loadAllExams(){
+        if(APP_DEBUG) trace('加载全部的考试数据...');
+        $_model = M('Examclass');
+        return $_model->field('`ExamID` as id, `CnName` as name')
+                      ->order('SortID')
+                      ->select();
     }
 }

@@ -113,13 +113,54 @@ class AgencyController extends BaseController{
             $this->display();
         }
     }
+
+    /**
+     * 设置机构考试。
+     * @return void
+     */
+    public function agency_exam(){
+        if(APP_DEBUG) trace("调用agency_exam...");
+        //获取机构ID
+        $_agencyId = I('JGID','');
+        //初始化数据模型
+        $_model = D('Agency');
+        if(IS_POST){//提交数据
+            $_result['JGID'] = $_agencyId;
+            $_examIds = I('examId','');
+            if(isset($_examIds) && !empty($_examIds) && is_array($_examIds)){
+                $_result['AllExams'] = implode($_examIds,',');
+            }else{
+                $_result['AllExams'] = '';
+            }
+            //更新数据
+            if($_model->update_agency($_result)){
+                $this->success('设置机构考试成功',U('Home/Agency/list_agency'));
+            }else{
+                $this->error('设置机构考试失败或未更新!',U('Home/Agency/list_agency'));
+            }
+        }else{//显示页面
+            //加载机构数据
+            $_data = $_model->loadAgency($_agencyId);
+            if(!$_data) $this->error('机构已不存在!');
+            //设置机构ID
+            $this->assign('agency_id', $_agencyId);
+            //设置机构名称
+            $this->assign('agency_name', $_data['abbr_cn']);
+            //设置考试数据
+            $this->assign('all_exams', $_model->loadAllExams());
+            //设置机构考试
+            $this->assign('exam_ids', $_data['allexams']);
+            //显示
+            $this->display();
+        }
+    }
     
     /**
      * 删除合作机构
      */
-    public function del_agency($jgid){
+    public function del_agency(){
         $model = D('Agency');
-        if($model->delete_agency($jgid)){
+        if($model->delete_agency(I('JGID',''))){
             $this->success('成功删除一个合作机构',U('Home/Agency/list_agency'));
         }else{
             $this->error('删除合作机构失败');
