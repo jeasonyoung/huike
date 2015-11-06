@@ -19,14 +19,10 @@ class AgencyController extends BaseController{
             if(!$_result=$_model->create()){
                 $this->error($_model->getError());
             }else{
-                //将考试类别转化为字符串保存
-                // if(is_array($result['AllExams'])){
-                //     $result['AllExams']= implode($result['AllExams'],',');
-                // }
                 $_result['create_time'] = date('Y-m-d', time);
                 if($agencyId=$_model->insert_agency($result)){
                     //添加机构成功,为机构添加默认管理员
-                    $this->success('新增机构成功!',U('Home/Agency/add_user',array('aid' => $agencyId)));
+                    $this->success('新增机构成功!',U('Home/Agency/add_user',array('agencyId' => $agencyId)));
                 }else{
                     $this->error('新增机构失败');
                 }
@@ -84,10 +80,6 @@ class AgencyController extends BaseController{
             if(!$_result=$_model->create()){
                 $this->error($_model->getError());
             }else{
-
-                // if(is_array($result['AllExams'])){
-                //     $result['AllExams']= implode($result['AllExams'],',');
-                // }
                 if($_model->update_agency($_result)){
                     $this->success('更新合作机构信息成功',U('Home/Agency/list_agency'));
                 }else{
@@ -167,101 +159,144 @@ class AgencyController extends BaseController{
         }
     }
     
-    //添加机构用户
+    /**
+     * 添加机构用户。
+     * @return void
+     */
     public function add_user(){
-        $model = D('Agency');
+        if(APP_DEBUG) trace('调用add_user...');
+        //初始化机构管理数据模型
+        $_model = D('AgencyAdmin');
+        //提交数据处理
         if(IS_POST){
-            $JGID = I('JGID');
-            if(empty($JGID)){$this->error('请选择合作机构!');}
-            $data = array();
-            $data['UserName'] = I('UserName');
-            $data['PassWords'] = md5(I('PassWords'));
-            $data['JGID'] = $JGID;
-            $data['Lock'] = I('Lock');
-            $data['RegTime'] = date('Y-m-d H:i:s',time());
-            $data['GroupID'] = I('GroupID');
-            $data['LoginNum'] = 0;
-            $data['RealName'] = I('RealName');
-            if(empty($data['UserName']) || empty($data['PassWords']) || empty($data['RealName'])){
-                $this->error('用户名，密码，真实姓名为必填项');
-            }
-            if(I('PassWords')!==I('RePassWords')){
-                $this->error('两次输入密码不一样!');
-            }
-            if($model->query_user("username='".$data['UserName']."'",FALSE)){
-                $this->error('用户名已存在');
-            }
-            if($uid=$model->insert_user($data)){
-                //更新机构默认管理员字段
-                $db = M('jigou');
-                $db->where('jgid='.$JGID)->setField('JG_UID',$uid);
-                $this->success('新增机构用户成功!',U('Home/Agency/list_agency'));
+            if(!($_result = $_model->create())){
+                $this->error($_model->getError());
             }else{
-                $this->error('新增机构用户失败');
-            }
-        }else{
-            if(empty(I('get.aid'))){
-                $agency = $model->get_agencyList(array('`abbr_cn`','`jgid`'),'statetf=1');
-                $this->assign('agency',$agency);
-            }
-            $db_group = M('jigou_group');
-            $this->assign('group',$db_group->field('id,title')->select());
-            $this->display();
-        }
-    }
-    
-    //修改机构管理员
-    public function edit_user($UID){
-        $model = D('Agency');
-        if(IS_POST){
-            $rules = array(
-                array('UserName','require','用户名不能为空'),
-                array('RePassWords','PassWords','确认密码不正确',2,'confirm'),
-                array('JGID','require','请选择合作机构'),
-                array('RealName','require','真实姓名不能为空')
-            );
-            $check = M('jigou_admin');
-            $check->setProperty('_validate', $rules);
-            if(!$result=$check->create()){
-                $this->error($model->getError());
-            }else{
-                $update_info = array_filter($result);
-                if(!empty($update_info['PassWords'])){
-                    $update_info['PassWords'] = md5(I('PassWords'));
-                }
-                if($model->update_user($update_info)){
-                    $this->success('更新机构管理员信息成功',U('Home/Agency/list_users'));
+                $_data = array(
+                    'UserName'  => $_result['UserName'],
+                    'PassWords' => md5($_result['PassWords']),
+                    'JGID'      => $_result['JGID'],
+                    'Lock'      => $_result['Lock'],
+                    'RegTime'   => date('Y-m-d H:i:s',time()),
+                    'RealName'  => $_result['RealName'],
+                    'GroupID'   => $_result['GroupID'],
+                    'LoginNum'  => 0,
+                );
+                if($_uid = $_model->add($_data)){
+                    if($_data['GroupID'] = 1){//更新机构默认管理员字段
+                        M('Jigou')->save(array(
+                            'JGID'   => $_result['JGID'],
+                            'JG_UID' => $_uid,
+                        ));
+                    }
+                    $this->success('新增机构管理员成功!',U('Home/Agency/list_users'));
                 }else{
-                    $this->error('更新管理员信息失败');
+                    $this->error('新增机构管理员失败');
                 }
             }
         }else{
-            $data = $model->query_user('uid='.$UID,FALSE);
-            $agency = $model->get_agencyList(array('`abbr_cn`','`jgid`'),'statetf=1');
-            $this->assign('data',$data);
-            $this->assign('agency',$agency);
-            $db_group = M('jigou_group');
-            $this->assign('group',$db_group->field('id,title')->select());
+            //加载页面
+            $_agencyId = I('agencyId', null);
+            //设置机构
+            $this->assign('agencies', $_model->loadAllAgencies($_agencyId));
+            //设置管理组
+            $this->assign('groups', $_model->loadAgencyGroups(1));
+            //显示页面
             $this->display();
         }
     }
-    
-    /*机构用户列表*/
+
+    /**
+     * 机构用户列表。
+     * @return void
+     */
     public function list_users(){
-        $model = D('Agency');
-        $data = $model->query_user();
-        $this->assign('users',$data);
+        $_model = D('Agency');
+        if(IS_POST){//查询数据
+            $_agencyId = I('agencyId',null);
+            if(isset($_agencyId) && !empty($_agencyId)){
+                $_where = "hk_jigou_admin.JGID='".$_agencyId."'";
+                $this->assign('users',$_model->query_user($_where));
+                $this->assign('agency_id', $_agencyId);
+            }else{
+                $this->assign('users',$_model->query_user());
+            }
+        }else{//加载数据
+            $this->assign('users',$_model->query_user());
+        }
+        //设置机构
+        $this->assign('agencies', D('AgencyAdmin')->loadAllAgencies());
+        //显示页面
         $this->display();
     }
     
-    //删除结构管理员
-    public function del_users($uid){
-        $model = D('Agency');
-        if($model->delete_user($uid)){
-            $this->success('成功删除一个机构管理员');
+    /**
+     * 修改机构管理员。
+     * @return void。
+     */
+    public function edit_user(){
+        if(APP_DEBUG) trace("调用edit_user...");
+        //初始化机构管理数据模型
+        $_model = D('AgencyAdmin');
+        //更新数据
+        if(IS_POST){
+            $_rules = array(
+                array('UserName','require','用户名不能为空'),
+                array('RePassWords','PassWords','确认密码不正确',2,'confirm'),
+                array('JGID','require','请选择所属机构'),
+                array('RealName','require','真实姓名不能为空')
+            );
+            $_model->setProperty('_validate', $_rules);
+            if(!$_result=$_model->create()){
+                $this->error($_model->getError());
+            }else{
+                $_result = array_filter($_result);
+                if(!empty($_result['PassWords'])){
+                    $_result['PassWords'] = md5(I('PassWords'));
+                }
+                if($_model->save($_result)){
+                    $this->success('更新机构管理员信息成功',U('Home/Agency/list_users'));
+                }else{
+                    $this->error('更新机构管理员信息失败或未更新',U('Home/Agency/list_users'));
+                }
+            }
+        }else{//加载数据
+            $_data = $_model->loadAgencyAdmin(I('UID',null));
+            //设置数据
+            $this->assign('data', $_data);
+            //设置机构
+            $this->assign('agencies', $_model->loadAllAgencies($_data ? $_data['jgid'] : null));
+            //设置管理组
+            $this->assign('groups', $_model->loadAgencyGroups(1));
+            //显示页面
+            $this->display();
+
         }
     }
-    
+
+    /**
+     * 删除结构管理员
+     * @return void
+     */
+    public function del_users(){
+        if(APP_DEBUG) trace('调用del_users...');
+        $_uid = I('UID','');
+        if(isset($_uid) && !empty($_uid)){
+            $_model = D('AgencyAdmin');
+            if(is_array($_uid)){
+                $_model = $_model->where(array('UID' => array('in', $_uid)));
+            }else{
+                $_model = $_model->where("`UID` = '%s'", array($_uid));
+            }
+            if($_model->delete()){
+                $this->success('成功删除一个机构管理员');
+            }else{
+                $this->error('删除失败或未删除');
+            }
+        }else{
+            $this->error('未获取用户ID删除失败');
+        }
+    }
     
     
     /**

@@ -21,29 +21,32 @@
       <li>
         <label>公司名称</label>
         <input name="Company" type="text" class="dfinput" />
-        <i>如: 合作单位真实名称；如《柳州英腾软件》</i>
+        <i><font color="red">*</font> 如: 合作单位真实名称；如《柳州英腾软件》</i>
       </li>
       <li>
         <label>对外名称</label>
         <input name="abbr_cn" type="text" class="dfinput" style="width:150px"/>
-        <i>"如：考试宝典"</i>
+        <i><font color="red">*</font> 如：考试宝典</i>
       </li>
       <li>
         <label>英文简称</label>
         <input name="abbr_en" type="text" class="dfinput" style="width:150px"/>
-        <i>"如：ksbao"</i>
+        <i><font color="red">*</font> 如：ksbao</i>
       </li>
       <li>
         <label>登陆LOGO</label>
         <input name="login_icon" type="text" class="dfinput"/>
+        <i><font color="red">*</font></i>
       </li>
       <li>
         <label>登陆后LOGO</label>
         <input name="logo_icon" type="text" class="dfinput"/>
+        <i><font color="red">*</font></i>
       </li>
       <li>
         <label>视频LOGO</label>
         <input name="video_icon" type="text" class="dfinput"/>
+        <i><font color="red">*</font></i>
       </li>
       <li>
         <label>视频片头</label>
@@ -53,7 +56,7 @@
       <li>
         <label>机构域名</label>
         <input name="domain" type="text" class="dfinput"/>
-        <i>机构合作域名</i>
+        <i><font color="red">*</font> 机构合作域名</i>
       </li>
       <li>
         <label>流媒体域名</label>
@@ -90,40 +93,45 @@
         <select name="County" id="County" class="styled-select" style="width:150px">
           <option value="">-选择区(县)-</option>
         </select>
+        <i><font color="red">*</font></i>
       </li>
       <li>
         <label>详细地址</label>
         <input name="Address" type="text" class="dfinput" style="width:546px"/>
+        <i><font color="red">*</font></i>
       </li>
       <li>
         <label>联系人</label>
         <input name="Contact" type="text" class="dfinput" style="width:100px"/> 
+        <font color="red">*</font>
         合作电话: <input name="HZTel" type="text" class="dfinput" style="width:150px"/> 
         学员联系电话: <input name="StuTel" type="text" class="dfinput" style="width:150px"/>
       </li>
       <li>
         <label>机构简介</label>
         <textarea name="Introduce" class="dfinput" style="width:546px;height:102px;"></textarea>
+        <i><font color="red">*</font></i>
       </li>
       <li>
         <label>机构余额</label>
         <input name="Money" type="text" class="dfinput" style="width:100px"/>
-        <i>"单位：元"</i>
+        <i>单位：元</i>
       </li>
       <li>
         <label>机构折扣</label>
-        <input name="Dicount" type="text" class="dfinput" style="width:100px"/>
-        <i>"合同折扣 默认1.0"</i>
+        <input name="Dicount" value="1.0" type="text" class="dfinput" style="width:100px"/>
+        <i>合同折扣 默认1.0</i>
       </li>
       <li>
         <label>试听数量</label>
         <input name="ListenNum" value="2" type="text" class="dfinput" style="width:100px"/>
-        <i>"默认为2"</i>
+        <i>默认为2</i>
       </li>
       <li>
         <label>机构秘钥</label>
         <input name="Md5Key" value="{:create_rand_str()}" type="text" class="dfinput" style="width:150px"/>
         手机端秘钥<input name="APPKey" value="{:create_rand_str()}" type="text" class="dfinput" style="width:150px"/>
+        <i><font color="red">*</font></i>
       </li>
       <li>
         <label>头部html</label>
@@ -154,12 +162,12 @@
       <li>
         <label>安卓下载地址</label>
         <input name="apk_url" type="text" class="dfinput"/>
-        <i>"andriod端APK下载地址"</i>
+        <i>andriod端APK下载地址</i>
       </li>
       <li>
         <label>苹果下载地址</label>
         <input name="app_url" type="text" class="dfinput"/>
-        <i>"IOS端APP获取地址"</i>
+        <i>IOS端APP获取地址</i>
       </li>
       <li>
         <label>&nbsp;</label>
