@@ -64,7 +64,7 @@
             <volist name="rules" id="vo">
               <if condition="$vo.rules neq NULL ">
               <ul>
-                <p class="module">{$vo.title}</p>
+                <p class="module"><input type="checkbox"/>&nbsp;{$vo.title}</p>
                 <volist name="vo['rules']" id="li">
                 <li>
                   <input name="rules[]" value="{$li.id}" type="checkbox"/>{$li.title}
@@ -107,6 +107,16 @@
         $(":checkbox[value='"+ values[i] +"']").attr('checked', true);
       }
     </if>
+    //全选
+    $(".module > input[type='checkbox']").click(function(){
+      var chk = $(this).attr('checked');
+      $(this).parent().nextAll().each(function(){
+        $(this).find('input').each(function(){
+          $(this).attr('checked', chk);
+        });
+      });
+    });
+
   });
   //-->
   </script>
