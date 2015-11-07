@@ -136,13 +136,16 @@ class MemberController extends BaseController{
         if(APP_DEBUG) trace('锁定学员用户...');
         $_userId = I('UserID','');
         if(isset($_userId) && !empty($_userId)){
+            //初始化数据模型
+            $_model = D('Member');
+            //加载数据
+            $_data = $_model->loadMember($_userId);
             //更新数据
             $_update = array(
                 'UserID' => $_userId,
-                'Lock'   => 1,
+                'Lock'   => !$_data['lock'],
             );
-            //初始化数据模型
-            $_model = D('Member');
+            
             if($_model->save($_update)){
                 $this->success('锁定学员用户成功', U('Home/Member/member_list'));
             }else{
