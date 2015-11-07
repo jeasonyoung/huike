@@ -1,73 +1,92 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>添加学员</title>
-<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
-</head>
+<include file="Public/view_header" title="添加学员"/>
 <body>
-<div class="place"> <span>位置：</span>
-  <ul class="placeul">
-    <li><a href="#">首页</a></li>
-    <li><a href="#">学员信息管理</a></li>
-    <li><a href="#">添加学员</a></li>
-  </ul>
-</div>
-<div class="formbody">
-  <div class="formtitle"><span>添加学员</span></div>
-  <ul class="forminfo">
-  <form name="user" action="{:U('member/add_member')}" method="post">
-    <li>
-      <label>用户名</label>
-      <input name="UserName" type="text" class="dfinput" />
-      <i><font color="#FF0000">*</font> 设置管理员用户名</i></li>
-    <li>
-      <label>用户密码</label>
-      <input name="PassWords" type="password" class="dfinput" />
-      <i><font color="#FF0000">*</font> 学习密码</i></li>
-    <li>
-      <label>确认密码</label>
-      <input name="RePassWords" type="password" class="dfinput" />
-      <i>确认密码</i></li>
-    <li>
-      <label>学员姓名</label>
-      <input name="RealName" type="text" class="dfinput" />
+  <div class="place"> 
+    <span>位置：</span>
+    <ul class="placeul">
+      <li><a href="#">首页</a></li>
+      <li><a href="#">学员信息管理</a></li>
+      <li><a href="#">添加学员</a></li>
+    </ul>
+  </div>
+
+  <div class="formbody">
+
+    <div class="formtitle">
+      <span>添加学员</span>
+    </div>
+
+    <ul class="forminfo">
+    <form action="{:U('Home/Member/add_member')}" method="POST">
+      <li>
+        <label>所属机构</label>
+        <select name="JGID" class="styled-select">
+          <option value="">-选择机构-</option>
+          <volist name="agencies" id="vo">
+          <option value="{$vo['id']}">{$vo['name']}</option>
+          </volist>
+        </select>
       </li>
-    <li>
-      <label>用户昵称</label>
-      <input name="NickName" type="text" class="dfinput" />
+      <li>
+        <label>用户名</label>
+        <input name="UserName" type="text" class="dfinput"/>
+        <i><font color="#FF0000">*</font> 设置学员用户名</i>
       </li>
-    <li>
-      <label>联系电话</label>
-      <input name="Mobile" type="text" class="dfinput" />
+      <li>
+        <label>用户密码</label>
+        <input name="PassWords" type="password" class="dfinput"/>
+        <i><font color="#FF0000">*</font> 用户密码</i>
       </li>
-    <li>
-      <label>邮箱</label>
-      <input name="Email" type="text" class="dfinput" />
+      <li>
+        <label>确认密码</label>
+        <input name="RePassWords" type="password" class="dfinput"/>
+        <i><font color="#FF0000">*</font> 确认密码</i>
       </li>
-    <li>
-      <label>是否锁定</label>
-      <cite>
-      <input name="Lock" type="radio" value="1" />
-      是&nbsp;&nbsp;&nbsp;&nbsp;
-      <input name="Lock" type="radio" value="0" checked="checked" />
-      否</cite></li>
-    <li>
-      <label>所属机构</label>
-    <select name="JGID" class="styled-select">
-    <option value="">-选择机构-</option>
-    <volist name="agency" id="ag">
-    <option value="{$ag.jgid}">{$ag.abbr_cn}</option>
-    </volist>
-    </select>
-    </li>
-    <li>
-      <label>&nbsp;</label>
-      <input name="" type="submit" class="btn" value="确认保存"/>
-    </li>
-    <input type="hidden" name="AdminName" value="{$_SESSION['username']}" />
-    </form>
-  </ul>
-</div>
+      <li>
+        <label>学员姓名</label>
+        <input name="RealName" type="text" class="dfinput"/>
+      </li>
+      <li>
+        <label>用户昵称</label>
+        <input name="NickName" type="text" class="dfinput"/>
+      </li>
+      <li>
+        <label>联系电话</label>
+        <input name="Mobile" type="text" class="dfinput"/>
+      </li>
+      <li>
+        <label>邮箱</label>
+        <input name="Email" type="text" class="dfinput"/>
+      </li>
+      <li>
+        <label>是否锁定</label>
+        <cite>
+          <input name="Lock" type="radio" value="1"/>&nbsp;是
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <input name="Lock" type="radio" value="0" checked="checked"/>&nbsp;否
+        </cite>
+      </li>
+      <li>
+        <label>&nbsp;</label>
+        <input type="hidden" name="AdminName" value="{$_SESSION['username']}"/>
+        <input type="submit" class="btn" value="确认保存"/>
+      </li>
+      </form>
+    </ul>
+  </div>
+
+  <script type="text/javascript">
+  <!--
+  $(function(){
+    //
+    <if condition="isset($agency_id) and !empty($agency_id)">
+      //选择机构
+      $("select[name='JGID']").val("{$agency_id}");
+
+    </if>
+
+  });
+  //-->
+  </script>
+
 </body>
-</html>
+<include file="Public/view_footer"/>

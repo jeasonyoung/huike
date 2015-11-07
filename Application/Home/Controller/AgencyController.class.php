@@ -244,13 +244,15 @@ class AgencyController extends BaseController{
                 array('UserName','require','用户名不能为空'),
                 array('RePassWords','PassWords','确认密码不正确',2,'confirm'),
                 array('JGID','require','请选择所属机构'),
-                array('RealName','require','真实姓名不能为空')
+                array('RealName','require','真实姓名不能为空'),
+                array('GroupID','require','管理组不能为空'),
             );
-            $_model->setProperty('_validate', $_rules);
-            if(!$_result=$_model->create()){
+            //$_model->setProperty('_validate', $_rules);
+            if(!$_result=$_model->validate($_rules)->create()){
                 $this->error($_model->getError());
             }else{
                 $_result = array_filter($_result);
+                $_result['Lock'] = $_result['Lock'];
                 if(!empty($_result['PassWords'])){
                     $_result['PassWords'] = md5(I('PassWords'));
                 }

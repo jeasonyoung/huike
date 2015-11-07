@@ -1,132 +1,168 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>用户列表</title>
-<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
-<script type="text/javascript"  src="__PUBLIC__/laydate/laydate.js" charset="utf-8" ></script>
-<style>
-#search input,select{height:24px;border:1px solid #dedede}
-</style>
-</head>
-
-
+<include file="Public/view_header" title="用户列表"/>
 <body>
+    <style type="text/css">
+    .search { 
+        border:1px solid #ebb683;
+        line-height:35px;
+        text-indent:10px;
+        clear:both;
+    }
+    .search span,select {
+        display:inline-block;
+        float:left;
+        margin-right:5px;
+    }
+    .search select,input{
+        height:24px;
+        border:1px solid #dedede;
+        margin-top:5px;
+    }
+    .search ul li{line-height:35px;float:left;}
+    .button {
+        border-radius: 5px;
+        color: #fff;
+        font-weight: bold;
+        line-height: 20px;
+        overflow: hidden;
+        position: relative;
+        text-align: center;
+        text-shadow: 1px 1px 1px #333;
+        width: 60px;
+        cursor:pointer;
+    }
+    .button.gray {
+        background: -moz-linear-gradient(center top , #f2f3f7, #e4e8ec) repeat scroll 0 0;
+        border: 1px solid #dce1e6;
+        box-shadow: 0 1px 2px #fff inset, 0 -1px 0 #a8abae inset;
+        color: #8c96a0;
+        text-shadow: 1px 1px 1px #fff;
+    }
+    </style>
 
-	<div class="place">
-    <span>位置：</span>
-    <ul class="placeul">
-    <li><a href="#">首页</a></li>
-    <li><a href="#">学员管理</a></li>
-    <li><a href="#">用户列表</a></li>
-    </ul>
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">学员管理</a></li>
+            <li><a href="#">用户列表</a></li>
+        </ul>
     </div>
     
     <div class="rightinfo">
-    
-    <div class="tools">
-    	<ul class="toolbar">
-        <li class="click"><a href="{:U('member/add_member')}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
-        </ul>    
+        <!-- 查询搜索框 -->
+        <div class="tools search">
+            <span>所属机构:</span>
+            <ul>
+            <form action="{:U('Home/Member/member_list')}" method="POST">
+                <li>
+                    <select name="agencyId" style="width:150px">
+                        <option value="">-选择机构-</option>
+                        <volist name="agencies" id="vo">
+                            <option value="{$vo['id']}">{$vo['name']}</option>
+                        </volist>
+                    </select>
+                </li>
+                <li>
+                    <span>用户名:</span>
+                    <input name="userName" style="width:128px"/>
+                </li>
+                <li>
+                    <span>姓名:</span>
+                    <input name="realName" style="width:128px"/>
+                </li>
+                <li>
+                    <span>联系电话:</span>
+                    <input name="mobile" style="width:128px"/>
+                </li>
+                <li>
+                    <input type="submit" value="搜索" class="button gray"/>
+                </li>
+            </form>
+            </ul>
+        </div>
+
+        <table class="tablelist">
+        	<thead>
+            	<tr>
+                    <th>编号<i class="sort"><img src="__PUBLIC__/images/px.gif" /></i></th>
+                    <th>所属机构</th>
+                    <th>用户名</th>
+                    <th>姓名</th>
+                    <th>锁定</th>
+                    <th>注册时间</th>
+                    <th>联系电话</th>
+                    <th>创建者</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <volist id="vo" name="data['user']">
+                <tr>
+                    <td>{$vo.userid}</td>
+                    <td>{$vo.agency}</td>
+                    <td>{$vo.username}</td>
+                    <td>
+                        <if condition="$vo.realname eq ''">用户未设置<else/>{$vo.realname}</if>
+                    </td>
+                    <td>
+                        <if condition="$vo.lock eq 1">
+                            <font color="#FF0000">是</font>
+                        <else/>
+                            <font color="#008000">否</font>
+                        </if>
+                    </td>
+                    <td>{$vo.regtime}</td>
+                    <td>{$vo.mobile}</td>
+                    <td>
+                        <if condition="$vo.agencyuser neq ''">
+                        {$vo.agencyuser}<font color="#FF0000">[机构]</font>
+                        <else/>
+                        {$vo.adminname}<font color="#008000">[系统]</font>
+                        </if>
+                    </td>
+                    <td>
+                        <a href="{:U('Home/Member/lock_member',array('UserID' => $vo['userid']))}" class="tablelink">锁定</a>
+                        <a href="{:U('Home/Member/edit_member',array('UserID' => $vo['userid']))}" class="tablelink">修改</a>     
+                        <a href="{:U('Home/Member/del_member',array('UserID' => $vo['userid']))}" onclick="javascript:return confirm('确定删除此学员吗?')" class="tablelink"> 删除</a>
+                    </td>
+                </tr>   
+                </volist>   
+            </tbody>
+        </table>
+        
+        <div class="pagin">
+        {$data['page']}
+        </div>
     </div>
-    <div class="tools" style="border:1px solid #ebb683;border:1px">
-    <table class="tablelist" id="search">
-    <form name="search" action="{:U('member/member_list')}" method="get">
-    	<thead>
-    	<tr>
-        <th>搜索<i class="sort"><img src="__PUBLIC__/images/px.gif" /></i></th>
-        <th>用户名</th>
-        <th><input type="text" name="UserName" style="width:80px" value="{$_GET['UserName']}" /></th>
-        <th>真实姓名</th>
-        <th><input type="text" name="RealName" style="width:60px" value="{$_GET['RealName']}" /></th>
-        <th>联系电话</th>
-        <th><input type="text" name="Mobile" style="width:80px" value="{$_GET['Mobile']}" /></th>
-        <th>注册时间</th>
-        <th><input type="text" name="StartDate" value="{$_GET['StartDate']}" style="width:100px" class="laydate-icon" onclick="laydate()" /> - <input class="laydate-icon" type="text" name="EndDate" value="{$_GET['EndDate']}" style="width:100px" onclick="laydate()" /></th>
-        <th>所属机构</th>
-        <th><select name="JGID" style="width:120px">
-        <option value="">-选择机构-</option>
-    	<volist name="agency" id="ag">
-    	<option value="{$ag.jgid}">{$ag.abbr_cn}</option>
-    	</volist>
-        </select></th>
-        <th>锁定</th>
-        <th><select name="Lock" style="width:50px">
-        <option value="0">否</option>
-        <option value="1">是</option>
-        </select></th>
-        <th><input type="submit" value="搜索" /></th>
-        </tr>
-        </thead>
-    </form>    
-    </table>
-    </div>
-    <table class="tablelist">
-    	<thead>
-    	<tr>
-        <th><input name="" type="checkbox" value="" checked="checked"/></th>
-        <th>编号<i class="sort"><img src="__PUBLIC__/images/px.gif" /></i></th>
-        <th>用户名</th>
-        <th>姓名</th>
-        <th>是否锁定</th>
-        <th>所属机构</th>
-        <th>注册时间</th>
-        <th>联系电话</th>
-        <th>创建者</th>
-        <th>操作</th>
-        </tr>
-        </thead>
-        <tbody>
-        <volist id="vo" name="data['user']">
-        <tr>
-        <td><input name="" type="checkbox" value="" /></td>
-        <td>{$vo.userid}</td>
-        <td>{$vo.username}</td>
-        <td>
-        <if condition="$vo.realname eq ''">
-        用户未设置
-        <else />
-        {$vo.realname}
-        </if>
-        </td>
-        <td>
-        <if condition="$vo.lock eq 1">
-        <font color="#FF0000">是</font>
-        <else />
-        <font color="#008000">否</font>
-        </if>
-        </td>
-        <td>{$vo.agency}</td>
-        <td>{$vo.regtime}</td>
-        <td>
-        <if condition="$vo.mobile eq ''">
-        用户未设置
-        <else />
-        {$vo.mobile}
-        </if>
-        </td>
-        <td>
-        <if condition="$vo.agencyuser neq ''">
-        {$vo.agencyuser}<font color="#FF0000">[机构]</font>
-        <else />
-        {$vo.adminname}<font color="#008000">[系统]</font>
-        </if>
-        </td>
-        <td><a href="#" class="tablelink">锁定</a>     <a href="{:U('member/edit_member',array('UserID' => $vo['userid']))}" class="tablelink">修改</a>     <a href="{:U('member/del_member',array('UserID' => $vo['userid']))}" onclick="javascript:return confirm('确定删除此学员吗?')" class="tablelink"> 删除</a></td>
-        </tr>   
-        </volist>   
-        </tbody>
-    </table>
-    <div class="pagin">
-    {$page}
-    </div>
-    </div>
-    
+
     <script type="text/javascript">
-	$('.tablelist tbody tr:odd').addClass('odd');
-	</script>
+    <!--
+    $(function(){
+        //
+        $('.tablelist tbody tr:odd').addClass('odd');
+        //
+        <if condition="isset($agency_id) and !empty($agency_id)">
+            //选择机构
+            $("select[name='agencyId']").val("{$agency_id}");
+        </if>
+        //
+        <if condition="isset($user_name) and !empty($user_name)">
+            //用户名
+            $("input[name='userName']").val("{$user_name}");
+        </if>
+        //
+        <if condition="isset($real_name) and !empty($real_name)">
+            //姓名
+            $("input[name='realName']").val("{$real_name}");
+        </if>
+        //
+        <if condition="isset($mobile) and !empty($mobile)">
+            //姓名
+            $("input[name='mobile']").val("{$mobile}");
+        </if>
+    });
+    //-->
+    </script>
 
 </body>
-
-</html>
+<include file="Public/view_footer"/>

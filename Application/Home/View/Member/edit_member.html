@@ -1,88 +1,101 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>修改学员</title>
-<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="__PUBLIC__/js/jquery.js"></script>
-<script type="text/javascript">
-$(function(){
-  $("input[name='Lock']").each(function(){
-	 if($(this).val()==$('#st').val()){
-		 $(this).attr('checked',true);
-	 }
-  })
-  $('#jgid option').each(function(){
-	 if($(this).val()==$('#jg').val()){
-		 $(this).attr('selected',true);
-	 }
-  })
-})
-</script>
-</head>
+<include file="Public/view_header" title="修改学员"/>
 <body>
-<div class="place"> <span>位置：</span>
-  <ul class="placeul">
-    <li><a href="#">首页</a></li>
-    <li><a href="#">学员信息管理</a></li>
-    <li><a href="#">修改学员</a></li>
-  </ul>
-</div>
-<div class="formbody">
-  <div class="formtitle"><span>修改学员</span></div>
-  <ul class="forminfo">
-  <form name="user" action="{:U('member/edit_member')}" method="post">
-    <li>
-      <label>用户名</label>
-      <input name="UserName" type="text" class="dfinput" value="{$data['username']}" readonly="readonly" />
-      <i><font color="#FF0000">*</font> 设置管理员用户名</i></li>
-    <li>
-      <label>用户密码</label>
-      <input name="PassWords" type="password" class="dfinput" />
-      <i><font color="#FF0000">*</font> 不修改请留空</i></li>
-    <li>
-      <label>确认密码</label>
-      <input name="RePassWords" type="password" class="dfinput" />
-      <i>确认密码</i></li>
-    <li>
-      <label>学员姓名</label>
-      <input name="RealName" type="text" class="dfinput" value="{$data['realname']}" />
+  <div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+      <li><a href="#">首页</a></li>
+      <li><a href="#">学员信息管理</a></li>
+      <li><a href="#">修改学员</a></li>
+    </ul>
+  </div>
+
+  <div class="formbody">
+
+    <div class="formtitle">
+      <span>修改学员</span>
+    </div>
+
+    <ul class="forminfo">
+    <form action="{:U('Home/Member/edit_member')}" method="POST">
+      <li>
+        <label>所属机构</label>
+        <select name="JGID" class="styled-select">
+          <option value="">-选择机构-</option>
+          <volist name="agencies" id="vo">
+          <option value="{$vo['id']}">{$vo['name']}</option>
+          </volist>
+        </select>
       </li>
-    <li>
-      <label>用户昵称</label>
-      <input name="NickName" value="{$data['nickname']}" type="text" class="dfinput" />
+      <li>
+        <label>用户名</label>
+        <input name="UserName" value="{$data['username']}" type="text" class="dfinput" readonly="readonly"/>
+        <i><font color="#FF0000">*</font> 设置管理员用户名</i>
       </li>
-    <li>
-      <label>联系电话</label>
-      <input name="Mobile" type="text" class="dfinput" value="{$data['mobile']}" />
+      <li>
+        <label>用户密码</label>
+        <input name="PassWords" type="password" class="dfinput"/>
+        <i>不修改请留空</i>
       </li>
-    <li>
-      <label>邮箱</label>
-      <input name="Email" type="text" class="dfinput" value="{$data['email']}" />
+      <li>
+        <label>确认密码</label>
+        <input name="RePassWords" type="password" class="dfinput"/>
+        <i>确认密码</i>
       </li>
-    <li>
-      <label>是否锁定<input type="hidden" id="st" value="{$data['lock']}" /></label>
-      <cite>
-      <input name="Lock" type="radio" value="1" />
-      是&nbsp;&nbsp;&nbsp;&nbsp;
-      <input name="Lock" type="radio" value="0" checked="checked" />
-      否</cite></li>
-    <li>
-      <label>所属机构<input type="hidden" id="jg" value="{$data['jgid']}" /></label>
-    <select name="JGID" id="jgid" class="styled-select">
-    <option value="">-选择机构-</option>
-    <volist name="agency" id="ag">
-    <option value="{$ag.jgid}">{$ag.abbr_cn}</option>
-    </volist>
-    </select>
-    </li>
-    <li>
-      <label>&nbsp;</label>
-      <input name="" type="submit" class="btn" value="确认保存"/>
-    </li>
-    <input type="hidden" name="UserID" value="{$data['userid']}" />
-    </form>
-  </ul>
-</div>
+      <li>
+        <label>学员姓名</label>
+        <input name="RealName" value="{$data['realname']}" type="text" class="dfinput"/>
+      </li>
+      <li>
+        <label>用户昵称</label>
+        <input name="NickName" value="{$data['nickname']}" type="text" class="dfinput"/>
+      </li>
+      <li>
+        <label>联系电话</label>
+        <input name="Mobile" value="{$data['mobile']}" type="text" class="dfinput"/>
+      </li>
+      <li>
+        <label>邮箱</label>
+        <input name="Email" value="{$data['email']}" type="text" class="dfinput"/>
+      </li>
+      <li>
+        <label>是否锁定</label>
+        <cite>
+          <input name="Lock" type="radio" value="1"/>&nbsp;是
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <input name="Lock" type="radio" value="0" checked="checked"/>&nbsp;否
+        </cite>
+      </li>
+      
+      <li>
+        <label>&nbsp;</label>
+        <input type="hidden" name="UserID" value="{$data['userid']}"/>
+        <input type="submit" class="btn" value="确认保存"/>
+      </li>
+      </form>
+    </ul>
+  </div>
+
+  <script type="text/javascript">
+  <!--
+  $(function(){
+    //
+    <if condition="isset($data['jgid']) and !empty($data['jgid'])">
+      //机构
+      $("select[name='JGID']").val("{$data['jgid']}").attr('disabled',true);
+    </if>
+    //
+    <if condition="isset($data['lock']) and !empty($data['lock'])">
+      //锁定
+      $("input[name='Lock']").each(function(){
+        if($(this).val() == {$data['lock']}){
+          $(this).attr('checked',true);
+        }
+      });
+    </if>
+
+  });
+  //-->
+  </script>
+
 </body>
-</html>
+<include file="Public/view_footer"/>
