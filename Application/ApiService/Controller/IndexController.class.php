@@ -3,11 +3,9 @@
  * Api接口控制器
  */
 namespace ApiService\Controller;
-use Think\Controller\RestController;
+use Think\Controller;
 
-class IndexController extends RestController {
-    //允许的REST方法
-    protected $allowMethod = array('get','post');
+class IndexController extends Controller {
     /**
      * 默认入口。
      * @return void
@@ -253,6 +251,14 @@ class IndexController extends RestController {
      */
     public function login(){
         if(APP_DEBUG) trace('1.验证学员登录...');
+        $_token = I('token','');
+        $_username = I('username','');
+        $_pwd = I('pwd','');
+        $_sign = I('sign','');
+
+        
+
+
         //初始化模型
         $_model = D('Student');
         //验证数据
@@ -511,12 +517,12 @@ class IndexController extends RestController {
      * 重载发送反馈数据对象。
      * @param  mixed   $data 反馈数据对象。
      * @param  string  $type 反馈数据类型。
-     * @param  integer $code HTTP状态码
      * @return void        
      */
-    protected function response($data,$type='json',$code=200) {
-        if(APP_DEBUG) trace('重载覆盖发送反馈数据=>'.serialize($data));
-        parent::response($data,$type,$code);
+    protected function response($data,$type='json') {
+        if(APP_DEBUG) trace('发送反馈数据=>'.serialize($data));
+        header('HTTP/1.1 200 OK');
+        exit($this->encodeData($data));
     }
 
     /**
@@ -525,13 +531,11 @@ class IndexController extends RestController {
      * @param  string $type 数据格式
      * @return string       编码后的数据
      */
-    protected function encodeData($data,$type=''){
-        if(APP_DEBUG) trace('重载覆盖编码数据函数...');
-        if(empty($data))  return '';
-        if('json' == $type){
-            $this->setContentType($type);
-            return json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
-        }
-        return parent::encodeData($data,$type);
+    protected function encodeData($data){
+        if(APP_DEBUG) trace('编码数据函数...');
+        if(headers_sent()) return;
+        if(empty($charset))$charset = C('DEFAULT_CHARSET');
+        header('Content-Type: application/json;charset='.$charset);
+        return json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
 }

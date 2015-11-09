@@ -13,9 +13,8 @@
 	<div class="place">
     <span>位置：</span>
     <ul class="placeul">
-    <li><a href="#">首页</a></li>
-    <li><a href="{:U('Subjects/list_user')}&examid=">考试管理</a></li>
-	<li><a href="{:U('Subjects/list_user')}&examid={$Think.get.examid}">科目管理</a></li>
+    <li><a href="{:U('Subjects/list_exam',array('examid' => ''))}">选择考试</a></li>
+	<li><a href="{:U('Subjects/list_user',array('examid' => $_GET['examid']))}">科目管理</a></li>
     <li>班级列表</li>
     </ul>
     </div>
@@ -63,7 +62,7 @@
         <td>{$vo.last_time}</td>
         <td>{$vo.sortid}</td>
         <td><a href="{:U('SysClass/edit_user',array('examid' => $vo['examid'],'subid' => $vo['subid'],'scid' => $vo['scid']))}" class="tablelink">修改</a>     
-		<a href="{:U('SysClass/del_user',array('examid' => $vo['examid'],'scid' => $vo['scid']))}" onclick="javascript:return confirm('确定删除此班级吗?')" class="tablelink"> 删除</a></td>
+		<a href="{:U('SysClass/del_user',array('examid' => $vo['examid'],'subid' => $vo['subid'],'scid' => $vo['scid']))}" onclick="javascript:return confirm('确定删除此班级吗?')" class="tablelink"> 删除</a></td>
         </tr>
         </volist>
         </tbody>

@@ -214,7 +214,7 @@ class AuthController extends BaseController{
             $data['sortid'] = I('post.sortid',0);
             $data['show'] = I('show');
             $data['pid'] = I('pid');
-            if(empty($data['title']) || empty($data['pid'])){
+            if(empty($data['title'])/* || empty($data['pid'])*/){
                 $this->error('模块名称,所属模块是必填选项');
             }
             if($model->insert_module($data)){
@@ -243,8 +243,8 @@ class AuthController extends BaseController{
             $data['sortid'] = I('post.sortid',0);
             $data['show'] = I('show');
             $data['pid'] = I('pid');
-            if(empty($data['title']) || empty($data['pid'])){
-                $this->error('模块名称,所属模块是必填选项');
+            if(empty($data['title']) /*|| empty($data['pid'])*/){
+                $this->error('模块名称是必填选项');
             }
             if($model->update_module($data)){
                 $this->success('修改权限模块成功!',U('Home/Auth/list_module'));

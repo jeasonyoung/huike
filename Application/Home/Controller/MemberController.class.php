@@ -225,26 +225,21 @@ class MemberController extends BaseController{
         }
     }
     
-    // /**
-    //  * 学员简单注册接口
+       //  * 学员简单注册接口
     //  * @param array $data 学员信息 包含 用户名,密码,机构ID
-    //  */
-    // public function simple_regist($data){
-    //     //同一机构用户名已存在
-    //     if(self::$model->query_memeber("username='".$data['UserName']."' and jgid=".$data['JGID'],FALSE)){
-    //         return FALSE;
-    //     }else{
-    //         return self::$model->insert_member($data);
-    //     }
-    // }
+    //  
+     public function simple_regist($data){
+         //同一机构用户名已存在
+		 $_model = D('Member');
+         if($_model->query_memeber("username='".$data['UserName']."' and jgid=".$data['JGID'],FALSE)){
+             return FALSE;
+         }else{
+             return $_model->add($data);
+         }
+     }
     
-    // public function simple_del_user($uid){
-    //     return self::$model->delete_member($uid);
-    // }
+     public function simple_del_user($uid){
+         return self::$model->delete_member($uid);
+     }
 
-    // public function _initialize(){
-    //     self::$model=D('Member');
-    //     $agency = A('Agency');
-    //     $this->agencyList = $agency->getAgencyList();
-    // }
 }

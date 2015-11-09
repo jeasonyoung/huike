@@ -32,7 +32,7 @@ class ClassResourcesModel extends Model{
     }
 	//获取班级名称
 	public function query_scname($scid){
-        return $this->table('HK_Class_Sys')->field('scname')->where('scid='.$scid)->find();
+        return $this->table('HK_Class_Sys')->field('scname,examid,subid')->where('scid='.$scid)->find();
     }
 	public function query_year($scid){
         return $this->Distinct(true)->field('year')->where('scid='.$scid)->order('year')->select();
@@ -47,7 +47,10 @@ class ClassResourcesModel extends Model{
 		}
     }
     public function get_examclassname($scid){
-		return $this->table('HK_Class_Sys')->join('LEFT JOIN HK_ExamClass ON HK_Class_Sys.ExamID = HK_ExamClass.ExamID')->field('CnName,SCName,HK_Class_Sys.subid,HK_Class_Sys.examid')->where('scid='.$scid)->find();
+		return $this->table('HK_Class_Sys')
+					->join('LEFT JOIN HK_ExamClass ON HK_Class_Sys.ExamID = HK_ExamClass.ExamID')
+					->field('CnName,EnName,SCName,HK_Class_Sys.subid,HK_Class_Sys.examid')
+					->where('scid='.$scid)->find();
 	}
     /**
      * 修改考试科目信息
@@ -58,10 +61,10 @@ class ClassResourcesModel extends Model{
     }
     
     /**
-     * 删除考试科目信息
-     * @param int $subid 要删除的考试科目id
+     * 删除班级课时信息
+     * @param int $lessonid 要删除的班级课时id
      */
-    public function delete_user($subid){
-        return $this->where('subid='.$subid)->delete();
+    public function delete_user($lessonid){
+        return $this->where('lessonid='.$lessonid)->delete();
     }
 }

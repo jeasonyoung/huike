@@ -52,7 +52,7 @@ class SysClassModel extends Model{
      * 删除考试科目信息
      * @param int $subid 要删除的考试科目id
      */
-    public function delete_user($subid){
-        return $this->where('subid='.$subid)->delete();
+    public function delete_user($scid){
+        return $this->where('scid='.$scid)->delete();
     }
 }

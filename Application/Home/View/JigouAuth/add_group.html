@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>添加用户组</title>
+<link href="__PUBLIC__/css/style.css" rel="stylesheet" type="text/css" />
+<style>
+.module{background:#C3EFFF;height:25px;line-height:25px;padding:0 0 0 10px;margin:0;display:block; clear:both}
+.rulelist li{float: left;width: 120px; clear: none !important;height:30px; line-height:30px;margin-bottom:0}
+.rulelist li input{margin-right:5px}
+</style>
+</head>
+<body>
+<div class="place"> <span>位置：</span>
+  <ul class="placeul">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">用户和权限管理</a></li>
+    <li><a href="#">添加用户组</a></li>
+  </ul>
+</div>
+<div class="formbody">
+  <div class="formtitle"><span>添加用户组</span></div>
+  <ul class="forminfo">
+  <form name="user" action="{:U('JigouAuth/add_group')}" method="post">
+    <li>
+      <label>用户组名称</label>
+      <input name="title" type="text" class="dfinput" />
+      <i>如: 超级管理员</i></li>
+    <li>
+      <label>用户组简述</label>
+      <input name="describe" type="text" class="dfinput" />
+      <i>如 "拥有相对多的权限"</i></li>
+    <li>  
+      <label>是否启用</label>
+      <cite>
+      <input name="status" type="radio" value="1" checked="checked" />
+      是&nbsp;&nbsp;&nbsp;&nbsp;
+      <input name="status" type="radio" value="0" />
+      否</cite></li>
+    <li>
+    <label>权限分配</label>
+    <table class="rulelist">
+    <tr><td>
+    <volist name="rules" id="vo">
+    <if condition="$vo.rules neq NULL ">
+    <p class="module">{$vo.title}</p>
+    <ul>
+    <volist name="vo['rules']" id="li">
+    <li><input name="rules[]" value="{$li.id}" type="checkbox">{$li.title}</li>
+    </volist>
+    </ul>
+    </if>
+    </volist>
+    </td></tr>
+    </table>
+    </li>
+    <li>
+      <label>&nbsp;</label>
+      <input name="" type="submit" class="btn" value="确认保存"/>
+    </li>
+    </form>
+  </ul>
+</div>
+</body>
+</html>

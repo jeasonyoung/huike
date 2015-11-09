@@ -1,5 +1,6 @@
 <?php
 namespace Home\Controller;
+use Org\Util\String;
 use Home\Controller\BaseController;
 
 class ClassResourcesController extends BaseController{
@@ -23,13 +24,17 @@ class ClassResourcesController extends BaseController{
             $data['create_time'] = date('Y-m-d H:i:s',time());
             $data['SortID'] = I('SortID');
 			$data['TimeLen'] = I('TimeLen');
-            if(empty($data['CnName']) || empty($data['StartDate']) || empty($data['VideoUrl']) || empty($data['SortID']) || empty($data['Year'])){
-                $this->error('课时名称、开放时间、标清视频、课时编号、所属年份必须填写!');
+			$data['FreeTF'] = I('FreeTF');
+            if(empty($data['CnName']) || empty($data['StartDate']) || empty($data['VideoUrl']) || empty($data['Year'])){
+                $this->error('课时名称、开放时间、标清视频、所属年份必须填写!');
             }
+			if(empty($data['TimeLen']) || empty($data['SortID'])){
+				$this->error('课时编号、课时时长必须填写!');
+			}
             if($model->insert_user($data)){
-                $this->success('新增课时资源成功!',U('ClassResources/list_user').'&scid='.$scid.'&yearid='.$yearid);
+                $this->success('新增课时资源成功!',U('ClassResources/list_user',array('scid' => $scid,'yearid' => I('yearid'))));
             }else{
-                $this->error('新增课时资源失败!',U('ClassResources/add_user').'&scid='.$scid.'&yearid='.$yearid);
+                $this->error('新增课时资源失败!',U('ClassResources/add_user',array('scid' => $scid,'yearid' => I('yearid'))));
             }
         }else{
 			$ExamName = array();
@@ -40,28 +45,38 @@ class ClassResourcesController extends BaseController{
 			if(count($DefClassNum)==0){
 				$DefClassNum['sortid'] = 1;
 			}
+			else{
+				$DefClassNum['sortid'] = $DefClassNum['sortid']+1;
+			}
 			$this->assign('DefClassNum',$DefClassNum);
+            $data = array();
+			$fileid = substr(String::uuid(),1,-1);
+			$data['fileid'] = $fileid;
+			$data['filepath'] = '/'.$ExamName['enname'].'/'.$ExamName['subid'].'/'.$scid.'_'.substr($yearid,2,2).'/'.$fileid.'/';
+			$this->assign('info',$data);
             $this->display();
         }
     }
     
     /**
-     * 删除考试
-     * @param int $subid 考试科目ID
+     * 删除班级课时，班级ID
+     * @param int $scid 班级ID
+     * @param int $lessonid 班级课时ID
      * @return int 影响行数
      */
-    public function del_user($subid){
+    public function del_user($scid,$lessonid,$yearid){
         $model = D('Home/ClassResources');
-        if($model->delete_user($subid)){
-            $this->success('删除考试科目成功',U('ClassResources/list_user'));
+        if($model->delete_user($lessonid)){
+            $this->success('删除考试科目成功',U('ClassResources/list_user',array('scid' => $scid,'yearid' => $yearid)));
         }else{
             $this->error('删除考试科目失败,请联系技术人员');
         }
     }
     
     /**
-     * 修改考试
-     * @param int $subid 考试科目ID
+     * 修改班级课时
+     * @param int $scid 班级ID
+     * @param int $lessonid 班级课时ID
      */
     public function edit_user($scid,$lessonid){
         $model = D('Home/ClassResources');
@@ -82,9 +97,13 @@ class ClassResourcesController extends BaseController{
             $data['last_time'] = date('Y-m-d H:i:s',time());
             $data['SortID'] = I('SortID');
 			$data['TimeLen'] = I('TimeLen');
-            if(empty($data['CnName']) || empty($data['StartDate']) || empty($data['VideoUrl']) || empty($data['SortID']) || empty($data['Year'])){
-                $this->error('课时名称、开放时间、标清视频、课时编号、所属年份必须填写!');
+			$data['FreeTF'] = I('FreeTF');
+            if(empty($data['CnName']) || empty($data['StartDate']) || empty($data['VideoUrl']) || empty($data['Year'])){
+                $this->error('课时名称、开放时间、标清视频、所属年份必须填写!');
             }
+			if(empty($data['TimeLen']) || empty($data['SortID'])){
+				$this->error('课时编号、课时时长必须填写!');
+			}
             if($model->update_user($data)){
                 $this->success('课时资源修改成功',U('ClassResources/list_user',array('scid' => $scid,'yearid' => I('yearid'))));
             }else{
@@ -95,12 +114,13 @@ class ClassResourcesController extends BaseController{
 			$ExamName = $model->get_examclassname($scid);
 			$this->assign('ExamName',$ExamName);
             $data = $model->query_lessoninfo($lessonid);
+			$data['filepath'] = '/'.$ExamName['enname'].'/'.$ExamName['subid'].'/'.$scid.'_'.substr($data['year'],2,2).'/'.$data['uuid'].'/';
             $this->assign('info',$data);
             $this->display('edit_user');
         }
     }
     
-    /*考试列表*/
+    /*考试课时列表*/
     public function list_user($scid,$yearid){
         $model = D('Home/ClassResources');
         $data = $model->query_user($scid,$yearid);

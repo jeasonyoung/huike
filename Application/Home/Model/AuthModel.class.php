@@ -125,11 +125,11 @@ class AuthModel extends Model{
             //if(APP_DEBUG) trace("query_module-mid=>$mid");
             return $db->field($fields)
                       ->where('id='.$mid)
-                      ->order('bpath')
+                      ->order('bpath,sortid')
                       ->find();
         }
         return $db->field($fields)
-                  ->order('bpath')
+                  ->order('bpath,sortid')
                   ->select();
     }
    

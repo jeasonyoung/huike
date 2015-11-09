@@ -43,9 +43,9 @@ class SysClassController extends BaseController{
                 $this->error('主讲老师、有效期、招生截至时间、价格、课时数必须填写!');
             }
             if($model->insert_user($data)){
-                $this->success('新增班级成功!',U('SysClass/list_user').'&examid='.$examid.'&subid='.$subid);
+                $this->success('新增班级成功!',U('SysClass/list_user',array('examid' => $examid,'subid' => $subid)));
             }else{
-                $this->error('新增班级失败!',U('SysClass/add_user').'&examid='.$examid.'&subid='.$subid);
+                $this->error('新增班级失败!',U('SysClass/add_user',array('examid' => $examid,'subid' => $subid)));
             }
         }else{
 			$ExamName = array();
@@ -62,22 +62,26 @@ class SysClassController extends BaseController{
     }
     
     /**
-     * 删除考试
+     * 删除考试班级
      * @param int $subid 考试科目ID
+     * @param int $scid 考试班级ID
+     * @param int $examid 考试ID
      * @return int 影响行数
      */
-    public function del_user($subid){
+    public function del_user($scid,$subid,$examid){
         $model = D('Home/SysClass');
-        if($model->delete_user($subid)){
-            $this->success('删除考试科目成功',U('SysClass/list_user'));
+        if($model->delete_user($scid)){
+            $this->success('删除考试班级成功',U('SysClass/list_user',array('examid' => $examid,'subid' => $subid)));
         }else{
-            $this->error('删除考试科目失败,请联系技术人员');
+            $this->error('删除考试班级失败,请联系技术人员');
         }
     }
     
     /**
-     * 修改考试
+     * 修改考试系统班级
      * @param int $subid 考试科目ID
+     * @param int $scid 考试班级ID
+     * @param int $examid 考试ID
      */
     public function edit_user($subid,$examid,$scid){
         $model = D('Home/SysClass');

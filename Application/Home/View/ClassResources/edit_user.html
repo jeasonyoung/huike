@@ -33,29 +33,61 @@
     </li>
 	<li>
       <label>MP3试听地址</label>
-      <input name="MP3Url" type="text" class="dfinput" style="width:500px;" value="{$info['mp3url']}" />
+      <input name="MP3Url" type="text" class="dfinput" style="width:550px; font-size:14px;" value="{$info['mp3url']}" />
+	  <empty name="$info['mp3url']">
+		<i>{$info['filepath']}mp3.mp3</i>
+	  <else /> 
+		<i>已设置文件及路径，请慎重修改</i>
+	  </empty>
     </li>
 	<li>
       <label>标清视频地址</label>
-      <input name="VideoUrl" type="text" class="dfinput" style="width:500px;" value="{$info['videourl']}" />
-	  <i style="color:red;">*</i>
+      <input name="VideoUrl" type="text" class="dfinput" style="width:550px; font-size:14px;" value="{$info['videourl']}" />
+	  <empty name="$info['videourl']">
+		<i>{$info['filepath']}liuchang.mp4</i>
+	  <else /> 
+		<i style="color:red;">* 必填，已设置文件及路径，请慎重修改</i>
+	  </empty>
     </li>
 	<li>
       <label>高清视频地址</label>
-      <input name="HightUrl" type="text" class="dfinput" style="width:500px;" value="{$info['highturl']}" />
+      <input name="HightUrl" type="text" class="dfinput" style="width:550px; font-size:14px;" value="{$info['highturl']}" />
+	  <empty name="$info['highturl']">
+		<i>{$info['filepath']}gaoqing.mp4</i>
+	  <else /> 
+		<i>已设置文件及路径，请慎重修改</i>
+	  </empty>
     </li>
 	<li>
       <label>超清视频地址</label>
-      <input name="SuperUrl" type="text" class="dfinput" style="width:500px;" value="{$info['superurl']}" />
+      <input name="SuperUrl" type="text" class="dfinput" style="width:550px; font-size:14px;" value="{$info['superurl']}" />
+	  <empty name="$info['superurl']">
+		<i>{$info['filepath']}chaoqing.mp4</i>
+	  <else /> 
+		<i>已设置文件及路径，请慎重修改</i>
+	  </empty>
     </li>
 	<li>
       <label>PPT讲义地址</label>
-      <input name="PPTUrl" type="text" class="dfinput" style="width:500px;" value="{$info['ppturl']}" />
+      <input name="PPTUrl" type="text" class="dfinput" style="width:550px; font-size:14px;" value="{$info['ppturl']}" />
+	  <empty name="$info['ppturl']">
+		<i>{$info['filepath']}ppt.ppt</i>
+	  <else /> 
+		<i>已设置文件及路径，请慎重修改</i>
+	  </empty>
     </li>
 	<li>
       <label>视频时长</label>
       <i style="font-size:16px;"><input name="TimeLen" type="text" class="dfinput" value="{$info['timelen']}" style="width:120px; text-align:center; font-weight:bold;" />秒</i>
       <i>这个时间为视频长度，只能按秒计算</i></li>
+	<li>
+      <label>免费试听</label>
+        <cite>
+          <label><input name="FreeTF" type="radio" value="1"<if condition="$info['freetf'] eq 1 "> checked="checked"</if>/>&nbsp;允许试听</label>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <label><input name="FreeTF" type="radio" value="0"<if condition="$info['freetf'] eq 0 "> checked="checked"</if>/>&nbsp;不允许</label>
+        </cite>
+	</li>
     <li>
       <label>&nbsp;</label>
       <input type="hidden" name="yearid" value="{$info['year']}" />

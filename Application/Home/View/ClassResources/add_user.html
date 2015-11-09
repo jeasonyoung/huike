@@ -33,29 +33,41 @@
     </li>
 	<li>
       <label>MP3试听地址</label>
-      <input name="MP3Url" type="text" class="dfinput" style="width:500px;" value="" />
+      <input name="MP3Url" type="text" class="dfinput" style="width:550px; font-size:14px;" value="{$info['filepath']}mp3.mp3" />
+	  <i>无MP3，请删除</i>
     </li>
 	<li>
       <label>标清视频地址</label>
-      <input name="VideoUrl" type="text" class="dfinput" style="width:500px;" value="" />
-	  <i style="color:red;">*</i>
+      <input name="VideoUrl" type="text" class="dfinput" style="width:550px; font-size:14px;" value="{$info['filepath']}liuchang.mp4" />
+	  <i style="color:red;">* 默认文件及路径，请慎重修改</i>
     </li>
 	<li>
       <label>高清视频地址</label>
-      <input name="HightUrl" type="text" class="dfinput" style="width:500px;" value="" />
+      <input name="HightUrl" type="text" class="dfinput" style="width:550px; font-size:14px;" value="{$info['filepath']}gaoqing.mp4" />
+	  <i>默认文件及路径，请慎重修改</i>
     </li>
 	<li>
       <label>超清视频地址</label>
-      <input name="SuperUrl" type="text" class="dfinput" style="width:500px;" value="" />
+      <input name="SuperUrl" type="text" class="dfinput" style="width:550px; font-size:14px;" value="{$info['filepath']}chaoqing.mp4" />
+	  <i>无超清，请删除</i>
     </li>
 	<li>
       <label>PPT讲义地址</label>
-      <input name="PPTUrl" type="text" class="dfinput" style="width:500px;" value="" />
+      <input name="PPTUrl" type="text" class="dfinput" style="width:550px; font-size:14px;" value="{$info['filepath']}jiangyi.ppt" />
+	  <i>无超清，请删除</i>
     </li>
 	<li>
       <label>视频时长</label>
       <i style="font-size:16px;"><input name="TimeLen" type="text" class="dfinput" value="" style="width:120px; text-align:center; font-weight:bold;" />秒</i>
       <i>这个时间为视频长度，只能按秒计算</i></li>
+	<li>
+      <label>免费试听</label>
+        <cite>
+          <label><input name="FreeTF" type="radio" value="1" />&nbsp;允许试听</label>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <label><input name="FreeTF" type="radio" value="0" checked="checked"/>&nbsp;不允许</label>
+        </cite>
+	</li>
     <li>
       <label>&nbsp;</label>
       <input type="hidden" name="yearid" value="{$Think.get.yearid}" />

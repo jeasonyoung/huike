@@ -34,7 +34,7 @@ class SubjectsController extends BaseController{
      * @param int $subid 考试科目ID
      * @return int 影响行数
      */
-    public function del_user($subid){
+    public function del_user($subid,$examid){
         $model = D('Home/Subjects');
         if($model->delete_user($subid)){
             $this->success('删除考试科目成功',U('Subjects/list_user',array('examid' => $examid)));

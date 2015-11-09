@@ -11,13 +11,20 @@
  * @param  string  $msg     消息内容。
  * @return array            数组对象。
  */
-function build_callback_data($success=false,$data=null,$msg=''){
+function build_callback_data($success=false,$data=null,$msg=null){
     if(APP_DEBUG) trace('构建返回数据封装...');
-    return array(
-            'success' => $success,
-            'data'    => $data,
-            'msg'     => $msg
-        );
+    $_result = array();
+    $_result['success'] = $success;
+
+    if(isset($data)){
+        $_result['data'] = $data;
+    }
+
+    if(isset($msg) && !empty($msg)){
+        $_result['msg'] = $msg;
+    }
+
+    return $_result;
 }
 
 /**

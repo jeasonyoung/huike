@@ -2,9 +2,9 @@
 return array(
 	//'配置项'=>'配置值'
 	'DEFAULT_CHARSET'       =>  'utf-8', // 默认输出编码
-    'MODULE_ALLOW_LIST'     =>  array('Home','Agency'),
-    'DEFAULT_MODULE'        =>  'Home',
-	'URL_MODEL'		        =>  1,// URL访问模式: 2 采用Rewrite模式 IIS下需配置webconfig文件
+	'MODULE_ALLOW_LIST'     =>  array('Home'),
+	'DEFAULT_MODULE'        =>  'Home',
+	'URL_MODEL'		=>  1,		 // URL访问模式: 2 采用Rewrite模式 IIS下需配置webconfig文件
 	
 	/* 数据库设置 */
 	'DB_TYPE'               =>  'mysql',     // 数据库类型
@@ -34,7 +34,7 @@ return array(
             'AUTH_RULE' => 'hk_admin_rule', //权限规则表
             'AUTH_USER' => 'hk_admin'//用户信息表
 	),
-    'URL_CASE_INSENSITIVE' =>true,
-    //密码KEY
-    'md5_key'              => 'H9x5Mo3cT7Lr1AP',
+        'URL_CASE_INSENSITIVE' =>true,
+        //密码KEY
+        'md5_key'               => 'H9x5Mo3cT7Lr1AP',
 );

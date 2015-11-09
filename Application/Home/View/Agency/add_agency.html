@@ -1,5 +1,8 @@
 <include file="Public/view_header" title="添加合作机构"/>
 <body>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
 
   <div class="place"> 
     <span>位置：</span>
@@ -64,13 +67,74 @@
         <i>播放流媒体视频所需</i>
       </li>
       <li>
+        <label>是否销售</label>
+        <cite>
+        <input name="OpenSales" type="radio" value="0"/>&nbsp;不销售
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <input name="OpenSales" type="radio" value="1" checked="checked"/>&nbsp;销售
+        </cite>
+      </li>
+      <li name="open_sales_show">
+         
+        <fieldset style="border:solid 1px #ccc;width:460px;height:auto;">
+          <legend>支付宝商户接口</legend>
+          <ul style="float:left;margin-left:50px;">
+            <li>
+              <label>合作者ID:</label>
+              <input name="AlipayID" type="text" class="dfinput" style="width:295px;"/>
+            </li>
+            <li>
+              <label>支付宝账号:</label>
+              <input name="AlipayAcc" type="text" class="dfinput" style="width:295px;"/>
+            </li>
+            <li>
+              <label>支付宝秘钥:</label>
+              <input name="AlipayKey" type="text" class="dfinput" style="width:295px;"/>
+            </li>
+          </ul>
+        </fieldset>
+
+      </li>
+      
+      <li name="open_sales_show">
+
+        <fieldset style="border:solid 1px #ccc;width:460px;height:auto;">
+          <legend>网银在线商户接口</legend>
+          <ul style="float:left;margin-left:50px;">
+            <li>
+              <label>网银商户号:</label>
+              <input name="NetBankNo" type="text" class="dfinput" style="width:295px;"/>
+            </li>
+            <li>
+              <label>网银秘钥:</label>
+              <input name="NetBankKey" type="text" class="dfinput" style="width:295px;"/>
+            </li>
+
+          </ul>
+        </fieldset>
+
+      </li>
+
+      <li name="open_sales_show">
+
+        <fieldset style="border:solid 1px #f5f5f5;width:800px;height:auto;">
+          <legend>汇款银行卡</legend>
+          <script id="BankNoStr" name="BankNoStr" type="text/plain"></script>
+        </fieldset>
+
+      </li>
+      
+      <li name="open_sales_hide">
         <label>机构首页</label>
         <input name="Home_url" type="text" class="dfinput"/>
+        <i><font color="#ff00000">*</font></i>
       </li>
-      <li>
+
+      <li name="open_sales_hide">
         <label>登陆网址</label>
         <input name="Login_Url" type="text" class="dfinput"/>
       </li>
+
       <li>
         <label>机构状态</label>
         <cite>
@@ -114,7 +178,7 @@
       </li>
       <li>
         <label>机构余额</label>
-        <input name="Money" type="text" class="dfinput" style="width:100px"/>
+        <input name="Money" value="0" type="text" class="dfinput" style="width:100px"/>
         <i>单位：元</i>
       </li>
       <li>
@@ -200,7 +264,36 @@
           }
         }
       })
+    };
+    //销售按钮事件
+    $("input[name='OpenSales']").click(function(){
+      open_sales_handle($(this).val());
+    });
+    //页面加载时
+    open_sales_handle($("input[name='OpenSales']:checked").val());
+    
+    //销售显示与隐藏处理
+    function open_sales_handle(value){
+      var show = (value == 1) ? true : false;
+      $("li[name='open_sales_show']").each(function(){
+        if(show){
+          $(this).fadeIn();
+        }else{
+          $(this).hide();
+        }
+      });
+      $("li[name='open_sales_hide']").each(function(){
+        if(!show){
+          $(this).fadeIn();
+        }else{
+          $(this).hide();
+        }
+      });
     }
+
+    //ueditor
+    var ue = UE.getEditor('BankNoStr');
+    
   });
   //-->
   </script>

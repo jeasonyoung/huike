@@ -19,6 +19,7 @@ class OrderController extends BaseController{
                 show_bug($this->loadTcClass($tctid,$examid,FALSE));
                 $this->assign('tc_class',$this->loadTcClass($tctid,$examid,FALSE));
             }*/
+			
             $this->assign('examlist',$this->loadExam($tempid,FALSE));
             $this->assign('sublist',$this->loadSubject($examid,FALSE));
             //产品列表

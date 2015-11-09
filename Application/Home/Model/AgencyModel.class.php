@@ -34,8 +34,8 @@ class AgencyModel extends Model{
         array('Address','require','详细地址不能为空',1),
         array('Contact','require','联系人不能为空',1),
 
-        array('HZTel','tel_validate','合作电话不正确',0,'function'),
-        array('StuTel','tel_validate','学员联系电话不正确',0,'function'),
+        array('HZTel','tel_validate','合作电话不正确',2,'function'),
+        array('StuTel','tel_validate','学员联系电话不正确',2,'function'),
 
         array('Introduce','require','机构简介不能为空',1),
 

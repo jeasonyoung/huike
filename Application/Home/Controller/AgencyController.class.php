@@ -19,7 +19,38 @@ class AgencyController extends BaseController{
             if(!$_result=$_model->create()){
                 $this->error($_model->getError());
             }else{
-                $_result['create_time'] = date('Y-m-d', time);
+                //判断销售
+                if(isset($_result['OpenSales']) && !empty($_result['OpenSales'])){
+                    //支付宝参数
+                    $_alipayValues = array_filter(array($_result['AlipayID'],
+                                     $_result['AlipayAcc'],
+                                     $_result['AlipayKey']));
+                    //网银在线参数
+                    $_netBankValues = array_filter(array($_result['NetBankNo'],
+                                            $_result['NetBankKey']));
+
+                    //判断
+                    if(empty($_alipayValues) && empty($_netBankValues)){
+                        $this->error('支付宝或网银在线须有一个!');
+                        return;
+                    }else{
+                        //判断支付宝参数
+                        if(!empty($_alipayValues) && count($_alipayValues) < 3){
+                            $this->error('支付宝接口须填写完整!');
+                            return;
+                        }
+                        //判断网银在线
+                        if(!empty($_netBankValues) && count($_netBankValues) < 2){
+                            $this->error('网银在线接口须填写完整!');
+                        }
+
+                    }
+                }else if(empty($_result['OpenSales'] && empty($_result['Home_url']))){
+                    $this->error('机构首页不能为空!');
+                    return;
+                }
+
+                $_result['create_time'] = $_result['last_time'] = date('Y-m-d', time);
                 if($agencyId=$_model->insert_agency($result)){
                     //添加机构成功,为机构添加默认管理员
                     $this->success('新增机构成功!',U('Home/Agency/add_user',array('agencyId' => $agencyId)));
@@ -73,13 +104,46 @@ class AgencyController extends BaseController{
             if(!($_agency = $_model->loadAgency(I('JGID','')))){
                 $this->error("机构已不存在!",U('Home/Agency/list_agency'));
             }
-            if(floatval($_agency['money']) <= 0){
-                $this->error("机构余额须大于0,否则不允许修改机构信息!",U('Home/Agency/list_agency'));
+            if(floatval($_agency['money']) < 0){
+                $this->error("机构余额须大于等于0,否则不允许修改机构信息!",U('Home/Agency/list_agency'));
             }
 
             if(!$_result=$_model->create()){
                 $this->error($_model->getError());
             }else{
+
+                //判断销售
+                if(isset($_result['OpenSales']) && !empty($_result['OpenSales'])){
+                    //支付宝参数
+                    $_alipayValues = array_filter(array($_result['AlipayID'],
+                                     $_result['AlipayAcc'],
+                                     $_result['AlipayKey']));
+                    //网银在线参数
+                    $_netBankValues = array_filter(array($_result['NetBankNo'],
+                                            $_result['NetBankKey']));
+
+                    //判断
+                    if(empty($_alipayValues) && empty($_netBankValues)){
+                        $this->error('支付宝或网银在线须有一个!');
+                        return;
+                    }else{
+                        //判断支付宝参数
+                        if(!empty($_alipayValues) && count($_alipayValues) < 3){
+                            $this->error('支付宝接口须填写完整!');
+                            return;
+                        }
+                        //判断网银在线
+                        if(!empty($_netBankValues) && count($_netBankValues) < 2){
+                            $this->error('网银在线接口须填写完整!');
+                        }
+
+                    }
+                    
+                }else if(empty($_result['OpenSales'] && empty($_result['Home_url']))){
+                    $this->error('机构首页不能为空!');
+                    return;
+                }
+
                 if($_model->update_agency($_result)){
                     $this->success('更新合作机构信息成功',U('Home/Agency/list_agency'));
                 }else{
