@@ -48,7 +48,7 @@ class MemberController extends BaseController{
                 if($_model->uniqueMemberUser($_result['JGID'],$_result['UserName'])){
                     $this->error("用户名已存在");
                 }else{
-                    $_result['Psw'] = $result['PassWords'];
+                    $_result['Psw'] = create_des_encrypt($result['PassWords']);
                     $_result['PassWords'] = md5($result['PassWords']);
                     $_result['RegTime'] = date('Y-m-d H:i:s',time());
                     //
@@ -183,8 +183,8 @@ class MemberController extends BaseController{
                 $_data = array_filter($_result);
                 $_data['Lock'] = $_result['Lock'];
                 if(isset($_data['PassWords']) && !empty($_data['PassWords'])){
-                    $_data['Psw'] = I('PassWords');
-                    $_data['PassWords'] = md5($_data('PassWords'));
+                    $_data['Psw'] = create_des_encrypt($_data['PassWords']);
+                    $_data['PassWords'] = md5($_data['PassWords']);
                 }
                 //更新
                 if($_model->save($_data)){
@@ -195,6 +195,9 @@ class MemberController extends BaseController{
             }
         }else{
             $_data = $_model->loadMember($_userId);
+            // if(isset($_data['psw']) && !empty($_data['psw'])){
+            //     $_data['psw'] = create_des_decrypt($_data['psw']);
+            // }
             $this->assign('agencies', $_model->loadAllAgencies($_data['jgid']));
             $this->assign('data',$_data);
             $this->display();

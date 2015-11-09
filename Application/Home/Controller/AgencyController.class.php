@@ -50,6 +50,15 @@ class AgencyController extends BaseController{
                     return;
                 }
 
+                //支付宝key加密
+                if(isset($_result['AlipayKey']) && !empty($_result['AlipayKey'])){
+                    $_result['AlipayKey'] = create_des_encrypt($_result['AlipayKey']);
+                }
+                //网银在线密码加密
+                if(isset($_result['NetBankKey']) && !empty($_result['NetBankKey'])){
+                    $_result['NetBankKey'] = create_des_encrypt($_result['NetBankKey']);
+                }
+
                 $_result['create_time'] = $_result['last_time'] = date('Y-m-d', time);
                 if($agencyId=$_model->insert_agency($result)){
                     //添加机构成功,为机构添加默认管理员
@@ -144,6 +153,15 @@ class AgencyController extends BaseController{
                     return;
                 }
 
+                //支付宝key加密
+                if(isset($_result['AlipayKey']) && !empty($_result['AlipayKey'])){
+                    $_result['AlipayKey'] = create_des_encrypt($_result['AlipayKey']);
+                }
+                //网银在线密码加密
+                if(isset($_result['NetBankKey']) && !empty($_result['NetBankKey'])){
+                    $_result['NetBankKey'] = create_des_encrypt($_result['NetBankKey']);
+                }
+
                 if($_model->update_agency($_result)){
                     $this->success('更新合作机构信息成功',U('Home/Agency/list_agency'));
                 }else{
@@ -153,6 +171,17 @@ class AgencyController extends BaseController{
         }else{
             $_agencyId = I('JGID','');
             $_data = $_model->get_agencyList('*','jgid='.$_agencyId,FALSE);
+
+            //支付宝key解密
+            if(isset($_data['alipaykey']) && !empty($_data['alipaykey'])){
+                $_data['alipaykey'] = create_des_decrypt($_data['alipaykey']);
+                if(APP_DEBUG)trace("解密后=>".$_data['alipaykey']."[des]");
+            }
+            //网银在线密码解密
+            if(isset($_data['netbankkey']) && !empty($_data['netbankkey'])){
+                $_data['netbankkey'] = create_des_decrypt($_data['netbankkey']);
+            }
+
             /*地区相关信息*/
             $_citys = A('Citys');
             $_citylist = $_citys->optSelect(2,array('cityid','shortname'),$_data['province']);

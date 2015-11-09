@@ -89,7 +89,7 @@
             </li>
             <li>
               <label>支付宝秘钥:</label>
-              <input name="AlipayKey" value="{$data['alipaykey']}" type="text" class="dfinput" style="width:295px;"/>
+              <input name="AlipayKey" value="{:rtrim($data['alipaykey'],'\0')}" type="text" class="dfinput" style="width:295px;"/>
             </li>
           </ul>
         </fieldset>
@@ -107,7 +107,7 @@
             </li>
             <li>
               <label>网银秘钥:</label>
-              <input name="NetBankKey" value="{$data['netbankkey']}" type="text" class="dfinput" style="width:295px;"/>
+              <input name="NetBankKey" value="{:rtrim($data['netbankkey'],'\0')}" type="text" class="dfinput" style="width:295px;"/>
             </li>
 
           </ul>
@@ -127,11 +127,12 @@
       <li name="open_sales_hide">
         <label>机构首页</label>
         <input name="Home_url" value="{$data['home_url']}" type="text" class="dfinput"/>
+        <i><font color="#ff00000">*</font></i>
       </li>
 
       <li name="open_sales_hide">
         <label>登陆网址</label>
-        <input name="Login_Url" value="{$data['login_Url']}" type="text" class="dfinput"/>
+        <input name="Login_Url" value="{$data['login_url']}" type="text" class="dfinput"/>
       </li>
 
       <li>
@@ -285,7 +286,7 @@
         }
       });
     </if>
-    
+
     //页面加载时
     open_sales_handle($("input[name='OpenSales']:checked").val());
     
