@@ -21,4 +21,5 @@ return array(
         'api/m/aq/suggest/add' =>  'index/add_suggest',//11.新增学员建议(POST)
     ),
     'QUERY_LIMIT_TOP'      =>  200,
+    'DB_PARAMS'            => array(\PDO::ATTR_CASE => \PDO::CASE_NATURAL),
 );

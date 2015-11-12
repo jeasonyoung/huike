@@ -87,7 +87,7 @@ class IndexController extends AuthController {
         //验证签名成功
         if($_agencyId && ($_userId = $this->getRealUserId($randUserId))){
             $_model = M('AppCoursesView');
-            $_model = $_model->field('`pid`,`id`,`name`,`type`,`orderno` as order_no')
+            $_model = $_model->field(array('pid','id','name','type'))
                              ->where("`userId` = '%s'",array($_userId))
                              ->limit(C('QUERY_LIMIT_TOP'))
                              ->order("`orderno` desc")
@@ -123,10 +123,10 @@ class IndexController extends AuthController {
         //验证签名成功
         if($_agencyId){
             //字段定义
-            $_fields = array('id','name','videoUrl'=>'video_url',
-                             'highVideoUrl'=>'high_video_url',
-                             'superVideoUrl'=>'super_video_url',
-                             'time','orderNo'=>'order_no');
+            $_fields = array('id','name','videoUrl'=>'videoUrl',
+                             'highVideoUrl'=>'highVideoUrl',
+                             'superVideoUrl'=>'superVideoUrl',
+                             'time','orderNo'=>'orderNo');
             if($free){//免费试听
                 //初始化免费试听数据模型
                 $_model = M('AppFreeLessonsView');
@@ -146,6 +146,10 @@ class IndexController extends AuthController {
                              ->order("`orderNo` desc")
                              ->select();
             if($_model){
+                //机构播放服务器地址
+                //$_playHost = M('Jigou')->field('');
+
+
                 $this->send_callback(true, $_model);
             }else{
                 if(APP_DEBUG) trace('无数据!');
@@ -161,7 +165,7 @@ class IndexController extends AuthController {
      * @return json          返回数据
      */
     public function exams($token=null,$sign=null){
-        if(APP_DEBUG) trace('6.考试类别下的考试集合...');
+        if(APP_DEBUG) trace('4.考试类别下的考试集合...');
         //验证签名
         $_agencyId = $this->verificationSignature(array(
             'token' => $token,
@@ -173,14 +177,14 @@ class IndexController extends AuthController {
             $_model = M('Jigou')->field('allExams')
                                 ->where("`JGID` = '%s'", array($_agencyId))
                                 ->find();
-            if($_model && isset($_model['allexams'])){
-                if(APP_DEBUG) trace('考试ID集合:'.$_model['allexams']);
+            if($_model && isset($_model['allExams'])){
+                if(APP_DEBUG) trace('考试ID集合:'.$_model['allExams']);
                 //初始化考试数据模型
                 $_result = M('Examclass')->field(array(
                     'examId' => 'id',
                     'CnName' => 'name',
                     'EnName' => 'abbr',
-                    'SortID' => 'order_no',
+                    'SortID' => 'orderNo',
                 ))->where(array('examId' => array('in', $_model['allexams'])))
                   ->limit(C('QUERY_LIMIT_TOP'))
                   ->order("SortID")
@@ -207,7 +211,7 @@ class IndexController extends AuthController {
      * @return json            返回数据
      */
     public function packages($token=null,$examId=null,$sign=null){
-        if(APP_DEBUG) trace('7.机构考试下的套餐/班级集合...');
+        if(APP_DEBUG) trace('5.机构考试下的套餐/班级集合...');
         //验证签名
         $_agencyId = $this->verificationSignature(array(
             'token'  => $token,
@@ -218,14 +222,14 @@ class IndexController extends AuthController {
         if($_agencyId){
             //初始化数据模型
             $_model = M('AppGroupsView')->field(array(
-                'pid','id','name','type','orderNo'=>'order_no'
+                'pid','id','name','type','orderNo'=>'orderNo'
             ))->where("`agencyId` = '%s' and `examId` = '%s'", array($_agencyId,$examId))
               ->limit(C('QUERY_LIMIT_TOP'))
               ->order("`orderNo` desc")
               ->select();
 
             if($_model){
-                return build_callback_data(true,$_model);
+                $this->send_callback(true,$_model);
             }else{
                 if(APP_DEBUG) trace('无数据!');
                 $this->send_callback(false,null,'无数据!');
@@ -244,7 +248,7 @@ class IndexController extends AuthController {
      * @return json                 返回数据
      */
     public function learning($token=null,$randUserId=null,$lessonId=null,$pos=0,$status=false,$sign=null){
-        if(APP_DEBUG) trace('8.更新学习记录...');
+        if(APP_DEBUG) trace('6.更新学习记录...');
         if(IS_POST){
             //验证签名
             $_agencyId = $this->verificationSignature(array(
@@ -315,7 +319,7 @@ class IndexController extends AuthController {
      * @return json               返回数据
      */
     public function load_topics($token=null,$randUserId=null,$sign=null){
-        if(APP_DEBUG) trace('9.学员答疑主题...');
+        if(APP_DEBUG) trace('7.学员答疑主题...');
         //验证签名
         $_agencyId = $this->verificationSignature(array(
             'token'      => $token,
@@ -327,9 +331,9 @@ class IndexController extends AuthController {
             //初始化数据模型
             $_model = M('AppTopicsView')->field(array(
                 'id','title','content',
-                'lessonID'  =>'lesson_id',
-                'lessonName'=>'lesson_name',
-                'lastTime'  =>'last_time',
+                'lessonID'  =>'lessonId',
+                'lessonName'=>'lessonName',
+                'lastTime'  =>'lastTime',
             ))->where("`userId` = '%s'",array($_userId))
               ->limit(C('QUERY_LIMIT_TOP'))
               ->order("`lastTime` desc")
@@ -355,7 +359,7 @@ class IndexController extends AuthController {
      * @return json               返回数据
      */
     public function add_topic($token=null,$randUserId=null,$lessonId=null,$title=null,$content=null,$sign=null){
-        if(APP_DEBUG) trace('10.新增答疑主题...');
+        if(APP_DEBUG) trace('8.新增答疑主题...');
         if(IS_POST){
             //验证签名
             $_agencyId = $this->verificationSignature(array(
@@ -409,7 +413,7 @@ class IndexController extends AuthController {
      * @return json             返回数据
      */
     public function load_details($token=null,$topicId=null,$sign=null){
-        if(APP_DEBUG) trace('11.学员答疑明细...');
+        if(APP_DEBUG) trace('9.学员答疑明细...');
         //验证签名
         $_agencyId = $this->verificationSignature(array(
             'token'     => $token,
@@ -420,8 +424,8 @@ class IndexController extends AuthController {
         if($_agencyId){
             //初始化数据模型
             $_model = M('AppDetailsView')->field(array(
-                'id','content',`userId`=>'user_id',
-                'userName'=>'user_name','createTime'=>'create_time',
+                'id','content',`userId`=>'userId',
+                'userName'=>'userName','createTime'=>'createTime',
             ))->where("`topicId` = '%s'",array($topicId))
               ->limit(C('QUERY_LIMIT_TOP'))
               ->order("`createTime` desc")

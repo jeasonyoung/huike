@@ -56,7 +56,7 @@ class UserModel extends Model{
                 if($this->save(array(
                         'UserID'        => $_userId,
                         'app_random_id' => $_rand_user_id,
-                        'LoginTime'     => date('Y-m-d', time()),
+                        'LoginTime'     => date('Y-m-d H:i:s', time()),
                     ))){
                     //更新登录次数
                     $this->where("`userid`='%s'", array($_userId))
@@ -66,14 +66,14 @@ class UserModel extends Model{
                         'UID'           => $_userId,
                         'LoginType'     => intval($terminal),
                         'LoginIP'       => get_client_ip(),
-                        'create_time'   => date('Y-m-d', time()),
+                        'create_time'   => date('Y-m-d H:i:s', time()),
                         'Browser'       => get_client_browser(),
                     ));
                     //返回数据
                     return build_callback_data(true,array(
-                        'agency_id'     => $agencyId,
-                        'rand_user_id'  => $_rand_user_id,
-                        'real_name'     => $_data['realname'],
+                        'agencyId'     => $agencyId,
+                        'randUserId'  => $_rand_user_id,
+                        'realName'     => $_data['realname'],
 
                     ),'登录成功!');
 
