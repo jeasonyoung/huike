@@ -24,6 +24,8 @@ return array(
 	/*布局设置*/
        // 'VIEW_PATH'             =>  './Theme/',
 	'TMPL_ENGINE_TYPE'      =>  'Think',
+
+    //'SHOW_PAGE_TRACE'       => true,
 	
 	/*权限认证配置*/
 	'AUTH_CONFIG'		=> array(

@@ -33,7 +33,7 @@ class UserModel extends Model{
             return build_callback_data(false,null,'密码为空!');
         }
         //查询数据
-        $_data = $this->field('userid,realname,psw,lock')
+        $_data = $this->field('userid,realname,passwords,lock')
                       ->where("`jgid` = '%s' and username = '%s'",array($agencyId,$username))
                       ->find();
         if(!$_data){
@@ -42,55 +42,48 @@ class UserModel extends Model{
         }else if(isset($_data['lock']) && !empty($_data['lock'])){
             if(APP_DEBUG) trace("用户账号[$username]已被锁定!");
             return build_callback_data(false,null,'用户已被锁定!');
-        }else{//0.校验密码
-            //1.解密用户密码
-            $_decypt_pwd = create_des_decrypt($_data['psw']);
-            if($_decypt_pwd){
-                if(APP_DEBUG)trace("用户密码:$_decypt_pwd");
-                //2.加密计算
-                $_encypt_pwd = md5($username.$_decypt_pwd);
-                if($_encypt_pwd != $pwd){
-                    if(APP_DEBUG) trace("密码错误[$_encypt_pwd != $pwd]..");
-                    return build_callback_data(false,null,'密码错误!');
-                }else{
-                    $_userId = $data['userid'];
-                    //验证成功，生成随机用户ID(用于限制一个账号多处登录)
-                    $_rand_user_id = String::uuid();
-                    //更新数据
-                    $_update = $this->save(array(
-                            'userid'        => $_userId,
-                            'app_random_id' => $_rand_user_id,
-                            'logintime'     => date('Y-m-d', time()),
-                    ));
-                    //更新成功
-                    if($_update){
-                        //更新登录次数
-                        $this->where("`userid`='%s'", array($_userId))
-                             ->setInc('loginnum');
-                        //写入登录日志
-                        M('UserLog').add(array(
-                            'UID'           => $_userId,
-                            'LoginType'     => intval($terminal),
-                            'LoginIP'       => get_client_ip(),
-                            'create_time'   => date('Y-m-d', time()),
-                            'Browser'       => get_client_browser(),
-                        ));
-                        //返回数据
-                        return build_callback_data(false,array(
-                            'agency_id'     => $agencyId,
-                            'rand_user_id'  => $_rand_user_id,
-                            'real_name'     => $_data['realname'],
-
-                        ),'登录成功!');
-
-                    }else{
-                        if(APP_DEBUG) trace("随机用户ID[$_rand_user_id=>$_userId]写入数据失败:$_update");
-                        return build_callback_data(false,null,'更新随机用户ID失败,请联系管理员!');
-                    }
-                }
+        }else if(isset($_data['passwords'])){//0.校验密码
+            //1.加密计算
+            $_encypt_pwd = md5($username.$_data['passwords']);
+            if($_encypt_pwd != $pwd){
+                if(APP_DEBUG) trace("密码错误[$_encypt_pwd != $pwd]..");
+                return build_callback_data(false,null,'密码错误!');
             }else{
-                return build_callback_data(false,null,'解密失败，请联系管理员!');
+                $_userId = $_data['userid'];
+                //验证成功，生成随机用户ID(用于限制一个账号多处登录)
+                $_rand_user_id = String::uuid();
+                //更新成功
+                if($this->save(array(
+                        'UserID'        => $_userId,
+                        'app_random_id' => $_rand_user_id,
+                        'LoginTime'     => date('Y-m-d', time()),
+                    ))){
+                    //更新登录次数
+                    $this->where("`userid`='%s'", array($_userId))
+                         ->setInc('loginnum');
+                    //写入登录日志
+                    M('UserLog')->add(array(
+                        'UID'           => $_userId,
+                        'LoginType'     => intval($terminal),
+                        'LoginIP'       => get_client_ip(),
+                        'create_time'   => date('Y-m-d', time()),
+                        'Browser'       => get_client_browser(),
+                    ));
+                    //返回数据
+                    return build_callback_data(true,array(
+                        'agency_id'     => $agencyId,
+                        'rand_user_id'  => $_rand_user_id,
+                        'real_name'     => $_data['realname'],
+
+                    ),'登录成功!');
+
+                }else{
+                    if(APP_DEBUG) trace("随机用户ID[$_rand_user_id=>$_userId]写入数据失败:$_update");
+                    return build_callback_data(false,null,'更新随机用户ID失败,请联系管理员!');
+                }
             }
+        }else{
+            return build_callback_data(false,null,'未知错误，请联系管理员!');
         }
     }
 

@@ -40,9 +40,9 @@ class AuthController extends RestController{
         $_sign = $params['sign'];
         if(APP_DEBUG)trace("获取签名:$_sign");
         //加载密钥
-        $_key = $this->loadSecretKeyByToken($_token);
-        if($_key){
-            if(APP_DEBUG) trace("加载密钥:$_key");
+        $_secretKey = $this->loadSecretKeyByToken($_token);
+        if($_secretKey){
+            if(APP_DEBUG) trace("加载密钥:$_secretKey");
             //从参数数组中移除签名
             unset($params['sign']);
             if(APP_DEBUG) trace('移除签名后的参数数组:'.serialize($params));
@@ -59,7 +59,7 @@ class AuthController extends RestController{
             //叠加参数键值对
             $_sign_source_str = implode('&', $_parameters);
             if(APP_DEBUG) trace("拼接参数字符串:$_sign_source_str");
-            $_sign_source_str .= $key;
+            $_sign_source_str .= $_secretKey;
             if(APP_DEBUG) trace("叠加密钥后的字符串:$_sign_source_str");
             //计算签名
             $_new_sign = md5($_sign_source_str);
@@ -149,10 +149,10 @@ class AuthController extends RestController{
 
     /**
      * 重载数据反馈。
-     * @param  [type]  $data [description]
-     * @param  string  $type [description]
-     * @param  integer $code [description]
-     * @return [type]        [description]
+     * @param  mixed   $data  数据
+     * @param  string  $type  数据格式
+     * @param  integer $code  返回代码
+     * @return void
      */
     protected function response($data,$type='json',$code=200){
         if(APP_DEBUG) trace('数据反馈response...');
@@ -161,9 +161,9 @@ class AuthController extends RestController{
 
     /**
      * 重载数据编码。
-     * @param  [type] $data [description]
-     * @param  string $type [description]
-     * @return [type]       [description]
+     * @param  mixed  $data  数据
+     * @param  string $type  数据格式
+     * @return string        格式化化后的字符串
      */
     protected function encodeData($data,$type='') {
         if(APP_DEBUG) trace('重载数据编码encodeData...');

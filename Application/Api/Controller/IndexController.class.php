@@ -275,11 +275,14 @@ class IndexController extends AuthController {
                                       ->where("`UID` = '%s' and `LessonID` = '%s'",array($_userId,$lessonId))
                                       ->find();
 
-                    if($_result && isset($_result['id'])){
+                    if($_result && isset($_result['id']) &&($_id = $_result['id'])){
                         if(APP_DEBUG) trace('更新...'.$_result['id']);
                         //更新
                         $_result = $_model->where("`id` = '%s'", array($_result['id']))
                                           ->save($_data);
+                        if($_result){
+                            $_result = $_id;
+                        }
                     }else{
                         if(APP_DEBUG) trace('新增...');
                         $_data['UID'] = $_userId;
@@ -291,7 +294,7 @@ class IndexController extends AuthController {
 
                     //结果
                     if($_result){
-                        $this->send_callback(true,null);
+                        $this->send_callback(true,$_result);
                     }else{
                         $this->send_callback(false,null,'提交失败，未知错误!');
                     }
@@ -385,7 +388,7 @@ class IndexController extends AuthController {
                     //
                     if($_model){
                         if(APP_DEBUG)trace("新增主题成功:$_model...");
-                        $this->send_callback(true,null);
+                        $this->send_callback(true,$_model);
                     }else{
                         if(APP_DEBUG)trace('新增主题失败!');
                         $this->send_callback(false,null,'提交失败，未知错误!');
@@ -470,7 +473,7 @@ class IndexController extends AuthController {
                     //
                     if($_model){
                         if(APP_DEBUG)trace("新增主题明细成功:$_model...");
-                        $this->send_callback(true,null);
+                        $this->send_callback(true,$_model);
                     }else{
                         if(APP_DEBUG)trace('新增主题明细失败!');
                         $this->send_callback(false,null,'提交失败，未知错误!');
@@ -517,7 +520,7 @@ class IndexController extends AuthController {
                     //
                     if($_model){
                         if(APP_DEBUG)trace("新增学员建议成功:$_model...");
-                        $this->send_callback(true,null);
+                        $this->send_callback(true,$_model);
                     }else{
                         if(APP_DEBUG)trace('新增学员建议失败!');
                         $this->send_callback(false,null,'提交失败，未知错误!');
