@@ -1,8 +1,8 @@
 <?php
 namespace Home\Controller;
-use Think\Controller;
+use Home\Controller\BaseController;
 
-class TeacherController extends Controller{
+class TeacherController extends BaseController{
     /*添加主讲老师*/
     public function add_user(){
         //IS_POST 表示当前请求为POST方式 即表单产生提交
@@ -12,20 +12,7 @@ class TeacherController extends Controller{
             $data['TeachName'] = I('TeachName');
             $data['ZCXL'] = I('ZCXL');
             $data['TeachPic'] = I('TeachPic');
-			$AllExamID = '';
-			if(!empty(I('AllExamID'))){
-				$array = I('AllExamID');
-				$size = count($array);  
-				for($i=0; $i< $size; $i++){
-					if($i==0){
-						$AllExamID = $array[$i];
-					}
-					else{
-						$AllExamID = $AllExamID.','.$array[$i];
-					}
-				}
-			}
-			$data['AllExam'] = $AllExamID;
+            $data['AllExam'] = I('AllExam');
             $data['Content'] = I('Content');
             $data['create_time'] = date('Y-m-d H:i:s',time());
             if(empty($data['TeachName']) || empty($data['TeachPic']) || empty($data['AllExam']) || empty($data['Content'])){
@@ -69,20 +56,7 @@ class TeacherController extends Controller{
             $data['TeachName'] = I('TeachName');
             $data['ZCXL'] = I('ZCXL');
             $data['TeachPic'] = I('TeachPic');
-			$AllExamID = '';
-			if(!empty(I('AllExamID'))){
-				$array = I('AllExamID');
-				$size = count($array);  
-				for($i=0; $i< $size; $i++){
-					if($i==0){
-						$AllExamID = $array[$i];
-					}
-					else{
-						$AllExamID = $AllExamID.','.$array[$i];
-					}
-				}  
-			}
-            $data['AllExam'] = $AllExamID;
+            $data['AllExam'] = I('AllExam');
             $data['Content'] = I('Content');
 			$data['last_time'] = date('Y-m-d H:i:s',time());
             if(empty($data['TeachName']) || empty($data['TeachPic']) || empty($data['AllExam']) || empty($data['Content'])){

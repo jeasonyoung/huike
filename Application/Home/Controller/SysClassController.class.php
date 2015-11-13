@@ -115,6 +115,7 @@ class SysClassController extends BaseController{
 			if(!empty(I('Year'))){$data['Year'] = I('Year');}			
             $data['last_time'] = date('Y-m-d H:i:s',time());
             $data['SortID'] = I('SortID');
+			$data['ListenID'] = I('ListenID');
             if(empty($data['SCName']) || empty($data['ExamID']) || empty($data['SubID']) || empty($data['CTID'])){
                 $this->error('班级名称、所属考试、所属科目、班级类型必须填写!');
             }
@@ -136,13 +137,15 @@ class SysClassController extends BaseController{
 			$this->assign('teachlist',$Teacher);
 			$Province = $model->query_province();
 			$this->assign('ProList',$Province);
+			$Lesson = $model->query_freelisten($scid);
+			$this->assign('Lesson',$Lesson);
             $data = $model->query_user($subid,$scid);
             $this->assign('info',$data);
             $this->display('edit_user');
         }
     }
     
-    /*考试列表*/
+    /*系统班级列表*/
     public function list_user($subid){
         $model = D('Home/SysClass');
         $data = $model->query_user($subid,'');

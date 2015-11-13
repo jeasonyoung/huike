@@ -79,14 +79,14 @@ class OrderModel extends Model{
     public function getOneProduct($pid,$ptype){
         if($ptype==2){
             $data = self::$db_class->where('jgcid='.$pid)->
-                    field(array('jgcid' => 'pid','kemu.subname',"concat(kemu.subname,'--',cnname)" => 'proname','hk_jigou_class.price','useyear','hk_jigou_class.sale_price','jgid','sys.price' => 'oldprice','sys.sale_price' => 'cost_price'))->
+                    field(array('jgcid' => 'pid','kemu.subname',"concat(kemu.subname,'--',cnname)" => 'proname','hk_jigou_class.price','useyear','hk_jigou_class.sale_price','jgid','sys.price' => 'oldprice','sys.sale_price' => 'cost_price','sys.ExamID','hk_jigou_class.PicPath'))->
                     join('left join hk_subjects kemu ON kemu.subid=hk_jigou_class.subid')->
                     join('left join hk_class_sys sys ON sys.scid=hk_jigou_class.scid')->
                     find();
             $data['type'] = $ptype;
         }else{
             $data = self::$db_taocan->where('taocanid='.$pid)->
-                    field(array('taocanid' => 'pid',"concat(hk_jigou_taocan_list.useyear,'-',ks.cnname,'-',taocanname,'-',fenlei.tccname)" => 'proname','real_price' => 'price','hk_jigou_taocan_list.sale_price','hk_jigou_taocan_list.useyear','hk_jigou_taocan_list.jgid','oldprice','discount','totalprice','cost_price'))->
+                    field(array('taocanid' => 'pid','hk_jigou_taocan_list.ExamID','hk_jigou_taocan_list.PicPath',"concat(hk_jigou_taocan_list.useyear,'-',ks.cnname,'-',taocanname,'-',fenlei.tccname)" => 'proname','real_price' => 'price','hk_jigou_taocan_list.sale_price','hk_jigou_taocan_list.useyear','hk_jigou_taocan_list.jgid','oldprice','discount','totalprice','cost_price'))->
                     join('left join hk_examclass ks on ks.examid=hk_jigou_taocan_list.examid')->
                     join('left join hk_jigou_taocan_class fenlei on fenlei.tccid=hk_jigou_taocan_list.tccid')
                     ->find();
@@ -146,7 +146,9 @@ class OrderModel extends Model{
                 $insert['Real_Price'] = $values['sale_price'];
                 $insert['OrderState'] = 0;
                 $insert['OrderType'] = 2;
-                
+				$insert['ExamID'] = $values['examid'];
+                $insert['PicPath'] = $values['picpath'];
+				
                 $oldPrice += $values['oldprice'];
                 $costPrice += $insert['Cost_Price'];
                 $totalPrice += $insert['TotalPrice'];

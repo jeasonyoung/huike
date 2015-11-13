@@ -131,14 +131,17 @@ $(function(){
         <td>{$vo.salesprice}</td>
         <td>{$vo.mobile}</td>
         <td>
-        <switch name="$vo.orderstate" >
-        <case value="0" break="1"><font color="#FF0000">未付费</font></case>
-        <case value="1" break="1"><font color="#008000">已付费</font></case>
-        <case value="2" break="1"><font color="#008000">已开通</font></case>
-        <case value="-1" break="1"><font color="#FF0000">已关闭</font></case>
-        <case value="-2" break="1"><font color="#0000FF">已删除</font></case>
-        <default /><font color="#FF0000">未付费</font>
-        </switch>
+		<if condition="$vo.orderstate eq 2">
+		<font color="#008000">已开通</font>
+		<elseif condition="$vo.orderstate eq 1"/>
+		<font color="#008000">已付费</font>
+		<elseif condition="$vo.orderstate eq -1"/>
+		<font color="#FF0000">已关闭</font>
+		<elseif condition="$vo.orderstate eq -2"/>
+		<font color="#0000FF">已删除</font>
+		<else />
+		<font color="#FF0000">未付费</font>
+		</if>
         </td>
         <td>{$vo.create_time}</td>
         <td>[<a href="{:U('order/view_order',array('orderid' => $vo['orderid']))}" class="tablelink">查看详情</a>]</td>

@@ -14,27 +14,27 @@ class AuthController extends RestController{
     protected function verificationSignature($params=array()){
         if(APP_DEBUG)trace('校验签名...'.serialize($params));
         if(empty($params)){//参数为空
-            $this->send_callback(false,1,'参数为空!');
+            $this->send_callback_error(-101,'参数为空!');
             return false;
         }
         //过滤空值参数
         $params = array_filter($params);
         if(empty($params)){
-            $this->send_callback(false,2,'参数值为空!');
+            $this->send_callback_error(-102,'参数值为空!');
             return false;
         }
         //去重复参数
         $params = array_unique($params);
         //获取令牌
         if(!isset($params['token'])){
-            $this->send_callback(false,3,'未带令牌!');
+            $this->send_callback_error(-103,'未带令牌!');
             return false;
         }
         $_token = $params['token'];
         if(APP_DEBUG)trace("获取令牌:$_token");
         //获取签名
         if(!isset($params['sign'])){
-            $this->send_callback(false,4,'未带签名!');
+            $this->send_callback_error(-104,'未带签名!');
             return false;
         }
         $_sign = $params['sign'];
@@ -72,10 +72,10 @@ class AuthController extends RestController{
                     return $_agencyId;
                 }
                 //机构ID不存在
-                $this->send_callback(false,5,'获取所属机构ID失败!');
+                $this->send_callback_error(-105,'获取所属机构ID失败!');
             }else{
                 //签名验证失败
-                $this->send_callback(false,6,'签名验证失败!');
+                $this->send_callback_error(-100,'签名验证失败!');
             }
         }
         return false;
@@ -114,7 +114,7 @@ class AuthController extends RestController{
     private function loadSecretKeyByToken($token=''){
         if(APP_DEBUG) trace("根据令牌[$token]获取密钥...");
         if(empty($token)){
-            $this->send_callback(false,0,'令牌为空!');
+            $this->send_callback_error(-200,'令牌为空!');
             return null;
         }
         //从表中查找数据
@@ -122,29 +122,36 @@ class AuthController extends RestController{
                             ->where("`abbr_en` = '%s'", array($token))
                             ->find();
         if(!$_model){
-            $this->send_callback(false,-1,'令牌不存在!');
+            $this->send_callback_error(-201,'令牌不存在!');
             return null;
         }
         if(empty($_model['statetf'])){
-            $this->send_callback(false,-2,'令牌已被停用!');
+            $this->send_callback_error(-202,'令牌已被停用!');
             return null;
         }
         if(!isset($_model['appkey']) || empty($_model['appkey'])){
-            $this->send_callback(false,-3,'机构未设置密钥!');
+            $this->send_callback_error(-203,'机构未设置密钥!');
             return null;
         }
         return $_model['appkey'];
     }
 
     /**
-     * 发送反馈消息
-     * @param  boolean $success 请求状态。
-     * @param  mixed   $data    反馈数据。
-     * @param  string  $msg     错误消息。
+     * 发送反馈成功消息。
+     * @param  mixed $data 反馈数据。
      * @return void
      */
-    protected function send_callback($success=false,$data=null,$msg=''){
-        $this->response(build_callback_data($success,$data,$msg));
+    protected function send_callback_success($data=null){
+        $this->response(build_callback_success($data));
+    }
+    /**
+     * 发送反馈失败消息。
+     * @param  integer $code  错误代码。
+     * @param  string  $msg   错误消息。
+     * @return void
+     */
+    protected function send_callback_error($code=0,$msg=''){
+        $this->response(build_callback_error($code,$msg));
     }
 
     /**

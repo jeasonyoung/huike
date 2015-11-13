@@ -6,12 +6,12 @@ namespace Api\Controller;
 
 class IndexController extends AuthController {
     /**
-     * 默认入口。
+     * 0.默认入口。
      * @return void
      */
     public function index(){
         if(APP_DEBUG) trace('0.默认入口...');
-        $this->send_callback(true,'ok','接口测试!');
+        $this->send_callback_success(array('ok' => '接口测试!'));
     }
 
     /**
@@ -53,7 +53,7 @@ class IndexController extends AuthController {
         if(APP_DEBUG) trace("根据随机用户ID[$randUserId]获取真实用户ID...");
         if(!isset($randUserId) || empty($randUserId)){
             if(APP_DEBUG)trace("随机用户ID为空!");
-            $this->send_callback(false,10,'用户ID为空!');
+            $this->send_callback_error(-8,'用户ID为空!');
             return false;
         }else{
             $_model = D('User');
@@ -63,7 +63,7 @@ class IndexController extends AuthController {
                 return $_userId;
             }else{
                 if(APP_DEBUG)trace("用户已在其他设备上登录!");
-                $this->send_callback(false,20,'用户已在其他设备上登录');
+                $this->send_callback_error(-9,'用户已在其他设备上登录');
                 return false;
             }
         }
@@ -93,10 +93,10 @@ class IndexController extends AuthController {
                              ->order("`orderno` desc")
                              ->select();
             if($_model){
-                $this->send_callback(true, $_model);
+                $this->send_callback_success($_model);
             }else{
                 if(APP_DEBUG) trace('无数据!');
-                $this->send_callback(false,null,'无数据!');
+                $this->send_callback_error(0,'无数据!');
             }
         }
     }
@@ -147,13 +147,24 @@ class IndexController extends AuthController {
                              ->select();
             if($_model){
                 //机构播放服务器地址
-                //$_playHost = M('Jigou')->field('');
+                $_playHost = M('Jigou')->field('FlvDomain')
+                                       ->where("`JGID` = '%s'", array($_agencyId))
+                                       ->find();
+                if($_playHost && isset($_playHost['FlvDomain'])){
+                    $_host = $_playHost['FlvDomain'];
+                    foreach ($_model as &$_item) {
+                        $_item['videoUrl']      = $_host.$_item['videoUrl'];
+                        $_item['highVideoUrl']  = $_host.$_item['highVideoUrl'];
+                        $_item['superVideoUrl'] = $_host.$_item['superVideoUrl'];
+                    }
 
-
-                $this->send_callback(true, $_model);
+                    $this->send_callback_success($_model);
+                }else{
+                    $this->send_callback_error(-30,'未配置流媒体服务器地址，请联系管理员!');
+                }
             }else{
                 if(APP_DEBUG) trace('无数据!');
-                $this->send_callback(false,null,'无数据!');
+                $this->send_callback_error(0,'无数据!');
             }
        }
     }
@@ -191,14 +202,14 @@ class IndexController extends AuthController {
                   ->select();
 
                 if($_result){
-                    $this->send_callback(true, $_result);
+                    $this->send_callback_success($_result);
                 }else{
                     if(APP_DEBUG) trace('无数据!');
-                    $this->send_callback(false,null,'无数据!');
+                    $this->send_callback_error(0,'无数据!');
                 }
             }else{
                 if(APP_DEBUG) trace('无数据，机构未设置考试!');
-                $this->send_callback(false,null,'无数据，机构未设置考试!');
+                $this->send_callback_error(-40,'无数据，机构未设置考试!');
             }
         }
     }
@@ -229,10 +240,10 @@ class IndexController extends AuthController {
               ->select();
 
             if($_model){
-                $this->send_callback(true,$_model);
+                $this->send_callback_success($_model);
             }else{
                 if(APP_DEBUG) trace('无数据!');
-                $this->send_callback(false,null,'无数据!');
+                $this->send_callback_error(0,'无数据!');
             }
         }
     }
@@ -264,13 +275,13 @@ class IndexController extends AuthController {
                 //检查课程资源ID
                 if(!isset($lessonId) || empty($lessonId)){
                     if(APP_DEBUG) trace('课程资源ID为空!');
-                    $this->send_callback(false,null,'课程资源ID为空!');
+                    $this->send_callback_error(-60,'课程资源ID为空!');
                 }else{
                     //字段数据
                     $_data = array(
                         'pos'      => intval($pos),
                         'status'   => ($status ? 1 : 0),
-                        'last_time'=> date('Y-m-d', time()),
+                        'last_time'=> date('Y-m-d H:i:s', time()),
                     );
                     //初始化数据模型
                     $_model = M('LearnLog');
@@ -291,23 +302,23 @@ class IndexController extends AuthController {
                         if(APP_DEBUG) trace('新增...');
                         $_data['UID'] = $_userId;
                         $_data['LessonID'] = $lessonId;
-                        $_data['create_time'] = date('Y-m-d',time());
+                        $_data['create_time'] = date('Y-m-d H:i:s',time());
                         //新增
                         $_result = $_model->add($_data);
                     }
 
                     //结果
                     if($_result){
-                        $this->send_callback(true,$_result);
+                        $this->send_callback_success($_result);
                     }else{
-                        $this->send_callback(false,null,'提交失败，未知错误!');
+                        $this->send_callback_error(-61,'提交失败，未知错误!');
                     }
                 }
 
             }
         }else{
             if(APP_DEBUG)trace('须POST提交!');
-            $this->send_callback(false,null,'须POST提交!');
+            $this->send_callback_error(-1,'须POST提交!');
         }
     }
 
@@ -340,10 +351,10 @@ class IndexController extends AuthController {
               ->select();
 
             if($_model){
-                return build_callback_data(true,$_model);
+                $this->send_callback_success($_model);
             }else{
                 if(APP_DEBUG) trace('无数据!');
-                $this->send_callback(false,null,'无数据!');
+                $this->send_callback_error(0,'无数据!');
             }
         }
     }
@@ -375,10 +386,10 @@ class IndexController extends AuthController {
                 //检查课程资源ID
                 if(!isset($lessonId) || empty($lessonId)){
                     if(APP_DEBUG) trace('课程资源ID为空!');
-                    $this->send_callback(false,null,'课程资源ID为空!');
+                    $this->send_callback_error(-80,'课程资源ID为空!');
                 }else if(!isset($title) || empty($title)){
                     if(APP_DEBUG) trace('主题标题为空!');
-                    $this->send_callback(false,null,'主题标题为空!');
+                    $this->send_callback_error(-81,'主题标题为空!');
                 }else{
                     //初始化数据模型
                     $_model = M('LearnAsk')->add(array(
@@ -386,22 +397,22 @@ class IndexController extends AuthController {
                         'LessonID' => $lessonId,
                         'Title'    => $title,
                         'Content'  => $content,
-                        'create_time' => date('Y-m-d',time()),
-                        'last_time'   => date('Y-m-d',time()),
+                        'create_time' => date('Y-m-d H:i:s',time()),
+                        'last_time'   => date('Y-m-d H:i:s',time()),
                     ));
                     //
                     if($_model){
                         if(APP_DEBUG)trace("新增主题成功:$_model...");
-                        $this->send_callback(true,$_model);
+                        $this->send_callback_success($_model);
                     }else{
                         if(APP_DEBUG)trace('新增主题失败!');
-                        $this->send_callback(false,null,'提交失败，未知错误!');
+                        $this->send_callback_error(-82,'提交失败，未知错误!');
                     }
                 }
             }
         }else{
             if(APP_DEBUG)trace('须POST提交!');
-            $this->send_callback(false,null,'须POST提交!');
+            $this->send_callback_success(-1,'须POST提交!');
         }
     }
 
@@ -432,10 +443,10 @@ class IndexController extends AuthController {
               ->select();
             //
             if($_model){
-                return build_callback_data(true,$_model);
+                $this->send_callback_success($_model);
             }else{
                 if(APP_DEBUG) trace('无数据!');
-                $this->send_callback(false,null,'无数据!');
+                $this->send_callback_error(0,'无数据!');
             }
         }
     }
@@ -465,28 +476,28 @@ class IndexController extends AuthController {
                 //检查主题ID
                 if(!isset($topicId) || empty($topicId)){
                     if(APP_DEBUG) trace('主题ID为空!');
-                    $this->send_callback(false,null,'主题ID为空!');
+                    $this->send_callback_success(-100,'主题ID为空!');
                 }else{
                     //初始化数据模型
                     $_model = M('LearnAnswer')->add(array(
                         'AskID' => $topicId,
                         'UID'   => $_userId,
                         'Content' => $content,
-                        'create_time' => date('Y-m-d',time()),
+                        'create_time' => date('Y-m-d H:i:s',time()),
                     ));
                     //
                     if($_model){
                         if(APP_DEBUG)trace("新增主题明细成功:$_model...");
-                        $this->send_callback(true,$_model);
+                        $this->send_callback_success($_model);
                     }else{
                         if(APP_DEBUG)trace('新增主题明细失败!');
-                        $this->send_callback(false,null,'提交失败，未知错误!');
+                        $this->send_callback_error(-101,'提交失败，未知错误!');
                     }
                 }
             }
         }else{
             if(APP_DEBUG)trace('须POST提交!');
-            $this->send_callback(false,null,'须POST提交!');
+            $this->send_callback_error(-1,'须POST提交!');
         }
     }
 
@@ -513,27 +524,27 @@ class IndexController extends AuthController {
                 //检查建议内容
                 if(!isset($content) || empty($content)){
                     if(APP_DEBUG) trace('建议内容为空!');
-                    $this->send_callback(false,null,'建议内容为空!');
+                    $this->send_callback_success(-110,'建议内容为空!');
                 }else{
                     //初始化数据模型
                     $_model = M('LearnAdvice')->add(array(
                         'UID'     => $_userId,
                         'Content' => $content,
-                        'create_time' => date('Y-m-d',time()),
+                        'create_time' => date('Y-m-d H:i:s',time()),
                     ));
                     //
                     if($_model){
                         if(APP_DEBUG)trace("新增学员建议成功:$_model...");
-                        $this->send_callback(true,$_model);
+                        $this->send_callback_success($_model);
                     }else{
                         if(APP_DEBUG)trace('新增学员建议失败!');
-                        $this->send_callback(false,null,'提交失败，未知错误!');
+                        $this->send_callback_error(-111,'提交失败，未知错误!');
                     }
                 }
             }
         }else{
             if(APP_DEBUG)trace('须POST提交!');
-            $this->send_callback(false,null,'须POST提交!');
+            $this->send_callback_error(-1,'须POST提交!');
         }
     }
 }

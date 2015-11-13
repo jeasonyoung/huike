@@ -43,7 +43,11 @@ $(function(){
       <label>主讲考试</label>
       <cite>
 	  <volist id="vo" name="examlist">
-		<label><input name="AllExam" type="checkbox" align="absmiddle" value="{$vo['examid']}" />{$vo['cnname']}</label>
+		<in name="vo['examid']" value="$info['allexam']">
+		<label><input id="AllExam{$vo['examid']}" name="AllExamID[]" type="checkbox" align="absmiddle" checked value="{$vo['examid']}" />{$vo['cnname']}</label>
+		<else />
+		<label><input id="AllExam{$vo['examid']}" name="AllExamID[]" type="checkbox" align="absmiddle" value="{$vo['examid']}" />{$vo['cnname']}</label>
+		</in>
       </volist>
 	  </cite></li>
     <li>

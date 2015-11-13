@@ -23,7 +23,7 @@
     <div class="tools">
     
     	<ul class="toolbar">
-        <li class="click"><a href="{:U('TaoCanType/add_class_taocantype')}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
+        <li class="click"><a href="{:U('Taocantype/add_class_taocantype')}"><span><img src="__PUBLIC__/images/t01.png" /></span>添加</a></li>
         </ul>
         <ul class="toolbar1">
         <li><span><img src="__PUBLIC__/images/t05.png" /></span>设置</li>
@@ -53,7 +53,7 @@
         <td>{$vo.create_time}</td>
         <td>{$vo.last_time}</td>
         <td>{$vo.sortid}</td>
-        <td><a href="{:U('TaoCanType/edit_class_taocantype',array('tctypeid' => $vo['tctypeid']))}" class="tablelink">修改</a>     <a href="{:U('TaoCanType/del_class_taocantype',array('tctypeid' => $vo['tctypeid']))}" onclick="javascript:return confirm('确定删除此套餐吗?')" class="tablelink"> 删除</a></td>
+        <td><a href="{:U('Taocantype/edit_class_taocantype',array('tctypeid' => $vo['tctypeid']))}" class="tablelink">修改</a>     <a href="{:U('Taocantype/del_class_taocantype',array('tctypeid' => $vo['tctypeid']))}" onclick="javascript:return confirm('确定删除此套餐吗?')" class="tablelink"> 删除</a></td>
         </tr>
         </volist>   
         </tbody>

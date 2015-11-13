@@ -17,10 +17,10 @@ class TaocantypeController extends BaseController{
                 $this->error('套餐类型名称不能为空!');
             }
             if($model->insert_class_taocantype($data)){
-                $this->success('新增套餐类型成功!',U('TaoCanType/list_class_taocantype'));
+                $this->success('新增套餐类型成功!',U('Taocantype/list_class_taocantype'));
             }
 			else{
-                $this->error('新增套餐类型失败!',U('TaoCanType/add_class_taocantype'));
+                $this->error('新增套餐类型失败!',U('Taocantype/add_class_taocantype'));
             }
         }
 		else{
@@ -36,7 +36,7 @@ class TaocantypeController extends BaseController{
     public function del_class_taocantype($tctypeid){
         $model = D('Home/TaoCanType');
         if($model->delete_class_taocantype($tctypeid)){
-            $this->success('删除套餐类型成功',U('TaoCanType/list_class_taocantype'));
+            $this->success('删除套餐类型成功',U('Taocantype/list_class_taocantype'));
         }
 		else{
             $this->error('套餐类型删除失败,请联系技术人员');
@@ -51,18 +51,19 @@ class TaocantypeController extends BaseController{
         $model = D('Home/TaoCanType');
         if(IS_POST){    //IS_POST 表示当前请求为POST方式 即表单产生提交
             $data = array();
+            $data['TCTypeID'] = I('tctypeid');
             $data['TCTypeName'] = I('TCTypeName');
             $data['discount'] = I('discount');
             $data['last_time'] = date('Y-m-d H:i:s');
             $data['SortID'] = I('SortID');
             if(empty($data['TCTypeName'])){
-                $this->error('请输入系统套餐类型！',U('TaoCanType/edit_class_taocantype',array('tctypeid' => $tctypeid)));
+                $this->error('请输入系统套餐类型！',U('Taocantype/edit_class_taocantype',array('tctypeid' => $tctypeid)));
             }
             if($model->update_class_taocantype($data)){
-                $this->success('套餐类型修改成功',U('TaoCanType/list_class_taocantype'));
+                $this->success('套餐类型修改成功',U('Taocantype/list_class_taocantype'));
             }
 			else{
-                $this->error('修改失败或未做修改',U('TaoCanType/edit_class_taocantype',array('tctypeid' => $tctypeid)));
+                $this->error('修改失败或未做修改',U('Taocantype/edit_class_taocantype',array('tctypeid' => $tctypeid)));
             }
         }
 		else{

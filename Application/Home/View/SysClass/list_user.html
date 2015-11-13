@@ -36,6 +36,7 @@
         <th>科目名称</th>
 		<th>班级类型</th>
 		<th>班级状态</th>
+		<th>免费试听</th>
 		<th>课程价格</th>
 		<th>课时数量</th>
         <th width="12%">创建时间</th>
@@ -56,10 +57,17 @@
 			<else />无效
 			</if>
 		</td>
+		<td>
+			<empty name="vo.listenid">
+				<font color=red>未设置</font>
+			<else /> 
+				<font color=green>已设置</font>
+			</empty>
+		</td>
         <td>{$vo.price}元</td>
         <td>{$vo.classnum}节</td>
-        <td>{$vo.create_time}</td>
-        <td>{$vo.last_time}</td>
+        <td>{$vo.create_time|strtotime|date="Y-m-d",###}</td>
+        <td>{$vo.last_time|strtotime|date="Y-m-d",###}</td>
         <td>{$vo.sortid}</td>
         <td><a href="{:U('SysClass/edit_user',array('examid' => $vo['examid'],'subid' => $vo['subid'],'scid' => $vo['scid']))}" class="tablelink">修改</a>     
 		<a href="{:U('SysClass/del_user',array('examid' => $vo['examid'],'subid' => $vo['subid'],'scid' => $vo['scid']))}" onclick="javascript:return confirm('确定删除此班级吗?')" class="tablelink"> 删除</a></td>

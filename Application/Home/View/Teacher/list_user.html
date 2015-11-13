@@ -52,7 +52,7 @@
         <td>{$vo.zcxl}</td>
         <td>{$vo.create_time}</td>
         <td>{$vo.last_time}</td>
-        <td><a href="{:U('teacher/edit_user',array('uid' => $vo['tid']))}" class="tablelink">修改</a>     <a href="{:U('teacher/del_user',array('uid' => $vo['tid']))}" onclick="javascript:return confirm('确定删除此用户吗?')" class="tablelink"> 删除</a></td>
+        <td><a href="{:U('teacher/edit_user',array('uid' => $vo['tid']))}" class="tablelink">修改</a>     <a href="{:U('teacher/del_user',array('uid' => $vo['tid']))}" onclick="javascript:return confirm('确定删除此老师吗?')" class="tablelink"> 删除</a></td>
         </tr>   
         </volist>   
         </tbody>

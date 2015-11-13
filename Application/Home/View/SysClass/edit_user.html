@@ -112,6 +112,21 @@
     </li>
 	<li>&nbsp;</li>
     <li>
+      <label>试听课时</label>
+      <label>
+		<select name="ListenID" class="dfinput">
+			<volist id="Listen" name="Lesson">
+			<if condition="$Listen['lessonid'] == $info['listenid'] ">
+			<option value="{$Listen['lessonid']}" selected>{$Listen['cnname']}</option>
+			<else />
+			<option value="{$Listen['lessonid']}">{$Listen['cnname']}</option>
+			</if>
+			</volist>
+		</select>
+	  </label>
+    </li>
+	<li>&nbsp;</li>
+    <li>
       <label><input name="StateTF" type="checkbox"<if condition="$info['statetf'] == 1 "> checked="checked"</if> value="1" />班级有效</label>
 	  <input type="hidden" name="scid" value="{$Think.get.scid}" />
       <input type="hidden" name="subid" value="{$Think.get.subid}" />

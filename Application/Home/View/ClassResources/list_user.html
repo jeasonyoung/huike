@@ -55,8 +55,9 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 		<th>开放时间</th>
 		<th>课程时长</th>
 		<th>包含视频类型</th>
-        <th width="12%">创建时间</th>
-        <th width="12%">更新时间</th>
+		<th>允许试听</th>
+        <th width="10%">创建时间</th>
+        <th width="10%">更新时间</th>
         <th>操作</th>
         </tr>
         </thead>
@@ -67,7 +68,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
         <td>{$vo.cnname}</td>
         <td>{$scname['scname']}</td>
 		<td>{$vo.year}</td>
-        <td>{$vo.startdate|strtotime|date="y-m-d",###}</td>
+        <td>{$vo.startdate|strtotime|date="Y-m-d",###}</td>
         <td>{$vo.timelen}秒</td>
         <td>
 			<empty name="vo.mp3url"><else />MP3 | </empty>
@@ -76,8 +77,13 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 			<empty name="vo.superurl"><else />超清 | </empty>
 			<empty name="vo.ppturl"><else />PPT讲义</empty>
 		</td>
-        <td>{$vo.create_time}</td>
-        <td>{$vo.last_time}</td>
+		<td><if condition="$vo.freetf == 1 ">
+				<font color=green>允许</font>
+			<else />
+				<font color=red>禁止</font>
+			</if></td>
+        <td>{$vo.create_time|strtotime|date="Y-m-d",###}</td>
+        <td>{$vo.last_time|strtotime|date="Y-m-d",###}</td>
         <td><a href="{:U('ClassResources/edit_user',array('lessonid' => $vo['lessonid'],'scid' => $vo['scid']))}" class="tablelink">修改</a>     
 		<a href="{:U('ClassResources/del_user',array('lessonid' => $vo['lessonid'],'scid' => $vo['scid'],'yearid' => $_GET['yearid']))}" onclick="javascript:return confirm('确定删除此课时吗?')" class="tablelink"> 删除</a></td>
         </tr>

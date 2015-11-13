@@ -17,7 +17,7 @@
 <div class="formbody">
   <div class="formtitle"><span>添加系统套餐类型</span></div>
   <ul class="forminfo">
-  <form name="user" action="{:U('TaoCanType/add_class_taocantype')}" method="post">
+  <form name="user" action="{:U('Taocantype/add_class_taocantype')}" method="post">
     <li>
       <label>套餐类型名称</label>
       <input name="TCTypeName" type="text" class="dfinput" value="{$info['TCTypeName']}" />
@@ -33,7 +33,6 @@
     </li>
     <li>
       <label>&nbsp;</label>
-      <input type="hidden" name="CTID" value="{$info['ctid']}" />
       <input name="" type="submit" class="btn" value="确认保存"/>
     </li>
     </form>

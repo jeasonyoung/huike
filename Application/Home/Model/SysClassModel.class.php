@@ -24,7 +24,7 @@ class SysClassModel extends Model{
 		else{
 			$TempStr = $this->join('LEFT JOIN HK_Subjects ON HK_Class_Sys.SubID = HK_Subjects.SubID');
 			$TempStr = $TempStr->join('LEFT JOIN HK_Class_Type ON HK_Class_Sys.CTID = HK_Class_Type.CTID');
-			$TempStr = $TempStr->field('scid,scname,subname,classtypename,statetf,price,classnum,year,HK_Class_Sys.create_time,HK_Class_Sys.last_time,HK_Class_Sys.sortid,HK_Class_Sys.examid,HK_Class_Sys.subid');
+			$TempStr = $TempStr->field('scid,scname,subname,classtypename,statetf,price,classnum,year,listenid,HK_Class_Sys.create_time,HK_Class_Sys.last_time,HK_Class_Sys.sortid,HK_Class_Sys.examid,HK_Class_Sys.subid');
 			return $TempStr->where('HK_Class_Sys.subid='.$subid)->select();
         }
     }
@@ -39,6 +39,9 @@ class SysClassModel extends Model{
     }
 	public function query_province(){
         return $this->table('HK_Citys')->field('CityID,CityName')->where('ParentID=0 and level=1')->order('SortID')->select();
+    }
+	public function query_freelisten($scid){
+        return $this->table('HK_Class_Resources')->field('LessonID,CnName')->where('scid='.$scid.' and FreeTF=1')->order('SortID')->select();
     }
     /**
      * 修改考试科目信息
