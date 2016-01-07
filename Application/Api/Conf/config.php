@@ -8,6 +8,7 @@ return array(
     'URL_PARAMS_BIND'      => true,//开启URL参数绑定
     'URL_ROUTER_ON'        => true,
     'URL_ROUTE_RULES'      => array(
+        'api/m/register' => 'index/register',//0.学员注册
         'api/m/login'    => 'index/login',//1.验证学员登录
         'api/m/courses'  => 'index/courses',//2.我的课程(套餐/班级集合)
         'api/m/lessons'  => 'index/lessons',//3.课程资源(视频)集合

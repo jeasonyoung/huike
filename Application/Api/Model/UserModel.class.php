@@ -11,6 +11,55 @@ class UserModel extends Model{
     protected $tableName = 'user';
 
     /**
+     * 学员注册。
+     * @param  string $agencyId 机构ID
+     * @param  string $username 学员账号
+     * @param  string $pwd      学员密码
+     * @param  string $realname 真实姓名
+     * @param  string $phone    手机号码
+     * @param  string $email    邮箱地址
+     * @param  string $terminal 终端类型(2:苹果,3-安卓)
+     * @return json             反馈数据
+     */
+    public function register($agencyId,$username,$pwd,$realname,$phone,$email,$terminal){
+        if(APP_DEBUG)trace("学员用户注册[agencyId=>$agencyId,username=>$username,terminal=>$terminal]...");
+        //检查所属机构ID
+        if(empty($agencyId)){
+            return build_callback_error(-300,'机构ID为空!');
+        }
+        //检查用户名
+        if(empty($username)){
+            return build_callback_error(-301,'用户名为空!');
+        }
+        //检查密码
+        if(empty($pwd)){
+            return build_callback_error(-302,'密码为空!');
+        }
+        //检查机构用户是否已被注册
+        $_total = $this->where("`jgid` = '%s' and username = '%s'",array($agencyId,$username))
+                       ->count();
+        if($_total > 0)return build_callback_error(-310,'注册失败,用户名已存在!');
+        $data = array('JGID'      => $agencyId,
+                      'UserName'  => $username,
+                      'Psw'       => $pwd,
+                      'PassWords' => md5($pwd),
+                      'RealName'  => $realname,
+                      'Mobile'    => $phone,
+                      'Email'     => $email,
+                      'RegTime'   => date('Y-m-d H:i:s'),
+                      'Source'    => ($terminal == 2 ? 'iOS':'andorid'),
+                      'UserType'  => ($terminal == 2 ? 5:6));
+        //添加学员数据
+        if($this->add($data)){
+            //注册成功
+            return build_callback_success();
+        }else{
+            //注册失败
+            return build_callback_error(-311,'注册失败,服务器发生错误，请联系管理员');
+        }
+    }
+
+    /**
      * 学员用户登录。
      * @param  string $agencyId 机构ID
      * @param  string $username 用户名
@@ -21,15 +70,15 @@ class UserModel extends Model{
     public function login($agencyId,$username,$pwd,$terminal=2){
         if(APP_DEBUG)trace("学员用户登录[agencyId=>$agencyId][username=>$username][pwd=>$pwd]...");
         //检查所属机构ID
-        if(!isset($agencyId) || empty($agencyId)){
+        if(empty($agencyId)){
             return build_callback_error(-300,'机构ID为空!');
         }
         //检查用户名
-        if(!isset($username) || empty($username)){
+        if(empty($username)){
             return build_callback_error(-301,'用户名为空!');
         }
         //检查密码
-        if(!isset($pwd) || empty($pwd)){
+        if(empty($pwd)){
             return build_callback_error(-302,'密码为空!');
         }
         //查询数据
@@ -71,10 +120,10 @@ class UserModel extends Model{
                     ));
                     //返回数据
                     return build_callback_success(array(
-                        'agencyId'     => $agencyId,
+                        'agencyId'    => $agencyId,
                         'randUserId'  => $_rand_user_id,
-                        'realName'     => $_data['realname'],
-
+                        'realName'    => $_data['realname'],
+                        'download'    => 0,
                     ));
 
                 }else{

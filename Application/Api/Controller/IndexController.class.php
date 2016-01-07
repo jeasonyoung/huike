@@ -15,6 +15,41 @@ class IndexController extends AuthController {
     }
 
     /**
+     * 学员注册。
+     * @param  string  $token    令牌
+     * @param  string  $username 用户名
+     * @param  string  $pwd      密码
+     * @param  string  $realname 真实姓名
+     * @param  string  $phone    手机号码
+     * @param  string  $email    电子邮箱
+     * @param  integer $terminal 终端类型(2:苹果,3-安卓)
+     * @param  string  $sign     签名
+     * @return json              返回数据。
+     */
+    public function register($token=null,$username=null,$pwd=null,$realname=null,$phone='',$email='',$terminal=2,$sign=null){
+        if(APP_DEBUG) trace('0.学员注册...');
+        //验证签名
+        $_agencyId = $this->verificationSignature(array(
+                'token'     => $token,
+                'username'  => $username,
+                'pwd'       => $pwd,
+                'realname'  => $realname,
+                'phone'     => $phone,
+                'email'     => $email,
+                'terminal'  => $terminal,
+                'sign'      => $sign,
+            ));
+        //验证签名成功
+        if($_agencyId){
+            //注册学员
+            $_callback = D('User')->register($_agencyId,
+                $username,$pwd,$realname,$phone,$email,$terminal);
+            //反馈数据
+            $this->response($_callback);
+        }
+    }
+
+    /**
      * 1.验证学员登录。
      * @param  string $token    令牌
      * @param  string $username 用户名
@@ -73,25 +108,37 @@ class IndexController extends AuthController {
      * 2.学员用户订单下的套餐／班级集合
      * @param  string $token        令牌
      * @param  string $randUserId   随机用户ID
+     * @param  string $terminal     终端(0:默认值[不传值],2:苹果,3-安卓)
      * @param  string $sign         签名
      * @return json                 返回数据
      */
-    public function courses($token=null,$randUserId=null,$sign=null){
+    public function courses($token=null,$randUserId=null,$terminal=0,$sign=null){
         if(APP_DEBUG) trace('2.加载学员用户订单下的套餐/班级集合...');
         //验证签名
         $_agencyId = $this->verificationSignature(array(
             'token'      => $token,
             'randUserId' => $randUserId,
+            'terminal'   => $terminal,
             'sign'       => $sign,
         ));
         //验证签名成功
         if($_agencyId && ($_userId = $this->getRealUserId($randUserId))){
-            $_model = M('AppCoursesView');
-            $_model = $_model->field(array('pid','id','name','type'))
-                             ->where("`userId` = '%s'",array($_userId))
-                             ->limit(C('QUERY_LIMIT_TOP'))
-                             ->order("`orderno` desc")
-                             ->select();
+            //苹果终端
+            if($terminal == 2){
+                $_model = M('AppGroupsView');
+                $_model = $_model->field(array('pid','id','name','type'))
+                                 ->where("`agencyId` = '%s'", array($_agencyId))
+                                 ->limit(C('QUERY_LIMIT_TOP'))
+                                 ->order("`orderno` desc")
+                                 ->select();
+            }else{
+                $_model = M('AppCoursesView');
+                $_model = $_model->field(array('pid','id','name','type'))
+                                 ->where("`userId` = '%s'",array($_userId))
+                                 ->limit(C('QUERY_LIMIT_TOP'))
+                                 ->order("`orderno` desc")
+                                 ->select();
+            }
             if($_model){
                 $this->send_callback_success($_model);
             }else{
@@ -236,7 +283,7 @@ class IndexController extends AuthController {
                 'pid','id','name','type','orderNo'=>'orderNo'
             ))->where("`agencyId` = '%s' and `examId` = '%s'", array($_agencyId,$examId))
               ->limit(C('QUERY_LIMIT_TOP'))
-              ->order("`orderNo` desc")
+              ->order("`orderNo` asc")
               ->select();
 
             if($_model){
