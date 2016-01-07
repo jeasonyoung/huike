@@ -23,4 +23,5 @@ return array(
     ),
     'QUERY_LIMIT_TOP'      =>  200,
     'DB_PARAMS'            => array(\PDO::ATTR_CASE => \PDO::CASE_NATURAL),
+	'PLAYHOST'					   => 'http://mms.52huike.com:8080',
 );

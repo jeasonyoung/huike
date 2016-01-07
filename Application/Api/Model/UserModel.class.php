@@ -70,15 +70,15 @@ class UserModel extends Model{
     public function login($agencyId,$username,$pwd,$terminal=2){
         if(APP_DEBUG)trace("学员用户登录[agencyId=>$agencyId][username=>$username][pwd=>$pwd]...");
         //检查所属机构ID
-        if(empty($agencyId)){
+        if(!isset($agencyId) || empty($agencyId)){
             return build_callback_error(-300,'机构ID为空!');
         }
         //检查用户名
-        if(empty($username)){
+        if(!isset($username) || empty($username)){
             return build_callback_error(-301,'用户名为空!');
         }
         //检查密码
-        if(empty($pwd)){
+        if(!isset($pwd) || empty($pwd)){
             return build_callback_error(-302,'密码为空!');
         }
         //查询数据
@@ -120,10 +120,10 @@ class UserModel extends Model{
                     ));
                     //返回数据
                     return build_callback_success(array(
-                        'agencyId'    => $agencyId,
+                        'agencyId'     => $agencyId,
                         'randUserId'  => $_rand_user_id,
-                        'realName'    => $_data['realname'],
-                        'download'    => 0,
+                        'realName'     => $_data['realname'],
+
                     ));
 
                 }else{

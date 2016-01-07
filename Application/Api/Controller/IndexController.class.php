@@ -108,37 +108,25 @@ class IndexController extends AuthController {
      * 2.学员用户订单下的套餐／班级集合
      * @param  string $token        令牌
      * @param  string $randUserId   随机用户ID
-     * @param  string $terminal     终端(0:默认值[不传值],2:苹果,3-安卓)
      * @param  string $sign         签名
      * @return json                 返回数据
      */
-    public function courses($token=null,$randUserId=null,$terminal=0,$sign=null){
+    public function courses($token=null,$randUserId=null,$sign=null){
         if(APP_DEBUG) trace('2.加载学员用户订单下的套餐/班级集合...');
         //验证签名
         $_agencyId = $this->verificationSignature(array(
             'token'      => $token,
             'randUserId' => $randUserId,
-            'terminal'   => $terminal,
             'sign'       => $sign,
         ));
         //验证签名成功
         if($_agencyId && ($_userId = $this->getRealUserId($randUserId))){
-            //苹果终端
-            if($terminal == 2){
-                $_model = M('AppGroupsView');
-                $_model = $_model->field(array('pid','id','name','type'))
-                                 ->where("`agencyId` = '%s'", array($_agencyId))
-                                 ->limit(C('QUERY_LIMIT_TOP'))
-                                 ->order("`orderno` desc")
-                                 ->select();
-            }else{
-                $_model = M('AppCoursesView');
-                $_model = $_model->field(array('pid','id','name','type'))
-                                 ->where("`userId` = '%s'",array($_userId))
-                                 ->limit(C('QUERY_LIMIT_TOP'))
-                                 ->order("`orderno` desc")
-                                 ->select();
-            }
+            $_model = M('AppCoursesView');
+            $_model = $_model->field(array('pid','id','name','type'))
+                             ->where("`userId` = '%s'",array($_userId))
+                             ->limit(C('QUERY_LIMIT_TOP'))
+                             ->order("`orderno` Asc")
+                             ->select();
             if($_model){
                 $this->send_callback_success($_model);
             }else{
@@ -194,21 +182,22 @@ class IndexController extends AuthController {
                              ->select();
             if($_model){
                 //机构播放服务器地址
-                $_playHost = M('Jigou')->field('FlvDomain')
-                                       ->where("`JGID` = '%s'", array($_agencyId))
-                                       ->find();
-                if($_playHost && isset($_playHost['FlvDomain'])){
-                    $_host = $_playHost['FlvDomain'];
+                //$_playHost = M('Jigou')->field('FlvDomain')
+                //                      ->where("`JGID` = '%s'", array($_agencyId))
+                //                       ->find();
+                //if($_playHost && isset($_playHost['FlvDomain'])){
+                    //$_host = $_playHost['FlvDomain'];
+					$_host = C("PLAYHOST");
                     foreach ($_model as &$_item) {
                         $_item['videoUrl']      = $_host.$_item['videoUrl'];
-                        $_item['highVideoUrl']  = $_host.$_item['highVideoUrl'];
-                        $_item['superVideoUrl'] = $_host.$_item['superVideoUrl'];
+                        //$_item['highVideoUrl']  = $_host.$_item['highVideoUrl'];
+                        //$_item['superVideoUrl'] = $_host.$_item['superVideoUrl'];
                     }
 
                     $this->send_callback_success($_model);
-                }else{
-                    $this->send_callback_error(-30,'未配置流媒体服务器地址，请联系管理员!');
-                }
+                //}else{
+                //    $this->send_callback_error(-30,'未配置流媒体服务器地址，请联系管理员!');
+                //}
             }else{
                 if(APP_DEBUG) trace('无数据!');
                 $this->send_callback_error(0,'无数据!');
@@ -239,11 +228,12 @@ class IndexController extends AuthController {
                 if(APP_DEBUG) trace('考试ID集合:'.$_model['allExams']);
                 //初始化考试数据模型
                 $_result = M('Examclass')->field(array(
-                    'examId' => 'id',
+                    'ExamID' => 'id',
                     'CnName' => 'name',
                     'EnName' => 'abbr',
                     'SortID' => 'orderNo',
-                ))->where(array('examId' => array('in', $_model['allexams'])))
+                ))
+				  ->where(array('ExamID' => array('in', $_model['allExams'])))
                   ->limit(C('QUERY_LIMIT_TOP'))
                   ->order("SortID")
                   ->select();
