@@ -24,7 +24,7 @@ class AuthController extends RestController{
             return false;
         }
         //去重复参数
-        $params = array_unique($params);
+        //$params = array_unique($params);
         //获取令牌
         if(!isset($params['token'])){
             $this->send_callback_error(-103,'未带令牌!');

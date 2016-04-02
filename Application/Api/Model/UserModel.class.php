@@ -120,10 +120,10 @@ class UserModel extends Model{
                     ));
                     //返回数据
                     return build_callback_success(array(
-                        'agencyId'     => $agencyId,
+                        'agencyId'    => $agencyId,
                         'randUserId'  => $_rand_user_id,
-                        'realName'     => $_data['realname'],
-
+                        'realName'    => $_data['realname'],
+                        'download'    => 1,//0:不显示类目和缓存相关
                     ));
 
                 }else{

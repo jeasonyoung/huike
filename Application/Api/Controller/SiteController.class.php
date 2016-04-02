@@ -8,6 +8,7 @@
 		 $this->send_callback_success(array('ok' => '接口测试!'));
 	 }
 	 
+	 
 	 /**
 	  *  获取班级相关信息
 	  *  @param $token 令牌(一般为机构英语名称abbr_en)

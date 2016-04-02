@@ -26,7 +26,7 @@ class IndexController extends AuthController {
      * @param  string  $sign     签名
      * @return json              返回数据。
      */
-    public function register($token=null,$username=null,$pwd=null,$realname=null,$phone='',$email='',$terminal=2,$sign=null){
+    public function register($token=null,$username=null,$pwd=null,$realname=null,$phone='',$email='',$terminal=0,$sign=null){
         if(APP_DEBUG) trace('0.学员注册...');
         //验证签名
         $_agencyId = $this->verificationSignature(array(
@@ -108,25 +108,38 @@ class IndexController extends AuthController {
      * 2.学员用户订单下的套餐／班级集合
      * @param  string $token        令牌
      * @param  string $randUserId   随机用户ID
+     * @param  string $terminal     终端(0:默认值[不传值],2:苹果,3-安卓)
      * @param  string $sign         签名
      * @return json                 返回数据
      */
-    public function courses($token=null,$randUserId=null,$sign=null){
+    public function courses($token=null,$randUserId=null,$terminal=0,$sign=null){
         if(APP_DEBUG) trace('2.加载学员用户订单下的套餐/班级集合...');
         //验证签名
         $_agencyId = $this->verificationSignature(array(
             'token'      => $token,
             'randUserId' => $randUserId,
+            'terminal'   => $terminal,
             'sign'       => $sign,
         ));
         //验证签名成功
         if($_agencyId && ($_userId = $this->getRealUserId($randUserId))){
-            $_model = M('AppCoursesView');
-            $_model = $_model->field(array('pid','id','name','type'))
-                             ->where("`userId` = '%s'",array($_userId))
-                             ->limit(C('QUERY_LIMIT_TOP'))
-                             ->order("`orderno` Asc")
-                             ->select();
+
+            /*  if($terminal == 2){
+                 $_model = M('AppGroupsView');
+                 $_model = $_model->field(array('pid','id','name','type'))
+                                  ->where("`agencyId` = '%s'", array($_agencyId))
+                                  ->limit(C('QUERY_LIMIT_TOP'))
+                                  ->order("`orderno` Asc")
+                                  ->select();
+             }else{ */
+                $_model = M('AppCoursesView');
+                $_model = $_model->field(array('pid','id','name','type'))
+                                 ->where("`userId` = '%s'",array($_userId))
+                                 ->limit(C('QUERY_LIMIT_TOP'))
+                                 ->order("`orderno` Asc")
+                                 ->select();
+            // }
+
             if($_model){
                 $this->send_callback_success($_model);
             }else{
@@ -232,8 +245,7 @@ class IndexController extends AuthController {
                     'CnName' => 'name',
                     'EnName' => 'abbr',
                     'SortID' => 'orderNo',
-                ))
-				  ->where(array('ExamID' => array('in', $_model['allExams'])))
+                ))->where(array('ExamID' => array('in', $_model['allExams'])))
                   ->limit(C('QUERY_LIMIT_TOP'))
                   ->order("SortID")
                   ->select();
@@ -271,7 +283,7 @@ class IndexController extends AuthController {
             //初始化数据模型
             $_model = M('AppGroupsView')->field(array(
                 'pid','id','name','type','orderNo'=>'orderNo'
-            ))->where("`agencyId` = '%s' and `examId` = '%s'", array($_agencyId,$examId))
+            ))->where(array('agencyId'=>$_agencyId,'examId'=>$examId))
               ->limit(C('QUERY_LIMIT_TOP'))
               ->order("`orderNo` asc")
               ->select();
@@ -582,6 +594,283 @@ class IndexController extends AuthController {
         }else{
             if(APP_DEBUG)trace('须POST提交!');
             $this->send_callback_error(-1,'须POST提交!');
+        }
+    }
+
+	/**
+     * 12.加载产品集合。
+     * @param  string $token  机构令牌
+     * @param  string $examId 所属考试
+     * @param  string $sign   签名数据
+     * @return mixed         返回产品数据
+     */
+    public function load_products($token=null,$examId=null,$sign=null){
+        if(APP_DEBUG) trace('12.加载产品集合...');
+        //验证签名
+        $_agencyId = $this->verificationSignature(array(
+            'token'  => $token,
+            'examId' => $examId,
+            'sign'   => $sign,
+        ));
+        //验证签名成功
+        if($_agencyId){
+            //初始化数据模型
+            $_model = M('AppProductsView')->field(array(
+                'id','name','type','useYear','img','content',
+                'teacherName','classNum','oldPrice','price'
+            ))->where("`agencyId` = '%s' and `examId` = '%s' ",array($_agencyId,$examId))
+              ->limit(C('QUERY_LIMIT_TOP'))
+              ->order("`orderNo` asc")
+              ->select();
+            //
+            if($_model){
+                $this->send_callback_success($_model);
+            }else{
+                if(APP_DEBUG) trace('无数据!');
+                $this->send_callback_error(0,'无数据!');
+            }
+        }
+    }
+
+    /**
+     * 13.获取用户帐户余额。
+     * @param  string  $token      机构令牌
+     * @param  string  $randUserId 随机用户ID
+     * @param  integer $terminal   终端(0:默认值[不传值],2:苹果,3-安卓)
+     * @param  string  $sign       签名数据
+     * @return mixed               返回余额数据
+     */
+    public function load_balance($token=null,$randUserId=null,$terminal=0,$sign=null){
+        if(APP_DEBUG) trace('13.获取用户帐户余额...');
+        //验证签名
+        $_agencyId = $this->verificationSignature(array(
+            'token'      => $token,
+            'randUserId' => $randUserId,
+            'terminal'   => $terminal,
+            'sign'       => $sign,
+        ));
+        //验证签名成功
+        if($_agencyId && ($_userId = $this->getRealUserId($randUserId))){
+			 //查询是否有未被验证的充值记录
+            $recharge = M('MobileRecharges')->where(array('userId'=>$_userId,'terminal'=>$terminal,'isValid'=>0))->find();
+            if(!empty($recharge)){
+                //二次验证充值
+                $this->valid_charge_ticket($recharge['id'],$recharge['receipt'],false);
+            }
+            //查询数据
+            $_model = M('user')->where(array('JGID'=>$_agencyId,'UserID'=>$_userId));
+            $balance = $_model->getField('Money');
+            if(!$balance) $balance = 0.0;
+
+            //返回数据
+            $this->send_callback_success(array('balance'=> $balance));
+        }
+    }
+
+    /**
+     * 14.验证充值
+     * @param  string  $token      机构令牌
+     * @param  string  $randUserId 随机用户ID
+     * @param  string  $chargeId   充值项目ID
+     * @param  float   $price      充值金额
+     * @param  string  $receipt    充值票据
+     * @param  integer $terminal   终端(0:默认值[不传值],2:苹果,3-安卓)
+     * @param  string  $sign       签名数据
+     * @return mixed               返回结果
+     */
+    public function verify_charge($token=null,$randUserId=null,$chargeId=null,$price=0.0,$receipt=null,$terminal=0,$sign=null){
+        if(APP_DEBUG) trace('14.验证充值...');
+        //验证签名
+        $_agencyId = $this->verificationSignature(array(
+            'token'      => $token,
+            'randUserId' => $randUserId,
+            'chargeId'   => $chargeId,
+            'price'      => $price,
+            'receipt'    => $receipt,
+            'terminal'   => $terminal,
+            'sign'       => $sign,
+        ));
+        //验证签名成功
+        if($_agencyId && ($_userId = $this->getRealUserId($randUserId))){
+			if(APP_DEBUG) trace("receipt-hex:$receipt");
+			$receiptBase64 = '';
+			$receiptBin = hex2bin($receipt);
+			if($receiptBin){
+				$receiptBase64 = base64_encode($receiptBin);
+			}
+			if(APP_DEBUG) trace("receipt-base64:$receiptBase64");
+            //插入到数据库
+            $result = M('MobileRecharges')->add(array(
+                    'agencyId' => $_agencyId,
+                    'userId'   => $_userId,
+                    'terminal' => $terminal,
+                    'chargeId' => $chargeId,
+                    'price'    => $price,
+                    'receipt'  => $receiptBase64,
+                ));
+            if($result){//插入数据库成功
+                //二次验证票据
+                $this->valid_charge_ticket($result,$receiptBase64);
+            }else{
+                $this->send_callback_error(0,'插入数据库失败!');
+            }
+        }
+    }
+    //14.1验证充值票据
+    private function valid_charge_ticket($id,$receipt,$response=true){
+        if(APP_DEBUG)trace("验证充值票据:$id");
+		//sandbox
+        $url = 'https://sandbox.itunes.apple.com/verifyReceipt/';
+        //stand
+        //$url = 'https://buy.itunes.apple.com/verifyReceipt/';
+        //
+        $data = '{"receipt-data":"'.$receipt.'"}';
+        if(APP_DEBUG)trace("url=>$url");
+		if(APP_DEBUG)trace("POST=>$data");
+        $ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,false); // 跳过证书检查
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,2); // 从证书中检查SSL加密算法是否存在
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//$data JSON类型字符串
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER,array('Content-Type:application/json','Content-Length:'.strlen($data)));
+		$data = curl_exec($ch);
+        //curl_close($ch);
+        if(APP_DEBUG)trace("反馈数据=>$data");
+        $result = json_decode($data,true);
+        if($result){
+            if($result['status'] == 0){
+                $data = M('MobileRecharges')->where(array('id'=>$id))->find();
+                if(!$data || empty($data)){
+                    if($response)$this->send_callback_error(0,'二次验证失败(未找到充值记录)!');
+                }else{
+                    //新增充值流水
+                    $accId = M('UserAccount')->add(array(
+                            'JGID' => $data['agencyId'],
+                            'UID'  => $data['userId'],
+                            'Channel' => 3,
+                            'MoneyFlow' => 0,
+                            'TradeType' => 0,
+                            'StateTF' => 1,
+                            'Money' => $data['price'],
+                            'Note' => 'ios充值(资金渠道:3)',
+                            'AddTime' => date('Y-m-d h:i:s'),
+                        ));
+                    if($accId){
+                        //更新用户余额
+                        M('user')->where(array('JGID'=>$data['agencyId'],'UserID'=>$data['userId']))
+                                 ->setInc('Money',$data['price']);
+                        //更新充值记录状态
+                        M('MobileRecharges')->where(array('id'=>$id))
+                                            ->setField(array('isValid'=>1));
+                        //充值到帐成功
+                        if($response)$this->send_callback_success();
+                    }else{
+                        if($response)$this->send_callback_error(0,'记录充值流水失败,请联系客户!');
+                    }
+                }
+            }else{
+                if($response)$this->send_callback_error(0,'二次验证充值失败['.$result['status'].'],请联系客服!');
+            }
+        }else{
+            if($response)$this->send_callback_error(0,'充值验证失败(服务器没有反馈),请联系客服!');
+        }
+    }
+
+    /**
+     * 15.购买产品
+     * @param  string  $token      机构令牌
+     * @param  string  $randUserId 随机用户ID
+     * @param  string  $productId  产品ID
+     * @param  string  $type       产品类型(class:班级,package:套餐)
+     * @param  integer $terminal   终端(0:默认值[不传值],2:苹果,3-安卓)
+     * @param  string  $sign       签名数据
+     * @return mixed               返回结果
+     */
+    public function buy($token=null,$randUserId=null,$productId=null,$type=null,$terminal=0,$sign=null){
+        if(APP_DEBUG) trace('15.购买产品...');
+        //验证签名
+        $_agencyId = $this->verificationSignature(array(
+            'token'      => $token,
+            'randUserId' => $randUserId,
+            'productId'  => $productId,
+            'type'       => $type,
+            'terminal'   => $terminal,
+            'sign'       => $sign,
+        ));
+        //验证签名成功
+        if($_agencyId && ($_userId = $this->getRealUserId($randUserId))){
+			//验证是否重复购买
+			$model = M('OrderDetail')->where(array('UID'=>$_userId,'JG_ProID'=>$productId))
+									 ->count();
+			if($model > 0){
+				$this->send_callback_error(0,"已购买！");
+				return;
+			}
+
+			//创建购买订单
+			$orderModel = D('UserOrder');
+            $order_no = $orderModel->createPayOrder($_agencyId,$_userId,$productId,$type);
+            if($order_no){
+				if(APP_DEBUG)trace("创建订单[$order_no]成功...");
+				//加载订单
+				$order = M('Orders')->where(array('OrderID'=>$order_no))->find();
+				if(empty($order)){
+					$this->send_callback_error(-1,"创建订单[$order_no]失败!");
+					return;
+				}
+				//查询机构余额
+				$agency_money = M('Jigou')->where(array('JGID'=>$_agencyId))->getField('Money');
+				if(APP_DEBUG)trace("查询机构[$_agencyId]余额:$agency_money=>".$order['CostPrice']);
+				if(empty($agency_money)){
+					$this->send_callback_error(-10,'机构余额为0，请联系客服!');
+					return;
+				}
+				if($agency_money < $order['CostPrice']){
+					$this->send_callback_error(-2,"开通订单[$order_no]失败，请联系客服!");
+					return;
+				}
+				//创建机构流水
+				$accId = M('JigouAccout')->add(array(
+					'JGID' => $_agencyId,
+					'OrderID' => $order_no,
+					'StuUserName' => $order['UserName'],
+					'Money' => $order['CostPrice'],
+					'AccMoney' => ($agency_money - $order['CostPrice']),
+					'Channel' => 0,//0:余额
+					'MoneyFlow' => 1,//0:收入,1:支出
+					'TradeType' => 1,//付款
+					'StateTF' => 1,//有效
+					'Note' => '移动支付(ios)',
+					'AddTime' => date('Y-m-d H:i:s'),
+				));
+				if($accId){//更新机构余额
+					M('Jigou')->where(array('JGID'=>$_agencyId))
+							  ->setDec('Money',$order['CostPrice']);
+					//开通订单
+					M('Orders')->where(array('OrderID'=>$order_no))
+								  ->save(array(
+									'OrderState'=>2,//开通
+									'OpenTime'=>date('Y-m-d H:i:s'),
+								  ));
+					//开通订单明细
+					//有效期
+					$validity = $orderModel->loadValidity($type,$productId);
+					if(empty($validity))$validity = 12;
+					M('OrderDetail')->where(array('OrderID'=>$order_no))
+									->save(array(
+										'OrderState'=>1,//0:未开通,1:已开通,
+										'OpenDate'=>date("Y-m-d H:i:s"),
+										'EndDate'=>date('Y-m-d H:i:s',strtotime("+".$validity." month")),
+									));
+					//完成购买
+					$this->send_callback_success();
+				}else{
+					$this->send_callback_error(-3,"创建机构订单[$order_no]流水失败，请联系客服!");
+				}
+            }else{
+                $this->send_callback_error(0,"您选择的产品已下架[$productId]!");
+            }
         }
     }
 }

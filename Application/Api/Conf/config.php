@@ -8,18 +8,22 @@ return array(
     'URL_PARAMS_BIND'      => true,//开启URL参数绑定
     'URL_ROUTER_ON'        => true,
     'URL_ROUTE_RULES'      => array(
-        'api/m/register' => 'index/register',//0.学员注册
-        'api/m/login'    => 'index/login',//1.验证学员登录
-        'api/m/courses'  => 'index/courses',//2.我的课程(套餐/班级集合)
-        'api/m/lessons'  => 'index/lessons',//3.课程资源(视频)集合
-        'api/m/exams'    => 'index/exams',//4.考试集合[用于免费体验]
-        'api/m/packages' => 'index/packages',//5.机构考试下套餐/班级集合[用于免费体验]
-        'api/m/learning/add' => 'index/learning',//6.上传学习记录(POST)
-        'api/m/aq/topics'    => 'index/load_topics',//7.获取答疑主题数据
-        'api/m/aq/topic/add' => 'index/add_topic',//8.新增答疑主题(POST)
-        'api/m/aq/details'   => 'index/load_details',//9.答疑主题明细
-        'api/m/aq/detail/add'=> 'index/add_detail',//10.新增答疑明细(POST)
-        'api/m/aq/suggest/add' =>  'index/add_suggest',//11.新增学员建议(POST)
+  		'api/m/register' => 'index/register',//0.学员注册
+      'api/m/login'    => 'index/login',//1.验证学员登录
+      'api/m/courses'  => 'index/courses',//2.我的课程(套餐/班级集合)
+      'api/m/lessons'  => 'index/lessons',//3.课程资源(视频)集合
+      'api/m/exams'    => 'index/exams',//4.考试集合[用于免费体验]
+      'api/m/packages' => 'index/packages',//5.机构考试下套餐/班级集合[用于免费体验]
+      'api/m/learning/add' => 'index/learning',//6.上传学习记录(POST)
+      'api/m/aq/topics'    => 'index/load_topics',//7.获取答疑主题数据
+      'api/m/aq/topic/add' => 'index/add_topic',//8.新增答疑主题(POST)
+      'api/m/aq/details'   => 'index/load_details',//9.答疑主题明细
+      'api/m/aq/detail/add'=> 'index/add_detail',//10.新增答疑明细(POST)
+      'api/m/aq/suggest/add' =>  'index/add_suggest',//11.新增学员建议(POST)
+      'api/m/products'     => 'index/load_products',//12.产品
+      'api/m/balance' => 'index/load_balance',//13.获取余额
+      'api/m/verifycharge' => 'index/verify_charge',//14.验证充值
+      'api/m/buy' => 'index/buy',//15.购买产品
     ),
     'QUERY_LIMIT_TOP'      =>  200,
     'DB_PARAMS'            => array(\PDO::ATTR_CASE => \PDO::CASE_NATURAL),
